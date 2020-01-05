@@ -1,0 +1,19 @@
+{% extends "./base.html%}
+
+{% block content%}
+
+
+<h1> Edit each picture</h1>
+{% if question_list %}
+    <ul class="list-group">
+    {% for question in question_list %}
+        <li class="list-group-item" ><a href="{% url 'vote' question.id %}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="400px"></a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+
+{% endblock content%}	

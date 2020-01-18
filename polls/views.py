@@ -38,10 +38,9 @@ def vote(request, question_id):
                 vote.question = quest
                 vote.save()
                 # print(vote.votes)
-                with open(quest.flashPic.file.seek(0), "rb") as opened_image:
-                    image = merge_images(opened_image,quest.ambientPic,vote.edit)
-                    quest.chosenPic = image
-                    quest.save()     
+                image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
+                quest.chosenPic = image
+                quest.save()     
         elif 'submit' in request.POST:
             print('submit')
             vote = 50
@@ -56,10 +55,23 @@ def vote(request, question_id):
         elif 'back' in request.POST:
             question_list = Question.objects.all()
             context = {'question_list': question_list}
-            return render(request, 'polls/index.html', context)       
+            return render(request, 'polls/index.html', context) 
+        else:
+            vote_form = voteForm(data=request.POST)
+            if vote_form.is_valid():
+                print(quest)
+                vote = vote_form.save(commit=False)
+                vote.question = quest
+                vote.save()
+                # print(vote.votes)
+                image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
+                quest.chosenPic = image
+                quest.save() 
+                      
     else:
         vote_form = voteForm()
         vote = 50
+
     return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form}) 
 
 def changeImageSize(maxWidth, 

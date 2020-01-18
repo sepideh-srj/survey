@@ -6,7 +6,7 @@ from django.views.generic import CreateView
 
 
 class voteForm(forms.ModelForm):
-    edit = forms.IntegerField(widget=NumberInput(attrs={'type':'range', 'step': '1'}))
+    edit = forms.IntegerField(widget=NumberInput(attrs={'type':'range', 'step': '1','onchange': 'submit();'}))
     print('edit')
     class Meta:
         model = Choice

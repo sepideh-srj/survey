@@ -129,6 +129,11 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> e9bd442cb24c18335a8c2677b858664775430b36
 
 
 

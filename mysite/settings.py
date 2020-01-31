@@ -130,5 +130,3 @@ MEDIA_URL = '/media/'
 # django_heroku.settings(locals())
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-

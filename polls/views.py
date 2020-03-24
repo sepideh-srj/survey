@@ -57,19 +57,11 @@ def vote(request, question_id):
             vote_form = voteForm()
             # obj = quest.choice_set.filter().last()
             # print(obj)
-<<<<<<< HEAD
             print('type of')
             print((request.POST['changedExp']))
             quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
                 flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']))
             quest.save()
-=======
-            # print('type of')
-            # print((request.POST['changedExp']))
-            quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
-                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']))
-            quest.save()
->>>>>>> 2093d6e3860f25f45a0930be67a598b8d69fb20e
             question_list = Question.objects.all()
             context = {'question_list': question_list}
             return render(request, 'polls/index.html', context)

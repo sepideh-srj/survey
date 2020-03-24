@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from .models import *
 from .form import *
-from PIL import Image
+# from PIL import Image
 from django.core.files.images import ImageFile
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile

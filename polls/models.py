@@ -7,8 +7,7 @@ class Question(models.Model):
     # matrix = models.IntegerField(blank=True)
     flashPic = models.ImageField(upload_to='images/')
     ambientPic = models.ImageField(upload_to='images/')
-    blendedPic = models.ImageField(upload_to='images/', blank=True, null=True) 
-    chosenPic = models.ImageField(upload_to='images/', blank=True, null=True) 
+    blendedPic = models.ImageField(upload_to='images/') 
     def __str__(self):
         return self.question_text
 

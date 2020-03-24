@@ -11,22 +11,13 @@ from PIL import Image
 from django.core.files.images import ImageFile
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import numpy as np
-from skimage import img_as_float,color
-import matplotlib.pyplot as plt
+# import numpy as np
+# from skimage import img_as_float,color
 
 
 def index(request):
 
     question_list = Question.objects.all()
-    for question in question_list:
- 
-        image = merge_images(question.flashPic,question.ambientPic,50)
-        question.blendedPic = image
-        question.chosenPic = image
-
-        question.save()
-
     context = {'question_list': question_list}
     return render(request, 'polls/index.html', context)
 
@@ -96,72 +87,72 @@ def vote(request, question_id):
 
     return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp}) 
 
-from django.views.decorators.csrf import csrf_exempt
-@csrf_exempt
-def returnBlend(request, question_id):
-    quest = Question.objects.get(pk=question_id)
-    edit = request.POST['edit']
-    image = merge_images(quest.flashPic,quest.ambientPic,float(edit))
-    return HttpResponse(image.read(), content_type="image/jpeg")
+# from django.views.decorators.csrf import csrf_exempt
+# @csrf_exempt
+# def returnBlend(request, question_id):
+#     quest = Question.objects.get(pk=question_id)
+#     edit = request.POST['edit']
+#     image = merge_images(quest.flashPic,quest.ambientPic,float(edit))
+#     return HttpResponse(image.read(), content_type="image/jpeg")
 
-def merge_images(field1,field2,opacity):
+# def merge_images(field1,field2,opacity):
 
-    image1 = Image.open(field1)
-    image2 = Image.open(field2)
-    height,width = image1.size
-    des = int(image1.info['Description'])
-    matrix = image1.info['Comment']
-    matrix = list(map(float, matrix.split("     ")))
+#     image1 = Image.open(field1)
+#     image2 = Image.open(field2)
+#     height,width = image1.size
+#     des = int(image1.info['Description'])
+#     matrix = image1.info['Comment']
+#     matrix = list(map(float, matrix.split("     ")))
 
-    image3 = img_as_float(image1)
-    image4 = img_as_float(image2)
-    blended = image3*opacity/100 + image4* (100-opacity)/100
-    # blended = cameraToXYZtoSRGB(blended,matrix, des,image1.size)
+#     image3 = img_as_float(image1)
+#     image4 = img_as_float(image2)
+#     blended = image3*opacity/100 + image4* (100-opacity)/100
+#     # blended = cameraToXYZtoSRGB(blended,matrix, des,image1.size)
 
-    # plt.imshow(blended1)
-    # im = (blended * 255 / np.max(blended)).astype('uint8')
-    im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)   
-    im = color.xyz2rgb(im)
-    im = (im * 255 / np.max(im)).astype('uint8')
-    im = Image.fromarray(im)
+#     # plt.imshow(blended1)
+#     # im = (blended * 255 / np.max(blended)).astype('uint8')
+#     im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)   
+#     im = color.xyz2rgb(im)
+#     im = (im * 255 / np.max(im)).astype('uint8')
+#     im = Image.fromarray(im)
 
-    output = io.BytesIO()
-    im.save(output, format='PNG', quality=100)
-    output.seek(0)
-    return InMemoryUploadedFile(output, 'ImageField',
-                                field1.name,
-                                'im/jpeg',
-                                sys.getsizeof(output), None)
+#     output = io.BytesIO()
+#     im.save(output, format='PNG', quality=100)
+#     output.seek(0)
+#     return InMemoryUploadedFile(output, 'ImageField',
+#                                 field1.name,
+#                                 'im/jpeg',
+#                                 sys.getsizeof(output), None)
 
-def fixWhitePoint(calibrationIlluminant):
-    d65 = [0.9504, 1.0000, 1.0888]
-    if (calibrationIlluminant == 17): # code a
-        makhraj = [1.0985, 1.0000, 0.3558]
-    elif calibrationIlluminant == 19: # code c 
-        makhraj = [0.9807, 1.0000, 1.1822]
-    elif calibrationIlluminant == 20: # code d55
-        makhraj = [0.9568, 1.0000, 0.9214]
-    elif calibrationIlluminant == 21: # code d65
-        makhraj = d65
-    elif calibrationIlluminant == 23: # code d50
-        makhraj =  [0.9642, 1.0000, 0.8251]             
-    return np.divide(d65,makhraj)
+# def fixWhitePoint(calibrationIlluminant):
+#     d65 = [0.9504, 1.0000, 1.0888]
+#     if (calibrationIlluminant == 17): # code a
+#         makhraj = [1.0985, 1.0000, 0.3558]
+#     elif calibrationIlluminant == 19: # code c 
+#         makhraj = [0.9807, 1.0000, 1.1822]
+#     elif calibrationIlluminant == 20: # code d55
+#         makhraj = [0.9568, 1.0000, 0.9214]
+#     elif calibrationIlluminant == 21: # code d65
+#         makhraj = d65
+#     elif calibrationIlluminant == 23: # code d50
+#         makhraj =  [0.9642, 1.0000, 0.8251]             
+#     return np.divide(d65,makhraj)
 
 
-def cameraToXYZtoSRGB(imgFloat, colorMatrix, calibrationIlluminant,size):
-    # imgFloat = img_as_float(image)
-    XYZtoCamera = np.reshape(colorMatrix,(3,3),order='F')
-    XYZtoCamera = np.transpose(XYZtoCamera)
-    width, height = size
+# def cameraToXYZtoSRGB(imgFloat, colorMatrix, calibrationIlluminant,size):
+#     # imgFloat = img_as_float(image)
+#     XYZtoCamera = np.reshape(colorMatrix,(3,3),order='F')
+#     XYZtoCamera = np.transpose(XYZtoCamera)
+#     width, height = size
     
-    imf = np.reshape(imgFloat, [width*height, 3], order='F')
-    imf = np.transpose(imf)
+#     imf = np.reshape(imgFloat, [width*height, 3], order='F')
+#     imf = np.transpose(imf)
 
-    imf = np.linalg.lstsq(XYZtoCamera,imf)[0]
+#     imf = np.linalg.lstsq(XYZtoCamera,imf)[0]
 
-    imf = np.transpose(imf)
-    imf = np.reshape(imf, [height, width, 3], order='F')
-    zarib = fixWhitePoint(calibrationIlluminant)
-    imf[:,:,0] = zarib[0] * imf[:,:,0]
-    imf[:,:,2] = zarib[2] * imf[:,:,2]
-    return imf    
+#     imf = np.transpose(imf)
+#     imf = np.reshape(imf, [height, width, 3], order='F')
+#     zarib = fixWhitePoint(calibrationIlluminant)
+#     imf[:,:,0] = zarib[0] * imf[:,:,0]
+#     imf[:,:,2] = zarib[2] * imf[:,:,2]
+#     return imf    

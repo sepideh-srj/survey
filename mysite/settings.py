@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
-    'storages',
+#    'crispy_forms',
+    # 'storages',
 ]
 
 MIDDLEWARE = [
@@ -127,13 +127,6 @@ MEDIA_URL = '/media/'
 # django_heroku.settings(locals())
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> e9bd442cb24c18335a8c2677b858664775430b36
 
 
 

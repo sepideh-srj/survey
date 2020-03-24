@@ -3,6 +3,8 @@ from django.db import models
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200, blank=True)
+    # matrix = models.CharField(max_length=200, blank=True)
+    # matrix = models.IntegerField(blank=True)
     flashPic = models.ImageField(upload_to='images/')
     ambientPic = models.ImageField(upload_to='images/')
     blendedPic = models.ImageField(upload_to='images/', blank=True, null=True) 
@@ -13,13 +15,9 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
-    edit = models.IntegerField(default=0)
-    def __str__(self):
-        return str(self.edit)
-
-class FinalChoice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
-    finalChoice = models.IntegerField(default=0)
-    def __str__(self):
-        return str(self.finalChoice)
+    flash = models.IntegerField(default=0)
+    ambient = models.IntegerField(default=0)
+    flashTemp = models.IntegerField(default=0)
+    ambientTemp =  models.IntegerField(default=0)
+    ambientBrightness = models.IntegerField(default=0)
 

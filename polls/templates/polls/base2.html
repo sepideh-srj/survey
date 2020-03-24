@@ -1,0 +1,433 @@
+{% load static %}
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	   <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{%static 'poll/main.css'%}">
+    <style>
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
+	<title> image editing survey </title>
+
+</head>
+
+<body>
+	<header class="site-header">
+  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <div class="container">
+      <h1 class="navbar-brand mr-4">Image Editing Survey</h1>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarToggle">
+        <div class="navbar-nav mr-auto">
+        </div>
+        <!-- Navbar Right Side -->
+        <div class="navbar-nav">
+         
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+	<div class="container">
+	{% block content %}
+	{% endblock %}
+
+	</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.6.0/math.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+      var flash = document.getElementById("flashCan");
+      var ambient = document.getElementById("ambientCan");
+      var output = document.getElementById("output");
+      var first = document.getElementById("first");
+      var flashimg = document.getElementById("flash");
+      var ambientimg = document.getElementById("ambient");
+      var flashCanvas = document.getElementById("flashCanvas");
+      var flashOutput = document.getElementById("flashOutput");
+      var output2 = document.getElementById("output2");
+
+      var output2Context = output2.getContext("2d");
+      var outputContext = output.getContext("2d");
+      var firstContext = first.getContext("2d");
+      var flashContext = flash.getContext("2d");
+      var ambientContext = ambient.getContext("2d");
+      var flashContext2 = flashCanvas.getContext("2d");
+      var flashOutputContext = flashOutput.getContext("2d");
+      var des = document.getElementById("des").innerHTML;
+      var matrix = document.getElementById("matrix").innerHTML;
+
+      var flashData, ambientData,outputData,matrix,firstData, flashOutputData;
+      var zarib;
+      var MA, M, invMA;
+      var slider = document.getElementById("myRange");
+      var flashTempSlider = document.getElementById("flashTempRange");
+      var output1 = document.getElementById("demo");
+      var flashSlider = document.getElementById("flashRange");
+      var ambientSlider = document.getElementById("ambientRange");
+
+      var fixedAmbient, fixedFlash;
+
+      // var hot = [0.94972, 1.00000, 1.22638];
+      var hot = [1.00985, 1, 0.35585];
+      // var cold = [0.95047, 1, 1.08883];
+      // var hot = [1, 0.0337, 0];
+      var cold = [0.5187, 0.6519, 1];
+      var coldFlash, hotFlash;
+      var outFlash;
+    // output1.innerHTML = slider.value;
+      window.onload = function() {
+  
+      ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
+      flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+      firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+      output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+      flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
+      ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
+      firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
+      output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
+      matrix = matrix.split('    ').map(function(item) {
+        return parseFloat(item, 10);
+      });
+      des = parseInt(des);
+      XYZtoCamera = new Array(3);
+      for (var i = 0; i < 3; i++) {
+        XYZtoCamera[i] = new Array(3)
+        for (var j = 0; j < 3; j++) {
+          XYZtoCamera[i][j] = matrix[i*3 + j];
+        }
+      }
+      // console.log(XYZtoCamera)
+      invXYZtoCamera = math.inv(XYZtoCamera);
+      // console.log(invXYZtoCamera)
+      height = flash.height;
+      width = flash.width;
+
+    
+    fixedAmbient = fixColorMap(ambientData.data);
+    fixedFlash = fixColorMap(flashData.data);
+    zarib = fixWhitePoint(des);
+    ambientContext.putImageData(ambientData, 0, 0);
+    flashContext.putImageData(flashData, 0, 0);
+    
+    blend2(fixedAmbient, fixedFlash,100,100,firstData.data,zarib);
+    blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
+    output2Context.putImageData(output2Data, 0, 0);
+    firstContext.putImageData(firstData, 0, 0);
+    outputContext.drawImage(first, 0,0,500, 500);
+    outputData = outputContext.getImageData(0, 0, flashimg.width, flashimg.height);
+    
+    // blend(fixedFlash, fixedFlash,50,firstData.data,zarib);
+    flashContext2.putImageData(firstData, 0,0);
+    flashOutputContext.putImageData(firstData, 0,0);
+    flashOutputData = flashOutputContext.getImageData(0, 0, flashimg.width, flashimg.height);
+    MA =  [[0.4002400,  0.7076000, -0.0808100] ,
+          [-0.2263000,  1.1653200,  0.0457000] , 
+          [0.0000000,  0.0000000,  0.9182200]]
+    invMA = math.inv(MA);
+    coldFlash = fixTemp(fixedFlash, cold);
+    hotFlash = fixTemp(fixedFlash, hot);
+    outFlash = new Float32Array(fixedAmbient.length);
+    }
+
+   
+    function preBlend(ambient,flash, slider,output) {
+      // console.log(ambient)
+      // console.log(flash)
+      // console.log(slider)
+      var temp = new Float32Array(ambient.length)
+      for (var i = 0; i < ambient.length; i+= 4) {
+      temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100; 
+      temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
+      temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
+      }
+      // console.log(temp)
+      // console.log(output)
+        for (var i = 0; i < ambient.length; i+=4) {
+        output[i] = temp[i];
+        output[i+1] = temp[i+1];
+        output[i+2] = temp[i+2];
+        output[i+3] = 255;
+
+      }
+  }
+
+    function blend(ambient,flash, slider,output,zarib) {
+      // console.log(ambient)
+      // console.log(flash)
+      // console.log(slider)
+      var temp = new Float32Array(ambient.length)
+      for (var i = 0; i < ambient.length; i+= 4) {
+      temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100; 
+      temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
+      temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
+      }
+      // console.log(temp)
+      for (var i = 0; i < ambient.length; i+=4) {
+        // console.log("her")
+        var x = temp[i];
+        var y = temp[i+1];
+        var z = temp[i+2];
+        // console.log(temp[i])
+        // console.log(temp[i+1])
+        // console.log(temp[i+2])
+        // console.log("rgb")
+        var rgb = xyz2rgb(x,y,z,zarib);
+        // console.log(rgb)
+        output[i] = rgb[0]*255;
+        output[i+1] = rgb[1]*255;
+        output[i+2] = rgb[2]*255;
+        output[i+3] = 255;
+        // console.log(rgb[0]*255)
+        // console.log(output[i])
+      }
+
+  }
+   function blend2(ambient,flash, flashSlider,ambientSlider, output,zarib) {
+      // console.log(ambient)
+      // console.log(flash)
+      // console.log(slider)
+      var temp = new Float32Array(ambient.length)
+      for (var i = 0; i < ambient.length; i+= 4) {
+      temp[i] = ambient[i]*ambientSlider/100 + flash[i]*(flashSlider)/100; 
+      temp[i+1] = ambient[i+1]*ambientSlider/100 + flash[i+1]*(flashSlider)/100;
+      temp[i+2] = ambient[i+2]*ambientSlider/100+ flash[i+2]*(flashSlider)/100;
+      }
+      // console.log(temp)
+      for (var i = 0; i < ambient.length; i+=4) {
+        // console.log("her")
+        var x = temp[i];
+        var y = temp[i+1];
+        var z = temp[i+2];
+        // console.log(temp[i])
+        // console.log(temp[i+1])
+        // console.log(temp[i+2])
+        // console.log("rgb")
+        var rgb = xyz2rgb(x,y,z,zarib);
+        // console.log(rgb)
+        output[i] = rgb[0]*255;
+        output[i+1] = rgb[1]*255;
+        output[i+2] = rgb[2]*255;
+        output[i+3] = 255;
+        // console.log(rgb[0]*255)
+        // console.log(output[i])
+      }
+
+  }
+
+    
+  
+
+    slider.oninput = function() {
+
+      output1.innerHTML = this.value;
+      // console.log("flash slider in slider")
+      // console.log(flashSlider.value);
+      preBlend(coldFlash, hotFlash, flashTempSlider.value, outFlash);
+      blend(fixedAmbient,outFlash,this.value,outputData.data,zarib);
+      outputContext.putImageData(outputData, 0, 0);
+
+    }
+
+    flashSlider.oninput = function() {
+      preBlend(coldFlash, hotFlash, flashTempSlider.value, outFlash);
+      blend2(fixedAmbient,outFlash,this.value,ambientSlider.value,output2Data.data,zarib);
+      output2Context.putImageData(output2Data, 0, 0);
+
+      
+    }
+
+    ambientSlider.oninput = function(){
+      preBlend(coldFlash, hotFlash, flashTempSlider.value, outFlash);
+      blend2(fixedAmbient,outFlash,flashSlider.value,this.value,output2Data.data,zarib);
+      output2Context.putImageData(output2Data, 0, 0);
+
+      
+
+    }
+    flashTempSlider.oninput = function() {
+
+      // output1.innerHTML = this.value;
+      // blend(fixedAmbient,fixedFlash,this.value,outputData.data,zarib);
+      // console.log("slider in flash slider")
+      // console.log(this.value)
+      preBlend(coldFlash, hotFlash, this.value, outFlash);
+      blend2(fixedAmbient,outFlash,flashSlider.value,ambientSlider.value,output2Data.data,zarib);
+      output2Context.putImageData(output2Data, 0, 0);
+
+      // flashOutputContext.putImageData(flashOutputData, 0, 0);
+      // blend(fixedAmbient,outFlash,slider.value,outputData.data,zarib);
+      // console.log(slider.value);
+      // console.log(flashOutputData)
+      // outputContext.putImageData(outputData, 0, 0);
+
+    }
+
+    
+  function fixWhitePoint(calibrationIlluminant){
+    // d65 = [0.9504, 1.0000, 1.089];
+    if (calibrationIlluminant == 17)
+    zarib = [[0.9394987, -0.2339150 , 0.4281177],
+           [-0.0256939,  1.0263828,  0.0051761]
+            ,[0.0000000,  0.0000000,  3.0598005]];
+    else if (calibrationIlluminant == 19) 
+      zarib =  [[0.9972812, -0.0093756, -0.0154171],
+                [-0.0010298,  1.0007636,  0.0002084],
+                [0.0000000,  0.0000000,  0.9209267]];
+    //     makhraj = [0.9807, 1.0000, 1.1822];
+    else if (calibrationIlluminant == 20) 
+      zarib =  [[0.9905739, -0.0328729,  0.0385701],
+                [-0.0036109,  1.0027841,  0.0007280],
+                [0.0000000,  0.0000000,  1.1815972]];
+    //     makhraj = [0.9568, 1.0000, 0.9214];
+     else if (calibrationIlluminant == 21) 
+        zarib =  [[1, 0,  0],
+                 [0,  1,  0],
+                 [0,  0,  1]]; 
+    //     makhraj = d65;
+    else if (calibrationIlluminant == 23) 
+        zarib = [[0.9845002, -0.0546158, 0.0676324],
+                [-0.0059992,  1.0047864,  0.0012095],
+                [0.0000000,  0.0000000,  1.3194581]];
+    return zarib;        
+    //     makhraj =  [0.9642, 1.0000, 0.8251];   
+    // console.log(d65[0]/makhraj[0])
+    // console.log(d65[2]/makhraj[2])             
+    // return [d65[0]/makhraj[0], 1.0, d65[2]/makhraj[2]];
+
+
+    }
+
+  function xyz2rgb(X, Y, Z,zarib) {
+    // console.log(0.4985314*Z);
+    X = X * zarib[0][0] + Y*zarib[0][1] + Z*zarib[0][2];
+    Y = X * zarib[1][0] + Y*zarib[1][1] + Z*zarib[1][2];
+    Z = X * zarib[2][0] + Y*zarib[2][1] + Z*zarib[2][2];
+    var R =  3.2404542*X - 1.5371385*Y - 0.4985314*Z;
+    var G = -0.9692660*X + 1.8760108*Y + 0.0415560*Z;
+    var B =  0.0556434*X - 0.2040259*Y + 1.0572252*Z;
+    // console.log(R);
+    R = adj(R);
+    G = adj(G);
+    B = adj(B);
+    return [R, G, B];
+
+
+  }
+  function adj(C) {
+  if (C >0 && C < 0.0031308) {
+    return 12.92 * C;
+  }
+  return 1.055 * Math.pow(C, 0.41666) - 0.055;
+}
+
+  function fixColorMap(data){
+    output = new Float32Array(data.length);
+    // console.log(data)
+    // output = math.zeros(data.length);
+    // console.log(math.max(data));
+    // console.log("ge")
+    // console.log(output)
+    for (var i = 0; i < data.length; i+=4) {
+      output[i+3] = 255;
+      for (var j=0; j <3; j++){
+        // console.log(data[i])
+        // console.log(data[i+1])
+        // console.log(data[i+2])
+        // console.log("hhhh")
+        // console.log(invXYZtoCamera[j][0] * data[i]+ invXYZtoCamera[j][1] * data[i+1] + invXYZtoCamera[j][2] * data[i+2])
+      output[i+j] = invXYZtoCamera[j][0] * data[i]/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]/255;
+      }
+
+    }
+    return output;
+
+  }
+
+   function fixTemp(data, destination){
+    output = new Float32Array(data.length);
+    var source = [0.95047, 1, 1.08883];
+
+    // console.log(MA)
+    roD = MA[0][0]+ destination[0] + MA[0][1]* destination[1]+ MA[0][2]*destination[2];
+    landaD = MA[1][0]*destination[0] + MA[1][1]* destination[1]+ MA[1][2]*destination[2];
+    bethaD = MA[2][0]*destination[0] + MA[2][1]* destination[1]+ MA[2][2]*destination[2];
+
+    roS = MA[0][0]+ source[0] + MA[0][1]* source[1]+ MA[0][2]*source[2];
+    landaS = MA[1][0]*source[0] + MA[1][1]* source[1]+ MA[1][2]*source[2];
+    bethaS = MA[2][0]*source[0] + MA[2][1]* source[1]+ MA[2][2]*source[2];
+    var temp = [[roD/roS, 0, 0], [0, landaD/landaS, 0], [0, 0, bethaD/bethaS]];
+    temp = math.multiply(invMA, temp);
+    M =math.multiply(temp, MA); 
+
+    // console.log(roD)
+    for (var i = 0; i < data.length; i+=4) {
+      var X = data[i];
+      var Y = data[i+1];
+      var Z = data[i+2];
+      X = X * M[0][0] + Y*M[0][1] + Z*M[0][2];
+      Y = X * M[1][0] + Y*M[1][1] + Z*M[1][2];
+      Z = X * M[2][0] + Y*M[2][1] + Z*M[2][2];
+      output[i] = X;
+      output[i+1] = Y;
+      output[i+2] = Z;
+      output[i+3] = 255;
+ 
+
+    }
+
+    return output;
+  }
+    </script>
+  
+</body>
+
+</html>

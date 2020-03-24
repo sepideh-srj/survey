@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import Question, Choice, FinalChoice
+from .models import *
 
 admin.site.register(Question)
 admin.site.register(Choice)
-admin.site.register(FinalChoice)
-
+# admin.site.register(FinalChoice)
+# admin.site.register(FlashChoice)
 # Register your models here.

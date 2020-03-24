@@ -2,28 +2,55 @@
 
 {% block content%}
 
+<div style="text-align: center">
+<h1>image number {{ question.question_text }}</h1>
+<hr>
+<p id="des" style="display: none;"> {{des}} </p>
+<p id="matrix" style="display: none;"> {{matrix}} </p>
+<p id="exp" style="display: none;"> {{exp}} </p>
+<img src="{{question.ambientPic.url}}" style="display: none;" id="ambient">
+<img src="{{question.flashPic.url}}" style="display: none;" id="flash" >
 
-<h1>{{ question.question_text }}</h1>
-<img src="{{question.blendedPic.url}}" width="400px">
-<img src="{{question.chosenPic.url}}" width="400px">
-<br>
-<br>
-<form method="post">
-	{{ vote_form.as_p }}
+<canvas id="flashCan" width="500" height="500" style="display: none;" ></canvas>
+<canvas id="ambientCan" width="500" height="500" style="display: none;"></canvas>
+<canvas id="first" width="500" height="500" style="text-align: right"></canvas>
+<canvas id="output" width="500" height="500"style="display: none"></canvas>
+<canvas id="output2" width="500" height="500"></canvas>
+
+<div class="slidecontainer">
+  
+<form method="post" id="test">
+<!-- 	{{ finalChoice_form.as_p }}
+ -->	{{ Choice_form.as_p }}
 	{% csrf_token %}
-	<!-- <button type="submit" name="check" class="btn btn-primary">Check</button> -->
+	<p> ambient lighting adjustment </p>
 
-	<!-- <button type="submit" name="submit" class="btn btn-primary  btn-lg">Submit</button> -->
-</form>
-<br>
+	<input name="changedExp" id="changedExp" value ="0.4" style="display: none"> </input>
+	<input name="ambientRange" type="range" min="0" max="200" value="100" class="slider" id="ambientRange">
+	<p> flash lighting adjustment </p>
+	<input name="flashRange" type="range" min="0" max="200" value="100" class="slider" id="flashRange">
 
-<form method="post">
-	{{ finalChoice_form.as_p }}
-	{% csrf_token %}
+	<!-- <p> ambient and flash lighting adjusment </p> -->
+	<input name="myRange" type="range" min="1" max="100" value="50" class="slider" id="myRange" style="display: none">
+	<p> temperture of flash light adjustment </p>
+	<input name="flashTempRange" type="range" min="1" max="100" value="50" class="slider" id="flashTempRange">
+  <p style="display: none;">Value: <span id="demo"></span></p>
+	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
 	<button type="submit" name="submit" class="btn btn-success">Submit</button>
 	<button type="submit" name="back" class="btn btn-danger">back</button>
+	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
 
 </form>
-<br>
+</div>
+</div>
+
+<canvas id="flashCanvas" width="500" height="500" style="display: none;"></canvas>
+<canvas id="flashOutput" width="500" height="500" style="display: none;"></canvas>
+
+
+</div>
+</div>
+
+
 
 {% endblock content%}	

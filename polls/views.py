@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Question, Choice
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 import json, io,sys
@@ -18,17 +17,14 @@ import matplotlib.pyplot as plt
 
 
 def index(request):
+
     question_list = Question.objects.all()
     for question in question_list:
-        # question.flashPic = fixPic(question.flashPic)
-        # question.ambientPic = fixPic(question.ambientPic)
-        # question. flashPic = resize(question.flashPic)
-        # question.ambientPic = resize(question.ambientPic)
+ 
         image = merge_images(question.flashPic,question.ambientPic,50)
-        # plt.imshow(question.flashPic)
-        # plt.show()
         question.blendedPic = image
         question.chosenPic = image
+
         question.save()
 
     context = {'question_list': question_list}
@@ -36,91 +32,99 @@ def index(request):
 
 def vote(request, question_id):
     quest = Question.objects.get(pk=question_id)
+    image = quest.ambientPic
+    image = Image.open(image)
+    des = int(image.info['Description'])
+    matrix = image.info['Comment']
+    print(float(image.info['Warning']))
+    exp = float(image.info['Warning'])
+    print(request.POST)
     if request.method == 'POST':
-        if 'check' in request.POST:
-            print('check')
-            vote_form = voteForm(data=request.POST)
-            if vote_form.is_valid():
-                print(quest)
-                vote = vote_form.save(commit=False)
-                vote.question = quest
-                vote.save()
-                # print(vote.votes)
-                image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
-                quest.chosenPic = image
-                quest.save()     
-        elif 'submit' in request.POST:
-            print('submit')
-            vote = 50
-            vote_form = voteForm()
-            obj = quest.choice_set.filter().last()
-            print(obj)
-            quest.finalchoice_set.create(finalChoice=obj.edit)
-            quest.save() 
-            question_list = Question.objects.all()
-            context = {'question_list': question_list}
-            return render(request, 'polls/index.html', context)  
-        elif 'back' in request.POST:
+        if 'back' in request.POST:
             question_list = Question.objects.all()
             context = {'question_list': question_list}
             return render(request, 'polls/index.html', context) 
-        else:
-            vote_form = voteForm(data=request.POST)
-            if vote_form.is_valid():
-                print(quest)
-                vote = vote_form.save(commit=False)
-                vote.question = quest
-                vote.save()
-                # print(vote.votes)
-                image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
-                quest.chosenPic = image
-                quest.save() 
+    # if request.method == 'POST':
+    #     if 'check' in request.POST:
+    #         print('check')
+    #         vote_form = voteForm(data=request.POST)
+    #         if vote_form.is_valid():
+    #             print(quest)
+    #             vote = vote_form.save(commit=False)
+    #             vote.question = quest
+    #             vote.save()
+    #             # print(vote.votes)
+    #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
+                
+    #             print(vote.edit)
+    #             quest.chosenPic = image
+    #             quest.save()     
+        elif 'submit' in request.POST:
+            print('submit') 
+            # print(changedExp)
+            vote = 50
+            vote_form = voteForm()
+            # obj = quest.choice_set.filter().last()
+            # print(obj)
+            print('type of')
+            print((request.POST['changedExp']))
+            # quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'], 
+            #     flashTemp=request.POST['flashTempRange'], ambientBrightness= request.POST['changedExp'])
+            # quest.save() 
+            question_list = Question.objects.all()
+            context = {'question_list': question_list}
+            return render(request, 'polls/index.html', context)  
+        # elif 'back' in request.POST:
+        #     question_list = Question.objects.all()
+        #     context = {'question_list': question_list}
+        #     return render(request, 'polls/index.html', context) 
+    #     else:
+    #         vote_form = voteForm(data=request.POST)
+    #         if vote_form.is_valid():
+    #             print(quest)
+    #             vote = vote_form.save(commit=False)
+    #             vote.question = quest
+    #             vote.save()
+    #             print(vote.edit)
+    #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
+    #             quest.chosenPic = image
+    #             quest.save() 
                       
     else:
         vote_form = voteForm()
         vote = 50
 
-    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form}) 
+    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp}) 
 
-def resize(image):
-    # image = Image.open(image)
-    print(image.size[0])
-    print(image)
-    # widthRatio  = maxWidth/image.size[0]
-    # heightRatio = maxHeight/image.size[1]
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def returnBlend(request, question_id):
+    quest = Question.objects.get(pk=question_id)
+    edit = request.POST['edit']
+    image = merge_images(quest.flashPic,quest.ambientPic,float(edit))
+    return HttpResponse(image.read(), content_type="image/jpeg")
 
-    # newWidth    = int(widthRatio*image.size[0])
-    # newHeight   = int(heightRatio*image.size[1])
-
-    # newImage    = image.resize((newWidth, newHeight))
-    return image
-    
 def merge_images(field1,field2,opacity):
 
     image1 = Image.open(field1)
     image2 = Image.open(field2)
-    image3 = fixPic(image1)
-    image4 = fixPic(image2)
+    height,width = image1.size
+    des = int(image1.info['Description'])
+    matrix = image1.info['Comment']
+    matrix = list(map(float, matrix.split("     ")))
 
-    # image3 = changeImageSize(800, 500, image1)
-    # image4 = changeImageSize(800, 500, image2)
-    # image5 = image3.convert("RGBA")
-    # image6 = image4.convert("RGBA")
-
+    image3 = img_as_float(image1)
+    image4 = img_as_float(image2)
     blended = image3*opacity/100 + image4* (100-opacity)/100
-    blended1 = color.xyz2rgb(blended)
-    print(type(blended1))
-    # plt.imshow(image3)
-    # plt.show()
-    # alphaBlended = Image.blend(image3, image4, alpha=opacity/100)
-    # alphaBlended = alphaBlended.convert('RGB')
-    # image = image.resize((800, 800), Image.ANTIALIAS)
-    plt.imshow(blended1)
-    im = (blended1 * 255 / np.max(blended1)).astype('uint8')
+    # blended = cameraToXYZtoSRGB(blended,matrix, des,image1.size)
+
+    # plt.imshow(blended1)
+    # im = (blended * 255 / np.max(blended)).astype('uint8')
+    im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)   
+    im = color.xyz2rgb(im)
+    im = (im * 255 / np.max(im)).astype('uint8')
     im = Image.fromarray(im)
 
-
-    # plt.show()
     output = io.BytesIO()
     im.save(output, format='PNG', quality=100)
     output.seek(0)
@@ -128,17 +132,6 @@ def merge_images(field1,field2,opacity):
                                 field1.name,
                                 'im/jpeg',
                                 sys.getsizeof(output), None)
-
-
-
-def fixPic(img):
-    # print(image)
-    # img = Image.open(field)
-    height,width = img.size
-    des = int(img.info['Description'])
-    matrix = img.info['Comment']
-    matrix = list(map(float, matrix.split("     ")))
-    return cameraToXYZtoSRGB(img, matrix, des)
 
 def fixWhitePoint(calibrationIlluminant):
     d65 = [0.9504, 1.0000, 1.0888]
@@ -155,11 +148,11 @@ def fixWhitePoint(calibrationIlluminant):
     return np.divide(d65,makhraj)
 
 
-def cameraToXYZtoSRGB(image, colorMatrix, calibrationIlluminant):
-    imgFloat = img_as_float(image)
+def cameraToXYZtoSRGB(imgFloat, colorMatrix, calibrationIlluminant,size):
+    # imgFloat = img_as_float(image)
     XYZtoCamera = np.reshape(colorMatrix,(3,3),order='F')
     XYZtoCamera = np.transpose(XYZtoCamera)
-    width, height = image.size
+    width, height = size
     
     imf = np.reshape(imgFloat, [width*height, 3], order='F')
     imf = np.transpose(imf)

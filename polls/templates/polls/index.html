@@ -3,17 +3,28 @@
 {% block content%}
 
 
-<h1> Edit each picture</h1>
-{% if question_list %}
-    <ul class="list-group">
+<h1 style="text-align: center;"> Edit each picture</h1>
+<!-- {% if question_list %}
+    <ul class="list-group" style="text-align: center; background-color: #3f484a;">
     {% for question in question_list %}
-        <li class="list-group-item" ><a href="{% url 'vote' question.id %}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="400px"></a>
+        <li class="list-group-item" style="text-align: center; background-color: #3f484a;"><a href="{% url 'vote' question.id %}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="400px"></a>
         </li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
+{% endif %} -->
+{% if question_list %}
+<div class="row">
+{% for question in question_list %}
+    <div class="three columns" style="text-align: center; background-color: #3f484a;"><div style="margin: 5%" ><hr><a href="{% url 'vote' question.id %}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="350px"></a>
+    </div>
+    </div>
+    {% if forloop.counter|divisibleby:3 %}
+</div>
+<div class="row">
+    {% endif %}
+{% endfor %}
 {% endif %}
-
-
+</div>
 {% endblock content%}	

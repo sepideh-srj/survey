@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from .models import *
 from .form import *
-# from PIL import Image
+from PIL import Image
 from django.core.files.images import ImageFile
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -34,7 +34,7 @@ def vote(request, question_id):
         if 'back' in request.POST:
             question_list = Question.objects.all()
             context = {'question_list': question_list}
-            return render(request, 'polls/index.html', context) 
+            return render(request, 'polls/index.html', context)
     # if request.method == 'POST':
     #     if 'check' in request.POST:
     #         print('check')
@@ -46,12 +46,12 @@ def vote(request, question_id):
     #             vote.save()
     #             # print(vote.votes)
     #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
-                
+
     #             print(vote.edit)
     #             quest.chosenPic = image
-    #             quest.save()     
+    #             quest.save()
         elif 'submit' in request.POST:
-            print('submit') 
+            print('submit')
             # print(changedExp)
             vote = 50
             vote_form = voteForm()
@@ -59,16 +59,16 @@ def vote(request, question_id):
             # print(obj)
             print('type of')
             print((request.POST['changedExp']))
-            # quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'], 
+            # quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
             #     flashTemp=request.POST['flashTempRange'], ambientBrightness= request.POST['changedExp'])
-            # quest.save() 
+            # quest.save()
             question_list = Question.objects.all()
             context = {'question_list': question_list}
-            return render(request, 'polls/index.html', context)  
+            return render(request, 'polls/index.html', context)
         # elif 'back' in request.POST:
         #     question_list = Question.objects.all()
         #     context = {'question_list': question_list}
-        #     return render(request, 'polls/index.html', context) 
+        #     return render(request, 'polls/index.html', context)
     #     else:
     #         vote_form = voteForm(data=request.POST)
     #         if vote_form.is_valid():
@@ -79,13 +79,13 @@ def vote(request, question_id):
     #             print(vote.edit)
     #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
     #             quest.chosenPic = image
-    #             quest.save() 
-                      
+    #             quest.save()
+
     else:
         vote_form = voteForm()
         vote = 50
 
-    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp}) 
+    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt
@@ -111,7 +111,7 @@ def vote(request, question_id):
 
 #     # plt.imshow(blended1)
 #     # im = (blended * 255 / np.max(blended)).astype('uint8')
-#     im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)   
+#     im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)
 #     im = color.xyz2rgb(im)
 #     im = (im * 255 / np.max(im)).astype('uint8')
 #     im = Image.fromarray(im)
@@ -128,14 +128,14 @@ def vote(request, question_id):
 #     d65 = [0.9504, 1.0000, 1.0888]
 #     if (calibrationIlluminant == 17): # code a
 #         makhraj = [1.0985, 1.0000, 0.3558]
-#     elif calibrationIlluminant == 19: # code c 
+#     elif calibrationIlluminant == 19: # code c
 #         makhraj = [0.9807, 1.0000, 1.1822]
 #     elif calibrationIlluminant == 20: # code d55
 #         makhraj = [0.9568, 1.0000, 0.9214]
 #     elif calibrationIlluminant == 21: # code d65
 #         makhraj = d65
 #     elif calibrationIlluminant == 23: # code d50
-#         makhraj =  [0.9642, 1.0000, 0.8251]             
+#         makhraj =  [0.9642, 1.0000, 0.8251]
 #     return np.divide(d65,makhraj)
 
 
@@ -144,7 +144,7 @@ def vote(request, question_id):
 #     XYZtoCamera = np.reshape(colorMatrix,(3,3),order='F')
 #     XYZtoCamera = np.transpose(XYZtoCamera)
 #     width, height = size
-    
+
 #     imf = np.reshape(imgFloat, [width*height, 3], order='F')
 #     imf = np.transpose(imf)
 
@@ -155,4 +155,4 @@ def vote(request, question_id):
 #     zarib = fixWhitePoint(calibrationIlluminant)
 #     imf[:,:,0] = zarib[0] * imf[:,:,0]
 #     imf[:,:,2] = zarib[2] * imf[:,:,2]
-#     return imf    
+#     return imf

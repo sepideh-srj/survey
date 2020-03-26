@@ -192,7 +192,7 @@
 		////// handling input ///////////
 
   		ambientSlider.oninput = function(){
-			if(this.value==50){
+			if(this.value==100){
       			preBlend(fixedAmbient,fixedFlash,flashTempSlider.value,outFlash);
       		}else{
       			preBlend2(fixedFlash,flashTempSlider.value,outFlash);
@@ -203,7 +203,7 @@
 
 
   		flashSlider.oninput = function() {
-  			if(this.value==50){
+  			if(this.value==100){
       			preBlend(coldFlash,hotFlash,flashTempSlider.value,fixedFlash);
   			}else{
       			preBlend2(fixedFlash,flashTempSlider.value,outFlash);

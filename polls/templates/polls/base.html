@@ -192,33 +192,33 @@
 		////// handling input ///////////
 
   		ambientSlider.oninput = function(){
-			if(this.value==100){
-      			preBlend(fixedAmbient,fixedFlash,flashTempSlider.value,outFlash);
-      		}else{
+        //if(this.value==100){
+      	//		preBlend(fixedAmbient,fixedFlash,flashTempSlider.value,outFlash);
+      	//	}else{
       			preBlend2(fixedFlash,flashTempSlider.value,outFlash);
-      		}
+      	//	}
       		blend2(fixedAmbient,outFlash,flashSlider.value,this.value,output2Data.data,zarib);
       		output2Context.putImageData(output2Data, 0, 0);
   		}
 
 
   		flashSlider.oninput = function() {
-  			if(this.value==100){
-      			preBlend(coldFlash,hotFlash,flashTempSlider.value,fixedFlash);
-  			}else{
+  			//if(this.value==100){
+      	//		preBlend(coldFlash,hotFlash,flashTempSlider.value,fixedFlash);
+  			//}else{
       			preBlend2(fixedFlash,flashTempSlider.value,outFlash);
-  			}
+  			//}
       		blend2(fixedAmbient,outFlash,this.value,ambientSlider.value,output2Data.data,zarib);
       		output2Context.putImageData(output2Data, 0, 0);
   		}
 
 
   		flashTempSlider.oninput = function() {
-			if(this.value==50){
-      			preBlend(coldFlash,hotFlash,this.value,fixedFlash);
-			}else{
+        //if(this.value==50){
+      	//		preBlend(coldFlash,hotFlash,this.value,fixedFlash);
+        //}else{
       			preBlend2(fixedFlash,this.value,outFlash);
-			}
+        //}
       		blend2(fixedAmbient,outFlash,flashSlider.value,ambientSlider.value,output2Data.data,zarib);
       		output2Context.putImageData(output2Data, 0, 0);
   		}

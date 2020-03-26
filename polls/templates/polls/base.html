@@ -85,613 +85,608 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-      var flash = document.getElementById("flashCan");
-      var ambient = document.getElementById("ambientCan");
-      var output = document.getElementById("output");
-      var first = document.getElementById("first");
-      var flashimg = document.getElementById("flash");
-      var ambientimg = document.getElementById("ambient");
-      var flashCanvas = document.getElementById("flashCanvas");
-      var flashOutput = document.getElementById("flashOutput");
-      var output2 = document.getElementById("output2");
-
-      var output2Context = output2.getContext("2d");
-      var outputContext = output.getContext("2d");
-      var firstContext = first.getContext("2d");
-      var flashContext = flash.getContext("2d");
-      var ambientContext = ambient.getContext("2d");
-      var flashContext2 = flashCanvas.getContext("2d");
-      var flashOutputContext = flashOutput.getContext("2d");
-      var des = document.getElementById("des").innerHTML;
-      var matrix = document.getElementById("matrix").innerHTML;
-      var exp = document.getElementById("exp").innerHTML;
-
-      var flashData, ambientData,outputData,matrix,firstData, flashOutputData;
-      var zarib;
-      var MA, M, invMA;
-      var slider = document.getElementById("myRange");
-      var flashTempSlider = document.getElementById("flashTempRange");
-      var output1 = document.getElementById("demo");
-      var flashSlider = document.getElementById("flashRange");
-      var ambientSlider = document.getElementById("ambientRange");
-
-      var fixedAmbient, fixedFlash;
-
-      // var hot = [0.94972, 1.00000, 1.22638];
-      var hot = [1.00985, 1, 0.35585];
-      // var cold = [0.95047, 1, 1.08883];
-      // var hot = [1, 0.0337, 0];
-      var cold = [0.5187, 0.6519, 1];
-      var coldFlash, hotFlash;
-      var outFlash;
-
-    // output1.innerHTML = slider.value;
-      window.onload = function() {
-
-        ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
-        flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
-        firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
-        matrix = matrix.split('    ').map(function(item) {
-          return parseFloat(item, 10);
-        });
-        des = parseInt(des);
-        XYZtoCamera = new Array(3);
-        for (var i = 0; i < 3; i++) {
-          XYZtoCamera[i] = new Array(3)
-          for (var j = 0; j < 3; j++) {
-            XYZtoCamera[i][j] = matrix[i*3 + j];
-          }
-        }
-        // console.log(XYZtoCamera)
-        invXYZtoCamera = math.inv(XYZtoCamera);
-        // console.log(invXYZtoCamera)
-        height = flash.height;
-        width = flash.width;
-
-
-        fixedAmbient = fixColorMap(ambientData.data);
-        fixedFlash = fixColorMap(flashData.data);
-        // console.log(fixedAmbient)
-
-       fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
-
-      // console.log(fixedAmbient)
-        zarib = fixWhitePoint(des);
-        ambientContext.putImageData(ambientData, 0, 0);
-        flashContext.putImageData(flashData, 0, 0);
-
-        blend2(fixedAmbient, fixedFlash,100,100,firstData.data,zarib);
-        blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
-        output2Context.putImageData(output2Data, 0, 0);
-        firstContext.putImageData(firstData, 0, 0);
-        outputContext.drawImage(first, 0,0,500, 500);
-        outputData = outputContext.getImageData(0, 0, flashimg.width, flashimg.height);
-
-        // blend(fixedFlash, fixedFlash,50,firstData.data,zarib);
-        flashContext2.putImageData(firstData, 0,0);
-        flashOutputContext.putImageData(firstData, 0,0);
-        flashOutputData = flashOutputContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        MA =  [[0.4002400,  0.7076000, -0.0808100] ,
-              [-0.2263000,  1.1653200,  0.0457000] ,
-              [0.0000000,  0.0000000,  0.9182200]]
-        invMA = math.inv(MA);
-        coldFlash = fixTemp(fixedFlash, cold);
-        hotFlash = fixTemp(fixedFlash, hot);
-        outFlash = new Float32Array(fixedAmbient.length);
-    }
-
-
+      	var flash = document.getElementById("flashCan");
+      	var ambient = document.getElementById("ambientCan");
+      	var output = document.getElementById("output");
+      	var first = document.getElementById("first");
+      	var flashimg = document.getElementById("flash");
+      	var ambientimg = document.getElementById("ambient");
+      	var flashCanvas = document.getElementById("flashCanvas");
+      	var flashOutput = document.getElementById("flashOutput");
+      	var output2 = document.getElementById("output2");
+
+      	var output2Context = output2.getContext("2d");
+      	var outputContext = output.getContext("2d");
+      	var firstContext = first.getContext("2d");
+      	var flashContext = flash.getContext("2d");
+      	var ambientContext = ambient.getContext("2d");
+      	var flashContext2 = flashCanvas.getContext("2d");
+      	var flashOutputContext = flashOutput.getContext("2d");
+      	var des = document.getElementById("des").innerHTML;
+      	var matrix = document.getElementById("matrix").innerHTML;
+      	var exp = document.getElementById("exp").innerHTML;
+
+      	var flashData, ambientData,outputData,matrix,firstData, flashOutputData;
+      	var zarib;
+      	var MA, M, invMA;
+      	var slider = document.getElementById("myRange");
+      	var flashTempSlider = document.getElementById("flashTempRange");
+      	var output1 = document.getElementById("demo");
+      	var flashSlider = document.getElementById("flashRange");
+      	var ambientSlider = document.getElementById("ambientRange");
+
+      	var fixedAmbient, fixedFlash;
+
+      	// var hot = [0.94972, 1.00000, 1.22638];
+      	var hot = [1.00985, 1, 0.35585];
+      	// var cold = [0.95047, 1, 1.08883];
+      	// var hot = [1, 0.0337, 0];
+      	var cold = [0.5187, 0.6519, 1];
+      	var coldFlash, hotFlash;
+      	var outFlash;
+
+    	// output1.innerHTML = slider.value;
+      	window.onload = function() {
+
+        	ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
+        	flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
+        	ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
+        	firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
+        	output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
+        	matrix = matrix.split('    ').map(function(item) {
+          		return parseFloat(item, 10);
+        	});
+        	des = parseInt(des);
+        	XYZtoCamera = new Array(3);
+        	for (var i = 0; i < 3; i++) {
+          		XYZtoCamera[i] = new Array(3)
+          		for (var j = 0; j < 3; j++) {
+            		XYZtoCamera[i][j] = matrix[i*3 + j];
+          		}
+        	}
+        	// console.log(XYZtoCamera)
+        	invXYZtoCamera = math.inv(XYZtoCamera);
+        	// console.log(invXYZtoCamera)
+        	height = flash.height;
+        	width = flash.width;
+
+
+        	fixedAmbient = fixColorMap(ambientData.data);
+        	fixedFlash = fixColorMap(flashData.data);
+        	// console.log(fixedAmbient)
+
+        	fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
+
+      		// console.log(fixedAmbient)
+        	zarib = fixWhitePoint(des);
+        	ambientContext.putImageData(ambientData, 0, 0);
+        	flashContext.putImageData(flashData, 0, 0);
+
+        	blend2(fixedAmbient, fixedFlash,100,100,firstData.data,zarib);
+        	blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
+        	output2Context.putImageData(output2Data, 0, 0);
+        	firstContext.putImageData(firstData, 0, 0);
+        	outputContext.drawImage(first, 0,0,500, 500);
+        	outputData = outputContext.getImageData(0, 0, flashimg.width, flashimg.height);
+
+        	// blend(fixedFlash, fixedFlash,50,firstData.data,zarib);
+        	flashContext2.putImageData(firstData, 0,0);
+        	flashOutputContext.putImageData(firstData, 0,0);
+        	flashOutputData = flashOutputContext.getImageData(0, 0, flashimg.width, flashimg.height);
+        	MA =	[[0.4002400,  0.7076000, -0.0808100] ,
+              		[-0.2263000,  1.1653200,  0.0457000] ,
+              		[0.0000000,  0.0000000,  0.9182200]]
+        	invMA = math.inv(MA);
+        	coldFlash = fixTemp(fixedFlash, cold);
+        	hotFlash = fixTemp(fixedFlash, hot);
+        	outFlash = new Float32Array(fixedAmbient.length);
+    	}
+
+
 
-    // slider.oninput = function() {
-    //
-    //     output1.innerHTML = this.value;
-    //     // console.log("flash slider in slider")
-    //     // console.log(flashSlider.value);
-    //     preBlend(coldFlash,hotFlash,flashTempSlider.value,outFlash);
-    //     //console.log(flashData.data)
-    //     //preBlend2(fixedFlash,flashTempSlider.value,outFlash);
-    //     blend(fixedAmbient,outFlash,this.value,outputData.data,zarib);
-    //     outputContext.putImageData(outputData, 0, 0);
-    // }
-
-
-
-  ambientSlider.oninput = function(){
-      //preBlend(coldFlash,hotFlash,flashTempSlider.value, fixedFlash);
-      preBlend2(fixedFlash,flashTempSlider.value,outFlash);
-      blend2(fixedAmbient,outFlash,flashSlider.value,this.value,output2Data.data,zarib);
-      output2Context.putImageData(output2Data, 0, 0);
-  }
-
-
-  flashSlider.oninput = function() {
-      //preBlend(coldFlash,hotFlash,flashTempSlider.value,fixedFlash);
-      preBlend2(fixedFlash,flashTempSlider.value,outFlash);
-      blend2(fixedAmbient,outFlash,this.value,ambientSlider.value,output2Data.data,zarib);
-      output2Context.putImageData(output2Data, 0, 0);
-  }
-
-
-  flashTempSlider.oninput = function() {
-
-      //preBlend(coldFlash,hotFlash,this.value,fixedFlash);
-
-      preBlend2(fixedFlash,this.value,outFlash);
-      blend2(fixedAmbient,outFlash,flashSlider.value,ambientSlider.value,output2Data.data,zarib);
-      output2Context.putImageData(output2Data, 0, 0);
-  }
-
-
-
-  function preBlend(ambient,flash,slider,output) {
-      // console.log(ambient)
-      // console.log(flash)
-      // console.log(slider)
-      var temp = new Float32Array(ambient.length)
-
-      //console.log(ambient);
-      for (var i = 0; i < ambient.length; i+= 4) {
-        temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
-        temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
-        temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
-      }
-       //console.log(temp)
-       //console.log(output)
-        for (var i = 0; i < ambient.length; i+=4) {
-          output[i] = temp[i];
-          output[i+1] = temp[i+1];
-          output[i+2] = temp[i+2];
-          output[i+3] = 255;
-        }
-    }
-
-
-  function preBlend2(flash,slider,output) {
-    // console.log(ambient)
-    //  console.log(flash)
-    // console.log(slider)
-      var temp = new Float32Array(flash.length);
-      temp=fixTemp2(flash,slider);
-      var diff= new Float32Array(flash.length);
-
-    // console.log(temp)
-    // console.log(output)
-      for (var i = 0; i < flash.length; i+=4) {
-        //diff[i]=temp[i]-flash[i];
-        output[i] = temp[i];
-        output[i+1] = temp[i+1];
-        output[i+2] = temp[i+2];
-        output[i+3] = 255;
-
-      }
-      //console.log(temp);
-  }
-
-  function blend(ambient,flash, slider,output,zarib) {
-      // console.log(ambient)
-      // console.log(flash)
-      // console.log(slider)
-      var temp = new Float32Array(ambient.length)
-      for (var i = 0; i < ambient.length; i+= 4) {
-        temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
-        temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
-        temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
-      }
-      // console.log(temp)
-      for (var i = 0; i < ambient.length; i+=4) {
-        // console.log("her")
-        var x = temp[i];
-        var y = temp[i+1];
-        var z = temp[i+2];
-        // console.log(temp[i])
-        // console.log(temp[i+1])
-        // console.log(temp[i+2])
-        // console.log("rgb")
-        var rgb = xyz2rgb(x,y,z,zarib);
-        // console.log(rgb)
-        output[i] = rgb[0]*255;
-        output[i+1] = rgb[1]*255;
-        output[i+2] = rgb[2]*255;
-        output[i+3] = 255;
-        // console.log(rgb[0]*255)
-        // console.log(output[i])
-      }
-
-  }
-
-  function blend2(ambient,flash, flashSlider,ambientSlider, output,zarib) {
-      // console.log(ambient)
-      // console.log(flash)
-      // console.log(slider)
-      var temp = new Float32Array(ambient.length)
-      for (var i = 0; i < ambient.length; i+= 4) {
-        temp[i] = ambient[i]*ambientSlider/100 + flash[i]*(flashSlider)/100;
-        temp[i+1] = ambient[i+1]*ambientSlider/100 + flash[i+1]*(flashSlider)/100;
-        temp[i+2] = ambient[i+2]*ambientSlider/100+ flash[i+2]*(flashSlider)/100;
-      }
-      // console.log(temp)
-      for (var i = 0; i < ambient.length; i+=4) {
-        // console.log("her")
-        var x = temp[i];
-        var y = temp[i+1];
-        var z = temp[i+2];
-        // console.log(temp[i])
-        // console.log(temp[i+1])
-        // console.log(temp[i+2])
-        // console.log("rgb")
-        var rgb = xyz2rgb(x,y,z,zarib);
-        // console.log(rgb)
-        output[i] = rgb[0]*255;
-        output[i+1] = rgb[1]*255;
-        output[i+2] = rgb[2]*255;
-        output[i+3] = 255;
-        // console.log(rgb[0]*255)
-        // console.log(output[i])
-      }
-
-  }
-
-
-  function fixWhitePoint(calibrationIlluminant){
-    // d65 = [0.9504, 1.0000, 1.089];
-    if (calibrationIlluminant == 17)
-    zarib = [[0.9394987, -0.2339150 , 0.4281177],
-           [-0.0256939,  1.0263828,  0.0051761]
-            ,[0.0000000,  0.0000000,  3.0598005]];
-    else if (calibrationIlluminant == 19)
-      zarib =  [[0.9972812, -0.0093756, -0.0154171],
-                [-0.0010298,  1.0007636,  0.0002084],
-                [0.0000000,  0.0000000,  0.9209267]];
-    //     makhraj = [0.9807, 1.0000, 1.1822];
-    else if (calibrationIlluminant == 20)
-      zarib =  [[0.9905739, -0.0328729,  0.0385701],
-                [-0.0036109,  1.0027841,  0.0007280],
-                [0.0000000,  0.0000000,  1.1815972]];
-    //     makhraj = [0.9568, 1.0000, 0.9214];
-     else if (calibrationIlluminant == 21)
-        zarib =  [[1, 0,  0],
-                 [0,  1,  0],
-                 [0,  0,  1]];
-    //     makhraj = d65;
-    else if (calibrationIlluminant == 23)
-        zarib = [[0.9845002, -0.0546158, 0.0676324],
-                [-0.0059992,  1.0047864,  0.0012095],
-                [0.0000000,  0.0000000,  1.3194581]];
-    return zarib;
-    //     makhraj =  [0.9642, 1.0000, 0.8251];
-    // console.log(d65[0]/makhraj[0])
-    // console.log(d65[2]/makhraj[2])
-    // return [d65[0]/makhraj[0], 1.0, d65[2]/makhraj[2]];
-
-
-    }
-
-  function xyz2rgb(X, Y, Z,zarib) {
-    // console.log(0.4985314*Z);
-    X = X * zarib[0][0] + Y*zarib[0][1] + Z*zarib[0][2];
-    Y = X * zarib[1][0] + Y*zarib[1][1] + Z*zarib[1][2];
-    Z = X * zarib[2][0] + Y*zarib[2][1] + Z*zarib[2][2];
-    var R =  3.2404542*X - 1.5371385*Y - 0.4985314*Z;
-    var G = -0.9692660*X + 1.8760108*Y + 0.0415560*Z;
-    var B =  0.0556434*X - 0.2040259*Y + 1.0572252*Z;
-    // console.log(R);
-    R = adj(R);
-    G = adj(G);
-    B = adj(B);
-    return [R, G, B];
-  }
-
-
-  function adj(C) {
-    if (C >0 && C < 0.0031308) {
-      return 12.92 * C;
-    }
-
-    return 1.055 * Math.pow(C, 0.41666) - 0.055;
-  }
-
-
-  function fixColorMap(data){
-    output = new Float32Array(data.length);
-    // console.log(data)
-    // output = math.zeros(data.length);
-    // console.log(math.max(data));
-    // console.log("ge")
-    // console.log(output)
-    for (var i = 0; i < data.length; i+=4) {
-      output[i+3] = 255;
-      for (var j=0; j <3; j++){
-        // console.log(data[i])
-        // console.log(data[i+1])
-        // console.log(data[i+2])
-        // console.log("hhhh")
-        // console.log(invXYZtoCamera[j][0] * data[i]+ invXYZtoCamera[j][1] * data[i+1] + invXYZtoCamera[j][2] * data[i+2])
-        output[i+j] = invXYZtoCamera[j][0] * data[i]/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]/255;
-      }
-
-    }
-    return output;
-  }
-
-
-
-   function fixTemp(data, destination){
-    output = new Float32Array(data.length);
-    var source = [0.95047, 1, 1.08883];
-
-    // console.log(MA)
-    roD = MA[0][0]+ destination[0] + MA[0][1]* destination[1]+ MA[0][2]*destination[2];
-    landaD = MA[1][0]*destination[0] + MA[1][1]* destination[1]+ MA[1][2]*destination[2];
-    bethaD = MA[2][0]*destination[0] + MA[2][1]* destination[1]+ MA[2][2]*destination[2];
-
-    roS = MA[0][0]+ source[0] + MA[0][1]* source[1]+ MA[0][2]*source[2];
-    landaS = MA[1][0]*source[0] + MA[1][1]* source[1]+  MA[1][2]*source[2];
-    bethaS = MA[2][0]*source[0] + MA[2][1]* source[1]+ MA[2][2]*source[2];
-    var temp = [[roD/roS, 0, 0], [0, landaD/landaS, 0], [0, 0, bethaD/bethaS]];
-    temp = math.multiply(invMA, temp);
-    M =math.multiply(temp, MA);
-
-    // console.log(roD)
-    for (var i = 0; i < data.length; i+=4) {
-      var X = data[i];
-      var Y = data[i+1];
-      var Z = data[i+2];
-      X = X * M[0][0] + Y*M[0][1] + Z*M[0][2];
-      Y = X * M[1][0] + Y*M[1][1] + Z*M[1][2];
-      Z = X * M[2][0] + Y*M[2][1] + Z*M[2][2];
-      output[i] = X;
-      output[i+1] = Y;
-      output[i+2] = Z;
-      output[i+3] = 255;
-    }
-
-    return output;
-  }
-
-
-
-
-  function fixTemp2(image,tempChange){
-   output_new = new Float32Array(output.length);
-   //t=1500 + ((temperature-1)/100)*8500;
-   var t= getTemperature(image);
-   // console.log("slider")
-   // console.log(tempChange)
-   var changeNorm=(tempChange-50)/50;
-   // console.log("changeNorm")
-   // console.log(changeNorm);
-
-   var newTemp = (math.round(t+changeNorm*5856));
-   // newTemp = t;
-
-   // console.log("temperature")
-   // console.log(newTemp);
-   if(newTemp<1000){newTemp=1000;}
-
-   var xD, yD=0;
-
-   // get xy from temperature
-   // if(temperature <= 7000){
-   //   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
-   // }else{
-   //   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
-   // }
-   // yD=-3*xD**2 + 2.870*xD - 0.275;
-   if(newTemp<2000){
-     r=getRatio(newTemp,1500,2000);
-     r_x=(0.5267-0.5857)/100;
-     // console.log("here");
-     // console.log(r);
-     xD=0.5857+r*r_x;
-     r_y=(0.4133-0.3931)/100;
-     yD=0.3931+r*r_y;
-     // console.log(newTemp*r_x)
-     // console.log(xD);
-     // console.log(yD);
-   }else if (newTemp<2500) {
-     r=getRatio(newTemp,2000,2500);
-     r_x=(0.4770-0.5267)/100;
-     xD=0.5267+r*r_x;
-     r_y=(0.4137-0.4133)/100;
-     yD=0.4133+r*r_y;
-   }else if (newTemp<2856) {
-     r=getRatio(newTemp,2500,2856);
-     r_x=(0.4475-0.4770)/100;
-     xD=0.4770+r*r_x;
-     r_y=(0.4074-0.4137)/100;
-     yD=0.4137+r*r_y;
-   }else if (newTemp<4000) {
-     r=getRatio(newTemp,2856,4000);
-     r_x=(0.3802-0.4475)/100;
-     xD=0.4475+r*r_x;
-     r_y=(0.3767-0.4074)/100;
-     yD=0.4074+r*r_y;
-   }else if (newTemp<5000) {
-     r=getRatio(newTemp,4000,5000);
-     r_x=(0.3444-0.3802)/100;
-     xD=0.3802+r*r_x;
-     r_y=(0.3513-0.3767)/100;
-     yD=0.3767+r*r_y;
-   }else if (newTemp<5500){
-     r=getRatio(newTemp,5000,5500);
-     r_x=(0.3314-0.3444)/100;
-     xD=0.3444+r*r_x;
-     r_y=(0.3405-0.3513)/100;
-     yD=0.3513+r*r_y;
-   }else if (newTemp<6500) {
-     r=getRatio(newTemp,5500,6500);
-     r_x=(0.3118-0.3314)/100;
-     xD=0.3314+r*r_x;
-     r_y=(0.3224-0.3405)/100;
-     yD=0.3405+r*r_y;
-   }else if (newTemp<7500) {
-     r=getRatio(newTemp,6500,7500);
-     r_x=(0.2978-0.3118)/100;
-     xD=0.3118+r*r_x;
-     r_y=(0.3083-0.3224)/100;
-     yD=0.3224+r*r_y;
-   }else{
-     r=getRatio(newTemp,7500,10000);
-     r_x=(0.2762-0.2978)/100;
-     xD=0.2978+r*r_x;
-     r_y=(0.2840-0.3083)/100;
-     yD=0.3083+r*r_y;
-   }
-
-   // xD = x;
-   // yD = y;
-   // console.log(r);
-   // console.log(r_x);
-   // console.log(r_y);
-   // -
-   // console.log("destination")
-   // // console.log(x);
-   // // console.log(y);
-   // console.log(xD);
-   // console.log(yD)
-   var counterX = 0;
-   var counterY = 0;
-
-   xD = math.abs(xD);
-   yD = math.abs(yD);
-   //sum up chromaticity over whole input image
-   var x=0;
-   var y=0;
-   for (var i = 0; i < image.length; i+=4) {
-     if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
-       var x_pix=0;
-       var y_pix=0;
-     }else{
-       var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-       var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-     }
-    if (x_pix >= 0.01)
-      counterX = counterX + 1;
-      x+=x_pix;
-      if (y_pix >= 0.01) {
-        counterY = counterY +1;
-      y+=y_pix;
-      }
-
-   }
-
-   //get average chromaticity
-   var chromaticity_x=x/(counterX);
-   var chromaticity_y=y/(counterY);
-   // console.log(chromaticity_x)
-   //get offest / ratio between average and destination chromaticity
-   var offset_x = xD/chromaticity_x;
-   var offset_y = yD/chromaticity_y;
-
-   // adjust XYZ values according to ratio
-   for (var i = 0; i < image.length; i+=4) {
-
-     if((image[i]+image[i+1]+image[i+2])==0){
-       var x_pix=0;
-       var y_pix=0;
-     }else{
-       var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-       var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-     }
-
-     x_pix=x_pix*offset_x;
-     y_pix=y_pix*offset_y;
-
-     if(y_pix==0){
-       output_new[i] = 0
-       output_new[i+2] = 0
-     }else{
-       output_new[i] = x_pix*image[i+1]/y_pix;
-       output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
-     }
-
-     output_new[i+1] = image[i+1];
-     output_new[i+3] = 255;
-
-   }
-   //console.log(output_new)
-   //return XYZ values
-   return output_new;
- }
-
-
- function getTemperature(image){
-   var x =0.0;
-   var y =0.0;
-   //console.log(image);
-   var counterX = 0;
-   var counterY = 0;
-
-   for (var i = 0; i < image.length; i+=4) {
-     if((image[i]+image[i+1]+image[i+2])==0){
-       var x_pix=0;
-       var y_pix=0;
-     }else{
-       var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-       var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-     }
-      if (x_pix >= 0.01)
-      counterX = counterX + 1;
-      if (y_pix >= 0.01) {
-        counterY = counterY +1;
-      }
-     x+=x_pix;
-     y+=y_pix;
-   }
-
-   x=x/counterX;
-   y=y/counterY;
-   // console.log(x)
-   // console.log(x)
-   // console.log(y)
-   var n = (x-0.3320)/(0.1858-y);
-
-   CCT = 437*n**3 + 3601*n**2 + 6861*n + 5517;
-   // console.log("original temperature")
-   // console.log(CCT)
-   return math.round(CCT);
- }
-
-
- function getRatio(t,low,high){
-   var dist=t-low;
-   var range=(high-low)/100;
-
-   return (dist/range);
- }
-
-
- function fixBrightnessAmbient(fixedAmbient,exp){
-  standardExp=0.0446;
-  lowExp=0.02;
-  highExp = 0.08;
-  var temp = new Float32Array(fixedAmbient.length)
-  console.log(fixedAmbient)
-  random = Math.floor(Math.random() * 3);
-  console.log(random)
-  if (random == 0)
-    toExp = standardExp;
-  else if (random == 1)
-    toExp = lowExp;
-  else
-    toExp = highExp;
-
-  ratio = toExp / exp;
-  console.log(ratio);  
-  for (var i = 0; i < fixedAmbient.length; i+=4) {
-    temp[i] = fixedAmbient[i]*ratio;
-    temp[i+1] = fixedAmbient[i+1]*ratio;
-    temp[i+2] = fixedAmbient[i+2]*ratio;
-    temp[i+3] = 255;
-  }
-  document.getElementById("changedExp").value = toExp;
-  return temp;
- }
+  
+
+		////// handling input ///////////
+
+  		ambientSlider.oninput = function(){
+			if(this.value==50){
+      			preBlend(fixedAmbient,fixedFlash,flashTempSlider.value,outFlash);
+      		}else{
+      			preBlend2(fixedFlash,flashTempSlider.value,outFlash);
+      		}
+      		blend2(fixedAmbient,outFlash,flashSlider.value,this.value,output2Data.data,zarib);
+      		output2Context.putImageData(output2Data, 0, 0);
+  		}
+
+
+  		flashSlider.oninput = function() {
+  			if(this.value==50){
+      			preBlend(coldFlash,hotFlash,flashTempSlider.value,fixedFlash);
+  			}else{
+      			preBlend2(fixedFlash,flashTempSlider.value,outFlash);
+  			}
+      		blend2(fixedAmbient,outFlash,this.value,ambientSlider.value,output2Data.data,zarib);
+      		output2Context.putImageData(output2Data, 0, 0);
+  		}
+
+
+  		flashTempSlider.oninput = function() {
+			if(this.value==50){
+      			preBlend(coldFlash,hotFlash,this.value,fixedFlash);
+			}else{
+      			preBlend2(fixedFlash,this.value,outFlash);
+			}
+      		blend2(fixedAmbient,outFlash,flashSlider.value,ambientSlider.value,output2Data.data,zarib);
+      		output2Context.putImageData(output2Data, 0, 0);
+  		}
+
+
+
+		////// utility functions //////////////////////
+
+  		function preBlend(ambient,flash,slider,output) {
+   
+      		var temp = new Float32Array(ambient.length)
+
+      		//console.log(ambient);
+      		for (var i = 0; i < ambient.length; i+= 4) {
+			    temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
+			    temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
+			    temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
+      		}
+       		//console.log(temp)
+       		//console.log(output)
+        	for (var i = 0; i < ambient.length; i+=4) {
+		        output[i] = temp[i];
+		        output[i+1] = temp[i+1];
+		        output[i+2] = temp[i+2];
+		        output[i+3] = 255;
+        	}
+    	}
+
+
+		function preBlend2(flash,slider,output) {
+    		// console.log(ambient)
+    		//  console.log(flash)
+    		// console.log(slider)
+      		var temp = new Float32Array(flash.length);
+      		temp=fixTemp2(flash,slider);
+      		var diff= new Float32Array(flash.length);
+
+    		// console.log(temp)
+    		// console.log(output)
+      		for (var i = 0; i < flash.length; i+=4) {
+        		//diff[i]=temp[i]-flash[i];
+        		output[i] = temp[i];
+        		output[i+1] = temp[i+1];
+        		output[i+2] = temp[i+2];
+        		output[i+3] = 255;
+
+      		}
+      		//console.log(temp);
+  		}
+
+  		function blend(ambient,flash, slider,output,zarib) {
+      		// console.log(ambient)
+      		// console.log(flash)
+      		// console.log(slider)
+      		var temp = new Float32Array(ambient.length)
+      		for (var i = 0; i < ambient.length; i+= 4) {
+        		temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
+        		temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
+        		temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
+      		}
+      		// console.log(temp)
+      		for (var i = 0; i < ambient.length; i+=4) {
+        		// console.log("her")
+        		var x = temp[i];
+        		var y = temp[i+1];
+        		var z = temp[i+2];
+				// console.log(temp[i])
+        		// console.log(temp[i+1])
+        		// console.log(temp[i+2])
+        		// console.log("rgb")
+        		var rgb = xyz2rgb(x,y,z,zarib);
+        		// console.log(rgb)
+        		output[i] = rgb[0]*255;
+        		output[i+1] = rgb[1]*255;
+        		output[i+2] = rgb[2]*255;
+        		output[i+3] = 255;
+        		// console.log(rgb[0]*255)
+        		// console.log(output[i])
+      		}
+		}
+
+
+		function blend2(ambient,flash, flashSlider,ambientSlider, output,zarib) {
+    		// console.log(ambient)
+      		// console.log(flash)
+      		// console.log(slider)
+      		var temp = new Float32Array(ambient.length)
+      		for (var i = 0; i < ambient.length; i+= 4) {
+        		temp[i] = ambient[i]*ambientSlider/100 + flash[i]*(flashSlider)/100;
+        		temp[i+1] = ambient[i+1]*ambientSlider/100 + flash[i+1]*(flashSlider)/100;
+        		temp[i+2] = ambient[i+2]*ambientSlider/100+ flash[i+2]*(flashSlider)/100;
+      		}
+      		// console.log(temp)
+      		for (var i = 0; i < ambient.length; i+=4) {
+        		// console.log("her")
+        		var x = temp[i];
+		        var y = temp[i+1];
+		        var z = temp[i+2];
+		        // console.log(temp[i])
+		        // console.log(temp[i+1])
+		        // console.log(temp[i+2])
+		        // console.log("rgb")
+		        var rgb = xyz2rgb(x,y,z,zarib);
+		        // console.log(rgb)
+		        output[i] = rgb[0]*255;
+		        output[i+1] = rgb[1]*255;
+		        output[i+2] = rgb[2]*255;
+		        output[i+3] = 255;
+		        // console.log(rgb[0]*255)
+		        // console.log(output[i])
+      		}
+
+  		}
+
+
+  		function fixWhitePoint(calibrationIlluminant){
+    		// d65 = [0.9504, 1.0000, 1.089];
+		    if (calibrationIlluminant == 17)
+		    	zarib = [[0.9394987, -0.2339150 , 0.4281177],
+		           		[-0.0256939,  1.0263828,  0.0051761],
+		         		[0.0000000,  0.0000000,  3.0598005]];
+		    else if (calibrationIlluminant == 19)
+		    	zarib = [[0.9972812, -0.0093756, -0.0154171],
+		            	[-0.0010298,  1.0007636,  0.0002084],
+		            	[0.0000000,  0.0000000,  0.9209267]];
+		    //     makhraj = [0.9807, 1.0000, 1.1822];
+		    else if (calibrationIlluminant == 20)
+		    	zarib = [[0.9905739, -0.0328729,  0.0385701],
+		            	[-0.0036109,  1.0027841,  0.0007280],
+		            	[0.0000000,  0.0000000,  1.1815972]];
+		    //     makhraj = [0.9568, 1.0000, 0.9214];
+		    else if (calibrationIlluminant == 21)
+		    	zarib = [[1, 0,  0],
+		                [0,  1,  0],
+		                [0,  0,  1]];
+		    //     makhraj = d65;
+		    else if (calibrationIlluminant == 23)
+		        zarib = [[0.9845002, -0.0546158, 0.0676324],
+		                [-0.0059992,  1.0047864,  0.0012095],
+		                [0.0000000,  0.0000000,  1.3194581]];
+		    return zarib;
+		    //     makhraj =  [0.9642, 1.0000, 0.8251];
+		    // console.log(d65[0]/makhraj[0])
+		    // console.log(d65[2]/makhraj[2])
+		    // return [d65[0]/makhraj[0], 1.0, d65[2]/makhraj[2]];
+		}
+
+
+  		function xyz2rgb(X, Y, Z,zarib) {
+		    // console.log(0.4985314*Z);
+		    X = X * zarib[0][0] + Y*zarib[0][1] + Z*zarib[0][2];
+		    Y = X * zarib[1][0] + Y*zarib[1][1] + Z*zarib[1][2];
+		    Z = X * zarib[2][0] + Y*zarib[2][1] + Z*zarib[2][2];
+		    var R =  3.2404542*X - 1.5371385*Y - 0.4985314*Z;
+		    var G = -0.9692660*X + 1.8760108*Y + 0.0415560*Z;
+		    var B =  0.0556434*X - 0.2040259*Y + 1.0572252*Z;
+		    // console.log(R);
+		    R = adj(R);
+		    G = adj(G);
+		    B = adj(B);
+		    return [R, G, B];
+  		}
+
+
+  	function adj(C) {
+	    if (C >0 && C < 0.0031308) {
+	      return 12.92 * C;
+	    }
+
+	    return 1.055 * Math.pow(C, 0.41666) - 0.055;
+  	}
+
+
+  	function fixColorMap(data){
+	    output = new Float32Array(data.length);
+	    // console.log(data)
+	    // output = math.zeros(data.length);
+	    // console.log(math.max(data));
+	    // console.log("ge")
+	    // console.log(output)
+	    for (var i = 0; i < data.length; i+=4) {
+	      	output[i+3] = 255;
+	      	for (var j=0; j <3; j++){
+	        	// console.log(data[i])
+	        	// console.log(data[i+1])
+	        	// console.log(data[i+2])
+	        	// console.log("hhhh")
+	        	// console.log(invXYZtoCamera[j][0] * data[i]+ invXYZtoCamera[j][1] * data[i+1] + invXYZtoCamera[j][2] * data[i+2])
+	        	output[i+j] = invXYZtoCamera[j][0] * data[i]/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]/255;
+	      	}
+
+	    }
+	    return output;
+  	}
+
+
+
+   	function fixTemp(data, destination){
+	    output = new Float32Array(data.length);
+	    var source = [0.95047, 1, 1.08883];
+
+	    // console.log(MA)
+	    roD = MA[0][0]+ destination[0] + MA[0][1]* destination[1]+ MA[0][2]*destination[2];
+	    landaD = MA[1][0]*destination[0] + MA[1][1]* destination[1]+ MA[1][2]*destination[2];
+	    bethaD = MA[2][0]*destination[0] + MA[2][1]* destination[1]+ MA[2][2]*destination[2];
+
+	    roS = MA[0][0]+ source[0] + MA[0][1]* source[1]+ MA[0][2]*source[2];
+	    landaS = MA[1][0]*source[0] + MA[1][1]* source[1]+  MA[1][2]*source[2];
+	    bethaS = MA[2][0]*source[0] + MA[2][1]* source[1]+ MA[2][2]*source[2];
+	    var temp = [[roD/roS, 0, 0], [0, landaD/landaS, 0], [0, 0, bethaD/bethaS]];
+	    temp = math.multiply(invMA, temp);
+	    M =math.multiply(temp, MA);
+
+    	// console.log(roD)
+    	for (var i = 0; i < data.length; i+=4) {
+		    var X = data[i];
+		    var Y = data[i+1];
+		    var Z = data[i+2];
+		    X = X * M[0][0] + Y*M[0][1] + Z*M[0][2];
+		    Y = X * M[1][0] + Y*M[1][1] + Z*M[1][2];
+		    Z = X * M[2][0] + Y*M[2][1] + Z*M[2][2];
+		    output[i] = X;
+		    output[i+1] = Y;
+		    output[i+2] = Z;
+		    output[i+3] = 255;
+    	}
+
+    	return output;
+  	}
+
+
+
+
+  	function fixTemp2(image,tempChange){
+	   	output_new = new Float32Array(output.length);
+	   	//t=1500 + ((temperature-1)/100)*8500;
+	   	var t= getTemperature(image);
+	   	// console.log("slider")
+	   	// console.log(tempChange)
+	   	var changeNorm=(tempChange-50)/50;
+	   	// console.log("changeNorm")
+	   	// console.log(changeNorm);
+
+   		var newTemp = (math.round(t+changeNorm*5856));
+   		// newTemp = t;
+
+   		// console.log("temperature")
+   		// console.log(newTemp);
+   		if(newTemp<1000){newTemp=1000;}
+
+   		var xD, yD=0;
+
+   		// get xy from temperature
+   		// if(temperature <= 7000){
+   		//   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
+   		// }else{
+   		//   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
+   		// }
+   		// yD=-3*xD**2 + 2.870*xD - 0.275;
+	   	if(newTemp<2000){
+	    	r=getRatio(newTemp,1500,2000);
+	     	r_x=(0.5267-0.5857)/100;
+	     	// console.log("here");
+	     	// console.log(r);
+	     	xD=0.5857+r*r_x;
+	     	r_y=(0.4133-0.3931)/100;
+	     	yD=0.3931+r*r_y;
+	     	// console.log(newTemp*r_x)
+	     	// console.log(xD);
+	     	// console.log(yD);
+	   	}else if (newTemp<2500) {
+	     	r=getRatio(newTemp,2000,2500);
+	     	r_x=(0.4770-0.5267)/100;
+	     	xD=0.5267+r*r_x;
+	     	r_y=(0.4137-0.4133)/100;
+	     	yD=0.4133+r*r_y;
+	   	}else if (newTemp<2856) {
+	     	r=getRatio(newTemp,2500,2856);
+	     	r_x=(0.4475-0.4770)/100;
+	     	xD=0.4770+r*r_x;
+	     	r_y=(0.4074-0.4137)/100;
+	     	yD=0.4137+r*r_y;
+	   	}else if (newTemp<4000) {
+	     	r=getRatio(newTemp,2856,4000);
+	     	r_x=(0.3802-0.4475)/100;
+	     	xD=0.4475+r*r_x;
+	     	r_y=(0.3767-0.4074)/100;
+	     	yD=0.4074+r*r_y;
+	   	}else if (newTemp<5000) {
+	     	r=getRatio(newTemp,4000,5000);
+	     	r_x=(0.3444-0.3802)/100;
+	     	xD=0.3802+r*r_x;
+	     	r_y=(0.3513-0.3767)/100;
+	     	yD=0.3767+r*r_y;
+	   	}else if (newTemp<5500){
+	     	r=getRatio(newTemp,5000,5500);
+	     	r_x=(0.3314-0.3444)/100;
+	     	xD=0.3444+r*r_x;
+	     	r_y=(0.3405-0.3513)/100;
+	     	yD=0.3513+r*r_y;
+	   	}else if (newTemp<6500) {
+	     	r=getRatio(newTemp,5500,6500);
+	     	r_x=(0.3118-0.3314)/100;
+	     	xD=0.3314+r*r_x;
+	     	r_y=(0.3224-0.3405)/100;
+	     	yD=0.3405+r*r_y;
+	   	}else if (newTemp<7500) {
+	     	r=getRatio(newTemp,6500,7500);
+	     	r_x=(0.2978-0.3118)/100;
+	     	xD=0.3118+r*r_x;
+	     	r_y=(0.3083-0.3224)/100;
+	     	yD=0.3224+r*r_y;
+	   	}else{
+	     	r=getRatio(newTemp,7500,10000);
+	     	r_x=(0.2762-0.2978)/100;
+	     	xD=0.2978+r*r_x;
+	     	r_y=(0.2840-0.3083)/100;
+	     	yD=0.3083+r*r_y;
+	   	}
+
+	   	// xD = x;
+	   	// yD = y;
+	   	// console.log(r);
+	   	// console.log(r_x);
+	   	// console.log(r_y);
+	   	// -
+	   	// console.log("destination")
+	   	// // console.log(x);
+	   	// // console.log(y);
+	   	// console.log(xD);
+	   	// console.log(yD)
+	   	var counterX = 0;
+	   	var counterY = 0;
+
+	   	xD = math.abs(xD);
+	   	yD = math.abs(yD);
+	   	//sum up chromaticity over whole input image
+	   	var x=0;
+	   	var y=0;
+	   	for (var i = 0; i < image.length; i+=4) {
+	     	if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
+	       		var x_pix=0;
+	       		var y_pix=0;
+	     	}else{
+	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+	     	}
+	    	if (x_pix >= 0.01){
+	      		counterX = counterX + 1;
+	      		x+=x_pix;
+	      	}
+	      	if (y_pix >= 0.01) {
+	        	counterY = counterY +1;
+	      		y+=y_pix;
+	      	}
+
+	   	}
+
+	   	//get average chromaticity
+	  	var chromaticity_x=x/(counterX);
+	  	var chromaticity_y=y/(counterY);
+	   	// console.log(chromaticity_x)
+	   	//get offest / ratio between average and destination chromaticity
+	   	var offset_x = xD/chromaticity_x;
+	   	var offset_y = yD/chromaticity_y;
+
+	   	// adjust XYZ values according to ratio
+	   	for (var i = 0; i < image.length; i+=4) {
+
+	    	if((image[i]+image[i+1]+image[i+2])==0){
+	       		var x_pix=0;
+	       		var y_pix=0;
+	     	}else{
+	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+	     	}
+
+	     	x_pix=x_pix*offset_x;
+	     	y_pix=y_pix*offset_y;
+
+	     	if(y_pix==0){
+	       		output_new[i] = 0
+	       		output_new[i+2] = 0
+	     	}else{
+	       		output_new[i] = x_pix*image[i+1]/y_pix;
+	       		output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
+	     	}
+
+	     	output_new[i+1] = image[i+1];
+	     	output_new[i+3] = 255;
+
+	   	}
+   		//console.log(output_new)
+   		//return XYZ values
+   		return output_new;
+ 	}
+
+
+ 	function getTemperature(image){
+   		var x =0.0;
+   		var y =0.0;
+   		//console.log(image);
+   		var counterX = 0;
+   		var counterY = 0;
+
+   		for (var i = 0; i < image.length; i+=4) {
+     		if((image[i]+image[i+1]+image[i+2])==0){
+       			var x_pix=0;
+       			var y_pix=0;
+     		}else{
+       			var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+       			var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+     		}
+      		if (x_pix >= 0.01) {counterX = counterX + 1;}
+      		if (y_pix >= 0.01) {counterY = counterY +1;}
+      
+     		x+=x_pix;
+     		y+=y_pix;
+   		}
+
+   		x=x/counterX;
+  		y=y/counterY;
+   		// console.log(x)
+   		// console.log(x)
+   		// console.log(y)
+   		var n = (x-0.3320)/(0.1858-y);
+
+   		CCT = 437*n**3 + 3601*n**2 + 6861*n + 5517;
+   		// console.log("original temperature")
+   		// console.log(CCT)
+   		return math.round(CCT);
+ 	}
+
+
+ 	function getRatio(t,low,high){
+   		var dist=t-low;
+   		var range=(high-low)/100;
+
+   		return (dist/range);
+ 	}
+
+
+ 	function fixBrightnessAmbient(fixedAmbient,exp){
+  		standardExp=0.0446;
+  		lowExp=0.02;
+  		highExp = 0.08;
+  		var temp = new Float32Array(fixedAmbient.length)
+  		console.log(fixedAmbient)
+  		random = Math.floor(Math.random() * 3);
+  		console.log(random)
+  		if (random == 0)
+    		toExp = standardExp;
+  		else if (random == 1)
+    		toExp = lowExp;
+  		else
+    		toExp = highExp;
+
+  		ratio = toExp / exp;
+  		console.log(ratio);  
+  		for (var i = 0; i < fixedAmbient.length; i+=4) {
+    		temp[i] = fixedAmbient[i]*ratio;
+		    temp[i+1] = fixedAmbient[i+1]*ratio;
+		    temp[i+2] = fixedAmbient[i+2]*ratio;
+		    temp[i+3] = 255;
+  		}
+  		document.getElementById("changedExp").value = toExp;
+  		return temp;
+ 	}
 
     </script>
 

@@ -170,9 +170,10 @@
 
         	
           // change the ambient brightness randomly
-          fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
-
+          // fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
+          fixedAmbient = fixColorAmbient(fixedAmbient);
       		// console.log(fixedAmbient)
+
         	zarib = fixWhitePoint(des);
         	//ambientContext.putImageData(ambientData, 0, 0);
         	//flashContext.putImageData(flashData, 0, 0);
@@ -376,9 +377,8 @@
 
         var output = new Float32Array(input.length);
         var source = zarib;
-
-        
-
+        // console.log(color)
+        // console.log(30*color/50-30)
         // console.log(roD)
         for (var i = 0; i < input.length; i+=4) {
             // console.log("her")
@@ -393,6 +393,7 @@
             var white = [0.9504, 1.0000, 1.089];
             var lab = xyz2lab(x,y,z,white);
 
+           // console.log(lab[2])
             lab[2]=lab[2]-(30*color/50-30);
 
             var xyz= lab2xyz(lab,white);
@@ -403,6 +404,8 @@
             output[i+2] = xyz[2]*blend/100;
             output[i+3] = input[i+3]*blend/100;
         }
+        // console.log(input);
+        // console.log(output)
 
         return output;
       }
@@ -936,6 +939,46 @@
   		document.getElementById("changedExp").value = toExp;
   		return temp;
  	}
+
+  function fixColorAmbient(input){
+
+    var output = new Float32Array(input.length);
+    color = Math.floor(Math.random() * 100);
+    // console.log(color)
+    // console.log(30*color/50-30)
+    // console.log(roD)
+    for (var i = 0; i < input.length; i+=4) {
+        // console.log("her")
+        var x = input[i];
+        var y = input[i+1];
+        var z = input[i+2];
+        // console.log(temp[i])
+        // console.log(temp[i+1])
+        // console.log(temp[i+2])
+        // console.log("rgb")
+
+        var white = [0.9504, 1.0000, 1.089];
+        var lab = xyz2lab(x,y,z,white);
+
+       // console.log(lab[2])
+        lab[2]=lab[2]-(30*color/50-30);
+
+        var xyz= lab2xyz(lab,white);
+
+        // console.log(rgb)
+        output[i] = xyz[0];
+        output[i+1] = xyz[1];
+        output[i+2] = xyz[2];
+        output[i+3] = input[i+3];
+        
+    }
+    document.getElementById("changedColor").value = color;
+    // console.log(input);
+    // console.log(output);
+    return output;
+  }
+
+
 
     </script>
 

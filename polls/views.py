@@ -60,7 +60,7 @@ def vote(request, question_id):
             print('type of')
             print((request.POST['changedExp']))
             quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
-                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']))
+                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'])
             quest.save()
             question_list = Question.objects.all()
             context = {'question_list': question_list}

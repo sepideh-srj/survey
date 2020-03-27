@@ -393,7 +393,7 @@
             var white = [0.9504, 1.0000, 1.089];
             var lab = xyz2lab(x,y,z,white);
 
-            lab[2]=lab[2]/(color/50);
+            lab[2]=lab[2]-(30*color/50-30);
 
             var xyz= lab2xyz(lab,white);
 

@@ -1,0 +1,23 @@
+{% extends "./base.html%}
+
+{% block content%}
+
+
+
+<h1 style="text-align: center;">   Welcome to the Survey</h1>
+<br>
+<div style="text-align: center;">
+ <br>
+ <h2> click the start button to begin the survey. </h2>
+ <br>
+ 	<p> in the next page, you'll see a set of pictures. When you click on them, another page will open that has components to edit. Edit each image in a way that will make the final image look the best.</p>
+ 	<br>
+ 	<br>
+ 	<br>
+ 	
+    <a href="{% url 'index' num %}"><button type="submit" name="start" class="button button2">Start</button></a>
+    <!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
+    </div>
+<!-- </form> -->
+
+{% endblock content%}	

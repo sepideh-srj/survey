@@ -19,4 +19,4 @@ class Choice(models.Model):
     flashTemp = models.IntegerField(default=0)
     ambientTemp =  models.IntegerField(default=0)
     ambientBrightness = models.FloatField(default=0)
-
+    userID = models.IntegerField(default=0)

@@ -16,8 +16,10 @@
 {% endif %} -->
 {% if question_list %}
 <div class="row">
+
 {% for question in question_list %}
-    <div class="three columns" style="text-align: center; background-color: #3f484a;"><div style="margin: 5%" ><hr><a href="{% url 'vote' question.id %}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="350px"></a>
+
+    <div class="three columns" style="text-align: center; background-color: #3f484a;"><div style="margin: 5%" ><hr><a href="{% url 'vote' question.id num%}"><img src="{{question.blendedPic.url|default_if_none:'#'}}" width="350px"></a>
     </div>
     </div>
     {% if forloop.counter|divisibleby:3 %}
@@ -26,5 +28,10 @@
     {% endif %}
 {% endfor %}
 {% endif %}
+</div>
+<br>
+<div style="text-align: center">
+
+<a href="{% url 'end'%}"><button style="background-color: #f44336;" type="submit" name="start" class="button button2">End the survey</button></a>
 </div>
 {% endblock content%}	

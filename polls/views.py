@@ -13,15 +13,31 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 # import numpy as np
 # from skimage import img_as_float,color
+def home(request):
+    num = 0
+    lastChoice = Choice.objects.all().last()
+    # question_list = Question.objects.all()
+    # context = {'question_list': question_list}
+    num = lastChoice.userID +1;
+    questions = Question.objects.all()
 
+    # for i in questions:
+    #     print(i.get(pk))
+    # print(questions)
+        # return render(request, 'polls/index.html', {'num':num} )
+    return render(request,'polls/home.html', {'num':num})
 
-def index(request):
+def index(request, num):
+    print(num)
+    question_list = Question.objects.all().order_by('?')
 
-    question_list = Question.objects.all()
-    context = {'question_list': question_list}
+    context = {'question_list': question_list, 'num':num}
     return render(request, 'polls/index.html', context)
+def end(request):
 
-def vote(request, question_id):
+    return render(request, 'polls/end.html')
+
+def vote(request, question_id, num):
     quest = Question.objects.get(pk=question_id)
     image = quest.ambientPic
     image = Image.open(image)
@@ -33,24 +49,10 @@ def vote(request, question_id):
     if request.method == 'POST':
         if 'back' in request.POST:
             question_list = Question.objects.all()
-            context = {'question_list': question_list}
+            context = {'question_list': question_list, 'num': num}
             return render(request, 'polls/index.html', context)
-    # if request.method == 'POST':
-    #     if 'check' in request.POST:
-    #         print('check')
-    #         vote_form = voteForm(data=request.POST)
-    #         if vote_form.is_valid():
-    #             print(quest)
-    #             vote = vote_form.save(commit=False)
-    #             vote.question = quest
-    #             vote.save()
-    #             # print(vote.votes)
-    #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
 
-    #             print(vote.edit)
-    #             quest.chosenPic = image
-    #             quest.save()
-        elif 'submit' in request.POST:
+        if 'submit' in request.POST:
             print('submit')
             # print(changedExp)
             vote = 50
@@ -60,32 +62,17 @@ def vote(request, question_id):
             print('type of')
             print((request.POST['changedExp']))
             quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
-                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'])
+                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'], userID = num)
             quest.save()
             question_list = Question.objects.all()
-            context = {'question_list': question_list}
+            context = {'question_list': question_list ,'num':num }
             return render(request, 'polls/index.html', context)
-        # elif 'back' in request.POST:
-        #     question_list = Question.objects.all()
-        #     context = {'question_list': question_list}
-        #     return render(request, 'polls/index.html', context)
-    #     else:
-    #         vote_form = voteForm(data=request.POST)
-    #         if vote_form.is_valid():
-    #             print(quest)
-    #             vote = vote_form.save(commit=False)
-    #             vote.question = quest
-    #             vote.save()
-    #             print(vote.edit)
-    #             image = merge_images(quest.flashPic,quest.ambientPic,vote.edit)
-    #             quest.chosenPic = image
-    #             quest.save()
 
-    else:
-        vote_form = voteForm()
-        vote = 50
+    
+    vote_form = voteForm()
+    vote = 50
 
-    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp})
+    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp, 'num': num})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt

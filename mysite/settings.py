@@ -22,7 +22,6 @@ SECRET_KEY = 'h&+7pq58)ryit9oy@+$xr5g3_3@6pacyck+e)$*b7y11gbsgj5'
 DEBUG = True
 
 ALLOWED_HOSTS = ['sepidsrj.pythonanywhere.com']
-, '127.0.0.1']
 
 
 # Application definition

@@ -11,9 +11,8 @@ from PIL import Image
 from django.core.files.images import ImageFile
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import numpy as np
-import random
 # import numpy as np
+import random
 # from skimage import img_as_float,color
 def home(request):
   

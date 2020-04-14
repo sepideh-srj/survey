@@ -3,7 +3,7 @@
 {% block content%}
 
 <div style="text-align: center">
-<h1>image number {{ question.question_text }}</h1>
+<h1>image number {{ question.question_id }}</h1>
 <hr>
 <p id="des" style="display: none;"> {{des}} </p>
 <p id="matrix" style="display: none;"> {{matrix}} </p>
@@ -13,9 +13,9 @@
 
 <canvas id="flashCan" width="500" height="500" style="display: none;" ></canvas>
 <canvas id="ambientCan" width="500" height="500" style="display: none;"></canvas>
-<canvas id="first" width="500" height="500" style="text-align: right"></canvas>
+<canvas id="first" width="500" height="400" style="text-align: right"></canvas>
 <canvas id="output" width="500" height="500"style="display: none"></canvas>
-<canvas id="output2" width="500" height="500"></canvas>
+<canvas id="output2" width="500" height="400"></canvas>
 
 <div class="slidecontainer">
   
@@ -38,8 +38,9 @@
   <p style="display: none;">Value: <span id="demo"></span></p>
 	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
 	<br>
-	<button type="submit"  name="submit" class="btn btn-success">Submit</button>
-	<button type="submit" name="back" class="btn btn-danger">back</button>
+	<br>
+	<button type="submit"  name="next" class="button3 button2">next</button>
+	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
 	<br>
 	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
 
@@ -49,7 +50,7 @@
 
 <canvas id="flashCanvas" width="500" height="500" style="display: none;"></canvas>
 <canvas id="flashOutput" width="500" height="500" style="display: none;"></canvas>
-
+<br>
 
 </div>
 </div>

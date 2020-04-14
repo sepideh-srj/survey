@@ -11,68 +11,93 @@ from PIL import Image
 from django.core.files.images import ImageFile
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+import numpy as np
+import random
 # import numpy as np
 # from skimage import img_as_float,color
 def home(request):
-    num = 0
-    lastChoice = Choice.objects.all().last()
-    # question_list = Question.objects.all()
-    # context = {'question_list': question_list}
-    num = lastChoice.userID +1;
-    questions = Question.objects.all()
+  
+    if request.method == 'POST':
+        if 'start' in request.POST:
+            lastUser = User.objects.all().last()
+            questions = Question.objects.all()
 
-    # for i in questions:
-    #     print(i.get(pk))
-    # print(questions)
-        # return render(request, 'polls/index.html', {'num':num} )
-    return render(request,'polls/home.html', {'num':num})
+            ids = []
+            for question in questions:
+                ids.append(question.question_id)
+            print(ids)
+            random.shuffle(ids)    
+            listToStr = ','.join([str(elem) for elem in ids]) 
+            userID = lastUser.userID +1;
+            newUser = User(userID = userID, order= listToStr, pointer=0)
+            newUser.save()
+            print(listToStr)
+            questions = Question.objects.all()
+            question_id = ids[0]
+            print(request)
+            return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
 
-def index(request, num):
-    print(num)
-    question_list = Question.objects.all().order_by('?')
+    return render(request,'polls/home.html')
 
-    context = {'question_list': question_list, 'num':num}
-    return render(request, 'polls/index.html', context)
+# def index(request, num):
+#     global randomVar
+#     print("index:{}".format(randomVar))
+#     # print(num)
+#     question_list = Question.objects.all().order_by('?')
+
+#     context = {'question_list': question_list, 'num':num}
+
+    # return render(request, 'polls/index.html', context)
+
+
 def end(request):
 
     return render(request, 'polls/end.html')
 
-def vote(request, question_id, num):
-    quest = Question.objects.get(pk=question_id)
+def vote(request, question_id, userID):
+    quest = Question.objects.get(question_id=question_id)
+
+    shuffle = list(range(1,5))
+    print("vote: request: ={}".format(request))
+    # pointer = pointer +1
     image = quest.ambientPic
     image = Image.open(image)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
-    print(float(image.info['Warning']))
+    # print(float(image.info['Warning']))
     exp = float(image.info['Warning'])
     print(request.POST)
     if request.method == 'POST':
-        if 'back' in request.POST:
-            question_list = Question.objects.all()
-            context = {'question_list': question_list, 'num': num}
-            return render(request, 'polls/index.html', context)
+        # if 'back' in request.POST:
+        #     question_list = Question.objects.all()
+        #     context = {'question_list': question_list, 'userID': userID}
+        #     return render(request, 'polls/index.html', context)
 
-        if 'submit' in request.POST:
-            print('submit')
-            # print(changedExp)
-            vote = 50
+        if 'next' in request.POST:
+            
             vote_form = voteForm()
-            # obj = quest.choice_set.filter().last()
-            # print(obj)
-            print('type of')
-            print((request.POST['changedExp']))
             quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
-                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'], userID = num)
+                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'], user = userID)
             quest.save()
             question_list = Question.objects.all()
-            context = {'question_list': question_list ,'num':num }
-            return render(request, 'polls/index.html', context)
 
-    
+            user = User.objects.get(userID=userID)
+            print("question_id:{}".format(question_id))
+            pointer = user.pointer
+            pointer = pointer + 1
+            user.pointer = pointer
+            user.save()
+            order = user.order
+            order = order.split(',')
+            print("userID:{}".format(userID))
+            if (Question.objects.count() == pointer):
+                return redirect("/polls/end/")
+            question_id = int(order[pointer])
+            print("question_id:{}".format(question_id))
+            return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
     vote_form = voteForm()
-    vote = 50
-
-    return render(request, 'polls/vote.html', {'question': quest, 'vote': vote, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'exp': exp, 'num': num})
+    print(request)
+    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt
@@ -143,3 +168,9 @@ def vote(request, question_id, num):
 #     imf[:,:,0] = zarib[0] * imf[:,:,0]
 #     imf[:,:,2] = zarib[2] * imf[:,:,2]
 #     return imf
+# print("id")
+
+
+# print("sepide")
+# randomVar = random.randint(1,50)
+# print("main:{}".format(shuffle))

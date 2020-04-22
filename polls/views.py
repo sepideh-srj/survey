@@ -53,6 +53,24 @@ def end(request):
 
     return render(request, 'polls/end.html')
 
+
+def process(request):
+    quest = Question.objects.get(question_id=9)
+
+    image = quest.ambientPic
+    image = Image.open(image)
+    des = int(image.info['Description'])
+    matrix = image.info['Comment']
+    # print(float(image.info['Warning']))
+    exp = float(image.info['Warning'])
+    flash = 100
+    ambient = 100
+    flashTemp = 100
+    ambientTemp = 60
+    ambientBrightness = 0.4
+
+    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix})
+
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
     numberOfPics = Question.objects.count()

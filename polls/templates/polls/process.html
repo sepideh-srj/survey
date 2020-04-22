@@ -1,4 +1,33 @@
-{% extends "./base.html%}
+{% extends "./base2.html%}
 
 {% block content%}
+
+<div style="text-align: center">
+<!-- <h1>image number {{ pointer | add:1}} from {{numberOfPics}} images</h1> -->
+<hr>
+<p id="des" style="display: none;"> {{des}} </p>
+<p id="matrix" style="display: none;"> {{matrix}} </p>
+<p id="exp" style="display: none;"> {{exp}} </p>
+<img src="{{question.ambientPic.url}}" style="display: none;" id="ambient">
+<img src="{{question.flashPic.url}}" style="display: none;" id="flash" >
+
+<canvas id="flashCan" width="500" height="500" style="display: none;" ></canvas>
+<canvas id="ambientCan" width="500" height="500" style="display: none;"></canvas>
+<canvas id="first" width="500" height="400" style="text-align: right"></canvas>
+<canvas id="output" width="500" height="500"style="display: none"></canvas>
+<!-- <canvas id="output2" width="500" height="400"></canvas> -->
+
+  
+</div>
+</div>
+
+<canvas id="flashCanvas" width="500" height="500" style="display: none;"></canvas>
+<canvas id="flashOutput" width="500" height="500" style="display: none;"></canvas>
+<br>
+
+</div>
+</div>
+
+
+
 {% endblock content%}	

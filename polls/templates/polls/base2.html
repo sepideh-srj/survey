@@ -128,17 +128,14 @@ body{
       	var first = document.getElementById("first");
       	var flashimg = document.getElementById("flash");
       	var ambientimg = document.getElementById("ambient");
-      	var flashCanvas = document.getElementById("flashCanvas");
-      	var flashOutput = document.getElementById("flashOutput");
-      	var output2 = document.getElementById("output2");
 
-      	var output2Context = output2.getContext("2d");
+      	// var output2Context = output2.getContext("2d");
       	var outputContext = output.getContext("2d");
       	var firstContext = first.getContext("2d");
       	var flashContext = flash.getContext("2d");
       	var ambientContext = ambient.getContext("2d");
-      	var flashContext2 = flashCanvas.getContext("2d");
-      	var flashOutputContext = flashOutput.getContext("2d");
+      	// var flashContext2 = flashCanvas.getContext("2d");
+      	// var flashOutputContext = flashOutput.getContext("2d");
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
       	var exp = document.getElementById("exp").innerHTML;
@@ -153,12 +150,6 @@ body{
       	var ambientSlider = document.getElementById("ambientRange");
 
       	var fixedAmbient, fixedFlash, currentAmbient, currentFlash;
-
-      	// var hot = [0.94972, 1.00000, 1.22638];
-      	var hot = [1.00985, 1, 0.35585];
-      	// var cold = [0.95047, 1, 1.08883];
-      	// var hot = [1, 0.0337, 0];
-      	var cold = [0.5187, 0.6519, 1];
       	var coldFlash, hotFlash;
       	var outFlash;
 
@@ -168,13 +159,13 @@ body{
         	ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
         	flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
         	firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        	output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	// output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
 
 
         	flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
         	ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
         	firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        	output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
+        	// output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
 
 
 
@@ -219,10 +210,10 @@ body{
 
         	//blend fixed images
           blend2(fixedAmbient,fixedFlash,100,100,firstData.data,zarib);
-        	blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
+        	// blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
 
           //update canvases
-        	output2Context.putImageData(output2Data, 0, 0);
+        	// output2Context.putImageData(output2Data, 0, 0);
         	firstContext.putImageData(firstData, 0, 0);
         	
           //outputContext.drawImage(first, 0,0,500, 500);
@@ -255,157 +246,7 @@ body{
 		  ////// handling input ///////////
 
       /// if ambient brightness is adjusted /////
-  		ambientSlider.oninput = function(){
-
-
-        //if the slider is in neutral position...
-        if(this.value==100){
-          //... set the current ambient value to original value...
-      		currentAmbient=fixedAmbient;
-      	}else{
-          //... else adjust current ambient value.
-      		currentAmbient = adjustBrightness(fixedAmbient,this.value);
-      	}
-
-        //console.log(currentAmbient)
-        // apply changed ambient brightness to overall image.
-      	var output=blendImages(currentAmbient,currentFlash,zarib);
-
-        let update = new ImageData(output,flashimg.width,flashimg.height);
-        
-
-        // update output
-      	output2Context.putImageData(update,0,0);
-        
-
-  		}
-
-
-
-      // if flash brightness is adjusted /////
-  		flashSlider.oninput = function() {
-
-        //if the slider is in neutral position...
-  			if(this.value==this.flashRange/2){
-
-            //... set the current flash value to original value...
-      			currentFlash=fixedFlash;
-  			}else{
-            //... else adjust current flash value.
-            console.log("first")
-      			console.log(currentFlash)
-            currentFlash = adjustBrightness(fixedFlash,this.value);
-
-            currentFlash=adjustColor(currentFlash,flashTempSlider.value,this.value);
-  			}
-
-        // apply changed flash brightness to overall image.
-      	//blend2(currentAmbient,currentFlash,this.value,ambientSlider.value,output2Data.data,zarib);
-        var output = blendImages(currentAmbient,currentFlash,zarib);
-        for (var i = 0; i < output.length; i+=1) {
-          //diff[i]=temp[i]-flash[i];
-          if (output[i]<0) {
-            output[i] = 0;
-          }
-          if (output[i]>255) {
-            output[i] = 255;
-          }
-       
-
-        }
-
-        let update = new ImageData(output,flashimg.width,flashimg.height);
-        console.log(Math.max(currentFlash))
-        // update output
-      	output2Context.putImageData(update, 0, 0);
-  		}
-
-
-
-      // if flash temperature is adjusted /////
-  		flashTempSlider.oninput = function() {
-
-        //if the slider is in neutral position...
-        if(this.value==this.flashTempRange/2){
-
-            //... set the current flash temp value to original value...
-      			currentFlash=fixedFlash;
-        }else{
-
-            //... else adjust current flash value.
-      			//preBlend2(currentFlash,this.value,outFlash);
-            currentFlash = adjustBrightness(fixedFlash,flashSlider.value);
-            currentFlash=adjustColor(currentFlash,this.value,flashSlider.value);
-        }
-
-
-        // apply changed flash temperature to overall image.
-      	var output=blendImages(currentAmbient,currentFlash,zarib);
-        for (var i = 0; i < output.length; i+=1) {
-          //diff[i]=temp[i]-flash[i];
-          if (output[i]<0) {
-            output[i] = 0;
-          }
-          if (output[i]>255) {
-            output[i] = 255;
-          }
-       
-
-        }
-
-        console.log(output)
-        let update = new ImageData(output,flashimg.width,flashimg.height);
-
-        // update output
-      	output2Context.putImageData(update, 0, 0);
-  		}
-
-
-
-		  ////// utility functions //////////////////////
-
-/*  		function preBlend(ambient,flash,slider,output) {
-   
-      		var temp = new Float32Array(ambient.length)
-
-      		//console.log(ambient);
-      		for (var i = 0; i < ambient.length; i+= 4) {
-			    temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
-			    temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
-			    temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
-      		}
-       		//console.log(temp)
-       		//console.log(output)
-        	for (var i = 0; i < ambient.length; i+=4) {
-		        output[i] = temp[i];
-		        output[i+1] = temp[i+1];
-		        output[i+2] = temp[i+2];
-		        output[i+3] = 255;
-        	}
-    	}*/
-
-
-/*		  function preBlend2(flash,slider,output) {
-    		// console.log(ambient)
-    		//  console.log(flash)
-    		// console.log(slider)
-      		var temp = new Float32Array(flash.length);
-      		temp=fixTemp2(flash,slider);
-      		var diff= new Float32Array(flash.length);
-
-    		// console.log(temp)
-    		// console.log(output)
-      		for (var i = 0; i < flash.length; i+=4) {
-        		//diff[i]=temp[i]-flash[i];
-        		output[i] = temp[i];
-        		output[i+1] = temp[i+1];
-        		output[i+2] = temp[i+2];
-        		output[i+3] = 255;
-
-      		}
-      		//console.log(temp);
-  		}*/
-
+  	
 
       function adjustBrightness(input,slider) {
         // console.log(ambient)
@@ -467,9 +308,9 @@ body{
             var xyz= lab2xyz(lab,white);
 
             // console.log(rgb)
-            output[i] = xyz[0];
-            output[i+1] = xyz[1];
-            output[i+2] = xyz[2];
+            output[i] = xyz[0]*blend/100;
+            output[i+1] = xyz[1]*blend/100;
+            output[i+2] = xyz[2]*blend/100;
             output[i+3] = 255;
         }
         console.log(output)
@@ -1041,7 +882,7 @@ body{
         output[i+3] = input[i+3];
         
     }
-    document.getElementById("changedColor").value = color;
+    // document.getElementById("changedColor").value = color;
     // console.log(input);
     // console.log(output);
     return output;

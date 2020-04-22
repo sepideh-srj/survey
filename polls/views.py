@@ -67,9 +67,9 @@ def process(request):
     ambient = 100
     flashTemp = 100
     ambientTemp = 60
-    ambientBrightness = 0.4
+    # ambientBrightness = 0.4
 
-    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix})
+    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp})
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)

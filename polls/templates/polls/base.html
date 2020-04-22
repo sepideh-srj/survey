@@ -1006,13 +1006,13 @@ body{
 		    temp[i+3] = 255;
   		}
   		document.getElementById("changedExp").value = toExp;
-  		return temp;
+  		// return temp;
  	}
 
-  function fixColorAmbient(input){
+  function fixColorAmbient(input, color){
 
     var output = new Float32Array(input.length);
-    color = Math.floor(Math.random() * 100);
+    // color = Math.floor(Math.random() * 100);
     // console.log(color)
     // console.log(30*color/50-30)
     // console.log(roD)
@@ -1041,7 +1041,7 @@ body{
         output[i+3] = input[i+3];
         
     }
-    document.getElementById("changedColor").value = color;
+    // document.getElementById("changedColor").value = color;
     // console.log(input);
     // console.log(output);
     return output;

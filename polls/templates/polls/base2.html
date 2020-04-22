@@ -129,25 +129,23 @@ body{
       	var flashimg = document.getElementById("flash");
       	var ambientimg = document.getElementById("ambient");
 
-      	// var output2Context = output2.getContext("2d");
       	var outputContext = output.getContext("2d");
       	var firstContext = first.getContext("2d");
       	var flashContext = flash.getContext("2d");
       	var ambientContext = ambient.getContext("2d");
-      	// var flashContext2 = flashCanvas.getContext("2d");
-      	// var flashOutputContext = flashOutput.getContext("2d");
+
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
       	var exp = document.getElementById("exp").innerHTML;
+        var ambientValue = document.getElementById("ambientValue").innerHTML;
+        var flashValue = document.getElementById("flashValue").innerHTML;
+        var flashTemp = document.getElementById("flashTemp").innerHTML;
+        var ambientTemp = document.getElementById("ambientTemp").innerHTML;
 
       	var flashData, ambientData,output2Data,matrix,firstData, flashOutputData;
       	var zarib;
       	var MA, M, invMA;
-      	var slider = document.getElementById("myRange");
-      	var flashTempSlider = document.getElementById("flashTempRange");
-      	var output1 = document.getElementById("demo");
-      	var flashSlider = document.getElementById("flashRange");
-      	var ambientSlider = document.getElementById("ambientRange");
+
 
       	var fixedAmbient, fixedFlash, currentAmbient, currentFlash;
       	var coldFlash, hotFlash;
@@ -175,6 +173,9 @@ body{
         	});
 
         	des = parseInt(des);
+          // ambientValue = parseInt(ambientValue)
+          flashValue = parseInt(flashValue)
+          ambientTemp = parseInt(ambientTemp)
 
         	XYZtoCamera = new Array(3);
         	for (var i = 0; i < 3; i++) {
@@ -201,7 +202,7 @@ body{
         	
           // change the ambient brightness randomly
           // fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
-          fixedAmbient = fixColorAmbient(fixedAmbient);
+          fixedAmbient = fixColorAmbient(fixedAmbient, ambientTemp);
       		// console.log(fixedAmbient)
 
         	zarib = fixWhitePoint(des);
@@ -209,7 +210,8 @@ body{
         	//flashContext.putImageData(flashData, 0, 0);
 
         	//blend fixed images
-          blend2(fixedAmbient,fixedFlash,100,100,firstData.data,zarib);
+          blend2(fixedAmbient,fixedFlash,flashValue,ambientValue,firstData.data,zarib);
+          firstData.data = adjustColor(firstData.data,flashTemp)
         	// blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
 
           //update canvases
@@ -280,8 +282,7 @@ body{
       }
 
 
-      function adjustColor(input, color, blend){
-
+      function adjustColor(input, color){
         var output = new Float32Array(input.length);
         var source = zarib;
         // console.log(color)
@@ -308,9 +309,9 @@ body{
             var xyz= lab2xyz(lab,white);
 
             // console.log(rgb)
-            output[i] = xyz[0]*blend/100;
-            output[i+1] = xyz[1]*blend/100;
-            output[i+2] = xyz[2]*blend/100;
+            output[i] = xyz[0];
+            output[i+1] = xyz[1];
+            output[i+2] = xyz[2];
             output[i+3] = 255;
         }
         console.log(output)

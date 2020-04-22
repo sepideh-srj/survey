@@ -9,10 +9,10 @@ from .models import *
 from .form import *
 from PIL import Image
 from django.core.files.images import ImageFile
-from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-# import numpy as np
+from .resources import QuestionResource
 import random
+
+
 # from skimage import img_as_float,color
 def home(request):
   
@@ -55,8 +55,8 @@ def end(request):
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
-
-    shuffle = list(range(1,5))
+    numberOfPics = Question.objects.count()
+    # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     # pointer = pointer +1
     image = quest.ambientPic
@@ -66,6 +66,8 @@ def vote(request, question_id, userID):
     # print(float(image.info['Warning']))
     exp = float(image.info['Warning'])
     print(request.POST)
+    user = User.objects.get(userID=userID)
+    pointer = user.pointer
     if request.method == 'POST':
         # if 'back' in request.POST:
         #     question_list = Question.objects.all()
@@ -79,10 +81,9 @@ def vote(request, question_id, userID):
                 flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'], user = userID)
             quest.save()
             question_list = Question.objects.all()
-
             user = User.objects.get(userID=userID)
-            print("question_id:{}".format(question_id))
             pointer = user.pointer
+            print("question_id:{}".format(question_id))
             pointer = pointer + 1
             user.pointer = pointer
             user.save()
@@ -96,7 +97,7 @@ def vote(request, question_id, userID):
             return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
     vote_form = voteForm()
     print(request)
-    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID})
+    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt

@@ -203,6 +203,8 @@ body{
           //fix images with camera Matrix
         	fixedAmbient = fixColorMap(ambientData.data);
         	fixedFlash = fixColorMap(flashData.data);
+          console.log("first flash")
+          console.log(fixedFlash)
         	// console.log(fixedAmbient)
 
         	
@@ -290,16 +292,30 @@ body{
       			currentFlash=fixedFlash;
   			}else{
             //... else adjust current flash value.
-      			currentFlash = adjustBrightness(fixedFlash,this.value);
+            console.log("first")
+      			console.log(currentFlash)
+            currentFlash = adjustBrightness(fixedFlash,this.value);
+
             currentFlash=adjustColor(currentFlash,flashTempSlider.value,this.value);
   			}
 
         // apply changed flash brightness to overall image.
       	//blend2(currentAmbient,currentFlash,this.value,ambientSlider.value,output2Data.data,zarib);
         var output = blendImages(currentAmbient,currentFlash,zarib);
+        for (var i = 0; i < output.length; i+=1) {
+          //diff[i]=temp[i]-flash[i];
+          if (output[i]<0) {
+            output[i] = 0;
+          }
+          if (output[i]>255) {
+            output[i] = 255;
+          }
+       
+
+        }
 
         let update = new ImageData(output,flashimg.width,flashimg.height);
-
+        console.log(Math.max(currentFlash))
         // update output
       	output2Context.putImageData(update, 0, 0);
   		}
@@ -318,13 +334,26 @@ body{
 
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
-            currentFlash=adjustColor(fixedFlash,this.value,flashSlider.value);
+            currentFlash = adjustBrightness(fixedFlash,flashSlider.value);
+            currentFlash=adjustColor(currentFlash,this.value,flashSlider.value);
         }
 
 
         // apply changed flash temperature to overall image.
       	var output=blendImages(currentAmbient,currentFlash,zarib);
+        for (var i = 0; i < output.length; i+=1) {
+          //diff[i]=temp[i]-flash[i];
+          if (output[i]<0) {
+            output[i] = 0;
+          }
+          if (output[i]>255) {
+            output[i] = 255;
+          }
+       
 
+        }
+
+        console.log(output)
         let update = new ImageData(output,flashimg.width,flashimg.height);
 
         // update output
@@ -430,19 +459,22 @@ body{
             var white = [0.9504, 1.0000, 1.089];
             var lab = xyz2lab(x,y,z,white);
 
+            // console.log("check lab")
+            // console.log(lab[0])
            // console.log(lab[2])
             lab[2]=lab[2]-(30*color/50-30);
-
+            // console.log(lab[0])
             var xyz= lab2xyz(lab,white);
 
             // console.log(rgb)
             output[i] = xyz[0]*blend/100;
             output[i+1] = xyz[1]*blend/100;
             output[i+2] = xyz[2]*blend/100;
-            output[i+3] = input[i+3]*blend/100;
+            output[i+3] = 255;
         }
+        console.log(output)
         // console.log(input);
-        // console.log(output)
+        // onsole.log(output)
 
         return output;
       }

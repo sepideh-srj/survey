@@ -3,7 +3,7 @@
 {% block content%}
 
 <div style="text-align: center">
-<h1>image number {{ question.question_id }}</h1>
+<h1>image number {{ pointer | add:1}} from {{numberOfPics}} images</h1>
 <hr>
 <p id="des" style="display: none;"> {{des}} </p>
 <p id="matrix" style="display: none;"> {{matrix}} </p>
@@ -34,7 +34,7 @@
 	<!-- <p> ambient and flash lighting adjusment </p> -->
 	<input name="myRange" type="range" min="0" max="100" value="50" class="slider" id="myRange" style="display: none">
 	<p> temperture of flash light adjustment </p>
-	<input name="flashTempRange" type="range" min="0" max="100" value="50" class="slider" id="flashTempRange">
+	<input name="flashTempRange" type="range" min="0" max="80" value="40" class="slider" id="flashTempRange">
   <p style="display: none;">Value: <span id="demo"></span></p>
 	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
 	<br>

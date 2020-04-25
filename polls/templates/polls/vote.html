@@ -25,7 +25,7 @@
 	{% csrf_token %}
 	<p> ambient lighting adjustment </p>
 
-	<input name="changedExp" id="changedExp" value ="0.4" style="display: none"> </input>
+	<input name="changedBrightness" id="changedBrightness" value ="0.4" style="display: none"> </input>
 	<input name="changedColor" id="changedColor" value ="50" style="display: none"> </input>
 	<input name="ambientRange" type="range" min="0" max="200" value="100" class="slider" id="ambientRange">
 	<p> flash lighting adjustment </p>
@@ -34,7 +34,7 @@
 	<!-- <p> ambient and flash lighting adjusment </p> -->
 	<input name="myRange" type="range" min="0" max="100" value="50" class="slider" id="myRange" style="display: none">
 	<p> temperture of flash light adjustment </p>
-	<input name="flashTempRange" type="range" min="0" max="80" value="40" class="slider" id="flashTempRange">
+	<input name="flashTempRange" type="range" min="0" max="100" value="50" class="slider" id="flashTempRange">
   <p style="display: none;">Value: <span id="demo"></span></p>
 	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
 	<br>

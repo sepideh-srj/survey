@@ -65,11 +65,11 @@ def process(request):
     exp = float(image.info['Warning'])
     flash = 100
     ambient = 100
-    flashTemp = 100
-    ambientTemp = 60
-    # ambientBrightness = 0.4
+    flashTemp = 38
+    ambientTemp = 75
+    ambientBrightness = 24
 
-    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp})
+    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness})
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
@@ -96,7 +96,7 @@ def vote(request, question_id, userID):
             
             vote_form = voteForm()
             quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
-                flashTemp=request.POST['flashTempRange'], ambientBrightness= float(request.POST['changedExp']),  ambientTemp= request.POST['changedColor'], user = userID)
+                flashTemp=float(request.POST['flashTempRange']), ambientBrightness= request.POST['changedBrightness'],  ambientTemp= request.POST['changedColor'], user = userID)
             quest.save()
             question_list = Question.objects.all()
             user = User.objects.get(userID=userID)

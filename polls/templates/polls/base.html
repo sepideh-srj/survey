@@ -209,7 +209,7 @@ body{
 
         	
           // change the ambient brightness randomly
-          // fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
+          fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           fixedAmbient = fixColorAmbient(fixedAmbient);
       		// console.log(fixedAmbient)
 
@@ -246,6 +246,7 @@ body{
           //set current images
           currentFlash=fixedFlash;
           currentAmbient=fixedAmbient;
+
     	}
 
 
@@ -265,6 +266,9 @@ body{
       	}else{
           //... else adjust current ambient value.
       		currentAmbient = adjustBrightness(fixedAmbient,this.value);
+          currentFlash = adjustBrightness(fixedFlash,flashSlider.value);          
+          if (flashSlider.value != 0)
+              currentFlash=fixTemp2(currentFlash,flashTempSlider.value);
       	}
 
         //console.log(currentAmbient)
@@ -292,30 +296,21 @@ body{
       			currentFlash=fixedFlash;
   			}else{
             //... else adjust current flash value.
-            console.log("first")
-      			console.log(currentFlash)
             currentFlash = adjustBrightness(fixedFlash,this.value);
-
-            currentFlash=adjustColor(currentFlash,flashTempSlider.value,this.value);
+            currentAmbient = adjustBrightness(fixedAmbient,ambientSlider.value);
+            // console.log(currentFlash)
+            if (this.value != 0)
+              currentFlash=fixTemp2(currentFlash,flashTempSlider.value);
+         //    console.log("first")
+      			// console.log(currentAmbient)
   			}
 
         // apply changed flash brightness to overall image.
       	//blend2(currentAmbient,currentFlash,this.value,ambientSlider.value,output2Data.data,zarib);
         var output = blendImages(currentAmbient,currentFlash,zarib);
-        for (var i = 0; i < output.length; i+=1) {
-          //diff[i]=temp[i]-flash[i];
-          if (output[i]<0) {
-            output[i] = 0;
-          }
-          if (output[i]>255) {
-            output[i] = 255;
-          }
-       
-
-        }
 
         let update = new ImageData(output,flashimg.width,flashimg.height);
-        console.log(Math.max(currentFlash))
+        // console.log(Math.max(currentFlash))
         // update output
       	output2Context.putImageData(update, 0, 0);
   		}
@@ -324,7 +319,7 @@ body{
 
       // if flash temperature is adjusted /////
   		flashTempSlider.oninput = function() {
-
+    
         //if the slider is in neutral position...
         if(this.value==this.flashTempRange/2){
 
@@ -335,7 +330,8 @@ body{
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
             currentFlash = adjustBrightness(fixedFlash,flashSlider.value);
-            currentFlash=adjustColor(currentFlash,this.value,flashSlider.value);
+            if(flashSlider.value != 0)
+              currentFlash=fixTemp2(fixedFlash,this.value);
         }
 
 
@@ -446,6 +442,8 @@ body{
         // console.log(color)
         // console.log(30*color/50-30)
         // console.log(roD)
+        originalTemp = 0;
+        cnt = 0;
         for (var i = 0; i < input.length; i+=4) {
             // console.log("her")
             var x = input[i];
@@ -462,7 +460,31 @@ body{
             // console.log("check lab")
             // console.log(lab[0])
            // console.log(lab[2])
-            lab[2]=lab[2]-(30*color/40-30);
+            originalTemp = originalTemp + lab[2];
+            cnt = cnt +1;
+        }
+
+        originalTemp = originalTemp/cnt;
+        console.log("originalTemp")
+        console.log(originalTemp)
+        for (var i = 0; i < input.length; i+=4) {
+            // console.log("her")
+            var x = input[i];
+            var y = input[i+1];
+            var z = input[i+2];
+            // console.log(temp[i])
+            // console.log(temp[i+1])
+            // console.log(temp[i+2])
+            // console.log("rgb")
+
+            var white = [0.9504, 1.0000, 1.089];
+            var lab = xyz2lab(x,y,z,white);
+
+            // console.log("check lab")
+            // console.log(lab[0])
+           // console.log(lab[2])
+            lab[2]=lab[2]-(30*(color)/40-30);
+
             // console.log(lab[0])
             var xyz= lab2xyz(lab,white);
 
@@ -472,9 +494,31 @@ body{
             output[i+2] = xyz[2];
             output[i+3] = 255;
         }
-        console.log(output)
-        // console.log(input);
-        // onsole.log(output)
+        Temp = 0;
+        cnt = 0;
+        for (var i = 0; i < output.length; i+=4) {
+            // console.log("her")
+            var x = output[i];
+            var y = output[i+1];
+            var z = output[i+2];
+            // console.log(temp[i])
+            // console.log(temp[i+1])
+            // console.log(temp[i+2])
+            // console.log("rgb")
+
+            var white = [0.9504, 1.0000, 1.089];
+            var lab = xyz2lab(x,y,z,white);
+
+            // console.log("check lab")
+            // console.log(lab[0])
+           // console.log(lab[2])
+            Temp = Temp + lab[2];
+            cnt = cnt +1;
+        }
+
+        Temp = Temp/cnt;
+        console.log("temp");
+        console.log(Temp);
 
         return output;
       }
@@ -737,205 +781,217 @@ body{
 
 
 
-   	function fixTemp(data, destination){
-	    output = new Float32Array(data.length);
-	    var source = [0.95047, 1, 1.08883];
+   // 	function fixTemp(data, destination){
+	  //   output = new Float32Array(data.length);
+	  //   var source = [0.95047, 1, 1.08883];
 
-	    // console.log(MA)
-	    roD = MA[0][0]+ destination[0] + MA[0][1]* destination[1]+ MA[0][2]*destination[2];
-	    landaD = MA[1][0]*destination[0] + MA[1][1]* destination[1]+ MA[1][2]*destination[2];
-	    bethaD = MA[2][0]*destination[0] + MA[2][1]* destination[1]+ MA[2][2]*destination[2];
+	  //   // console.log(MA)
+	  //   roD = MA[0][0]+ destination[0] + MA[0][1]* destination[1]+ MA[0][2]*destination[2];
+	  //   landaD = MA[1][0]*destination[0] + MA[1][1]* destination[1]+ MA[1][2]*destination[2];
+	  //   bethaD = MA[2][0]*destination[0] + MA[2][1]* destination[1]+ MA[2][2]*destination[2];
 
-	    roS = MA[0][0]+ source[0] + MA[0][1]* source[1]+ MA[0][2]*source[2];
-	    landaS = MA[1][0]*source[0] + MA[1][1]* source[1]+  MA[1][2]*source[2];
-	    bethaS = MA[2][0]*source[0] + MA[2][1]* source[1]+ MA[2][2]*source[2];
-	    var temp = [[roD/roS, 0, 0], [0, landaD/landaS, 0], [0, 0, bethaD/bethaS]];
-	    temp = math.multiply(invMA, temp);
-	    M =math.multiply(temp, MA);
+	  //   roS = MA[0][0]+ source[0] + MA[0][1]* source[1]+ MA[0][2]*source[2];
+	  //   landaS = MA[1][0]*source[0] + MA[1][1]* source[1]+  MA[1][2]*source[2];
+	  //   bethaS = MA[2][0]*source[0] + MA[2][1]* source[1]+ MA[2][2]*source[2];
+	  //   var temp = [[roD/roS, 0, 0], [0, landaD/landaS, 0], [0, 0, bethaD/bethaS]];
+	  //   temp = math.multiply(invMA, temp);
+	  //   M =math.multiply(temp, MA);
 
-    	// console.log(roD)
-    	for (var i = 0; i < data.length; i+=4) {
-		    var X = data[i];
-		    var Y = data[i+1];
-		    var Z = data[i+2];
-		    X = X * M[0][0] + Y*M[0][1] + Z*M[0][2];
-		    Y = X * M[1][0] + Y*M[1][1] + Z*M[1][2];
-		    Z = X * M[2][0] + Y*M[2][1] + Z*M[2][2];
-		    output[i] = X;
-		    output[i+1] = Y;
-		    output[i+2] = Z;
-		    output[i+3] = 255;
-    	}
+   //  	// console.log(roD)
+   //  	for (var i = 0; i < data.length; i+=4) {
+		 //    var X = data[i];
+		 //    var Y = data[i+1];
+		 //    var Z = data[i+2];
+		 //    X = X * M[0][0] + Y*M[0][1] + Z*M[0][2];
+		 //    Y = X * M[1][0] + Y*M[1][1] + Z*M[1][2];
+		 //    Z = X * M[2][0] + Y*M[2][1] + Z*M[2][2];
+		 //    output[i] = X;
+		 //    output[i+1] = Y;
+		 //    output[i+2] = Z;
+		 //    output[i+3] = 255;
+   //  	}
 
-    	return output;
-  	}
-
-
+   //  	return output;
+  	// }
 
 
-  	/*function fixTemp2(image,tempChange){
+
+
+  	function fixTemp2(image,tempChange){
 	   	output_new = new Float32Array(output.length);
 	   	//t=1500 + ((temperature-1)/100)*8500;
 	   	var t= getTemperature(image);
+      console.log("image temperature")
+      console.log(t);
+      var ratio = (t - 1000)/5856;
+      console.log("ratio")
+      console.log(ratio)
 	   	// console.log("slider")
 	   	// console.log(tempChange)
-	   	var changeNorm=(tempChange-50)/50;
-	   	// console.log("changeNorm")
-	   	// console.log(changeNorm);
+      if (t == 50) 
+        return image;
+      else
+  	   	{var changeNorm=(tempChange-50)/50;
+          if (changeNorm < 0)
+            changeNorm = changeNorm*ratio;
+  	   	console.log("changeNorm")
+  	   	console.log(changeNorm);
 
-   		var newTemp = (math.round(t+changeNorm*5856));
-   		// newTemp = t;
+     		var newTemp = (math.round(t+changeNorm*5856));
+     		// newTemp = t;
+        console.log(tempChange)
+     		console.log("temperature")
+     		console.log(newTemp);
+     		if(newTemp<1000){newTemp=1000;}
 
-   		// console.log("temperature")
-   		// console.log(newTemp);
-   		if(newTemp<1000){newTemp=1000;}
+     		var xD, yD=0;
 
-   		var xD, yD=0;
+     		// get xy from temperature
+     		// if(temperature <= 7000){
+     		//   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
+     		// }else{
+     		//   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
+     		// }
+     		// yD=-3*xD**2 + 2.870*xD - 0.275;
+  	   	if(newTemp<2000){
+  	    	r=getRatio(newTemp,1500,2000);
+  	     	r_x=(0.5267-0.5857)/100;
+  	     	// console.log("here");
+  	     	// console.log(r);
+  	     	xD=0.5857+r*r_x;
+  	     	r_y=(0.4133-0.3931)/100;
+  	     	yD=0.3931+r*r_y;
+  	     	// console.log(newTemp*r_x)
+  	     	// console.log(xD);
+  	     	// console.log(yD);
+  	   	}else if (newTemp<2500) {
+  	     	r=getRatio(newTemp,2000,2500);
+  	     	r_x=(0.4770-0.5267)/100;
+  	     	xD=0.5267+r*r_x;
+  	     	r_y=(0.4137-0.4133)/100;
+  	     	yD=0.4133+r*r_y;
+  	   	}else if (newTemp<2856) {
+  	     	r=getRatio(newTemp,2500,2856);
+  	     	r_x=(0.4475-0.4770)/100;
+  	     	xD=0.4770+r*r_x;
+  	     	r_y=(0.4074-0.4137)/100;
+  	     	yD=0.4137+r*r_y;
+  	   	}else if (newTemp<4000) {
+  	     	r=getRatio(newTemp,2856,4000);
+  	     	r_x=(0.3802-0.4475)/100;
+  	     	xD=0.4475+r*r_x;
+  	     	r_y=(0.3767-0.4074)/100;
+  	     	yD=0.4074+r*r_y;
+  	   	}else if (newTemp<5000) {
+  	     	r=getRatio(newTemp,4000,5000);
+  	     	r_x=(0.3444-0.3802)/100;
+  	     	xD=0.3802+r*r_x;
+  	     	r_y=(0.3513-0.3767)/100;
+  	     	yD=0.3767+r*r_y;
+  	   	}else if (newTemp<5500){
+  	     	r=getRatio(newTemp,5000,5500);
+  	     	r_x=(0.3314-0.3444)/100;
+  	     	xD=0.3444+r*r_x;
+  	     	r_y=(0.3405-0.3513)/100;
+  	     	yD=0.3513+r*r_y;
+  	   	}else if (newTemp<6500) {
+  	     	r=getRatio(newTemp,5500,6500);
+  	     	r_x=(0.3118-0.3314)/100;
+  	     	xD=0.3314+r*r_x;
+  	     	r_y=(0.3224-0.3405)/100;
+  	     	yD=0.3405+r*r_y;
+  	   	}else if (newTemp<7500) {
+  	     	r=getRatio(newTemp,6500,7500);
+  	     	r_x=(0.2978-0.3118)/100;
+  	     	xD=0.3118+r*r_x;
+  	     	r_y=(0.3083-0.3224)/100;
+  	     	yD=0.3224+r*r_y;
+  	   	}else{
+  	     	r=getRatio(newTemp,7500,10000);
+  	     	r_x=(0.2762-0.2978)/100;
+  	     	xD=0.2978+r*r_x;
+  	     	r_y=(0.2840-0.3083)/100;
+  	     	yD=0.3083+r*r_y;
+  	   	}
 
-   		// get xy from temperature
-   		// if(temperature <= 7000){
-   		//   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
-   		// }else{
-   		//   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
-   		// }
-   		// yD=-3*xD**2 + 2.870*xD - 0.275;
-	   	if(newTemp<2000){
-	    	r=getRatio(newTemp,1500,2000);
-	     	r_x=(0.5267-0.5857)/100;
-	     	// console.log("here");
-	     	// console.log(r);
-	     	xD=0.5857+r*r_x;
-	     	r_y=(0.4133-0.3931)/100;
-	     	yD=0.3931+r*r_y;
-	     	// console.log(newTemp*r_x)
-	     	// console.log(xD);
-	     	// console.log(yD);
-	   	}else if (newTemp<2500) {
-	     	r=getRatio(newTemp,2000,2500);
-	     	r_x=(0.4770-0.5267)/100;
-	     	xD=0.5267+r*r_x;
-	     	r_y=(0.4137-0.4133)/100;
-	     	yD=0.4133+r*r_y;
-	   	}else if (newTemp<2856) {
-	     	r=getRatio(newTemp,2500,2856);
-	     	r_x=(0.4475-0.4770)/100;
-	     	xD=0.4770+r*r_x;
-	     	r_y=(0.4074-0.4137)/100;
-	     	yD=0.4137+r*r_y;
-	   	}else if (newTemp<4000) {
-	     	r=getRatio(newTemp,2856,4000);
-	     	r_x=(0.3802-0.4475)/100;
-	     	xD=0.4475+r*r_x;
-	     	r_y=(0.3767-0.4074)/100;
-	     	yD=0.4074+r*r_y;
-	   	}else if (newTemp<5000) {
-	     	r=getRatio(newTemp,4000,5000);
-	     	r_x=(0.3444-0.3802)/100;
-	     	xD=0.3802+r*r_x;
-	     	r_y=(0.3513-0.3767)/100;
-	     	yD=0.3767+r*r_y;
-	   	}else if (newTemp<5500){
-	     	r=getRatio(newTemp,5000,5500);
-	     	r_x=(0.3314-0.3444)/100;
-	     	xD=0.3444+r*r_x;
-	     	r_y=(0.3405-0.3513)/100;
-	     	yD=0.3513+r*r_y;
-	   	}else if (newTemp<6500) {
-	     	r=getRatio(newTemp,5500,6500);
-	     	r_x=(0.3118-0.3314)/100;
-	     	xD=0.3314+r*r_x;
-	     	r_y=(0.3224-0.3405)/100;
-	     	yD=0.3405+r*r_y;
-	   	}else if (newTemp<7500) {
-	     	r=getRatio(newTemp,6500,7500);
-	     	r_x=(0.2978-0.3118)/100;
-	     	xD=0.3118+r*r_x;
-	     	r_y=(0.3083-0.3224)/100;
-	     	yD=0.3224+r*r_y;
-	   	}else{
-	     	r=getRatio(newTemp,7500,10000);
-	     	r_x=(0.2762-0.2978)/100;
-	     	xD=0.2978+r*r_x;
-	     	r_y=(0.2840-0.3083)/100;
-	     	yD=0.3083+r*r_y;
-	   	}
+  	   	// xD = x;
+  	   	// yD = y;
+  	   	// console.log(r);
+  	   	// console.log(r_x);
+  	   	// console.log(r_y);
+  	   	// -
+  	   	// console.log("destination")
+  	   	// // console.log(x);
+  	   	// // console.log(y);
+  	   	// console.log(xD);
+  	   	// console.log(yD)
+  	   	var counterX = 0;
+  	   	var counterY = 0;
 
-	   	// xD = x;
-	   	// yD = y;
-	   	// console.log(r);
-	   	// console.log(r_x);
-	   	// console.log(r_y);
-	   	// -
-	   	// console.log("destination")
-	   	// // console.log(x);
-	   	// // console.log(y);
-	   	// console.log(xD);
-	   	// console.log(yD)
-	   	var counterX = 0;
-	   	var counterY = 0;
+  	   	xD = math.abs(xD);
+  	   	yD = math.abs(yD);
+  	   	//sum up chromaticity over whole input image
+  	   	var x=0;
+  	   	var y=0;
+  	   	for (var i = 0; i < image.length; i+=4) {
+  	     	if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
+  	       		var x_pix=0;
+  	       		var y_pix=0;
+  	     	}else{
+  	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+  	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+  	     	}
+  	    	if (x_pix >= 0.01){
+  	      		counterX = counterX + 1;
+  	      		x+=x_pix;
+  	      	}
+  	      	if (y_pix >= 0.01) {
+  	        	counterY = counterY +1;
+  	      		y+=y_pix;
+  	      	}
 
-	   	xD = math.abs(xD);
-	   	yD = math.abs(yD);
-	   	//sum up chromaticity over whole input image
-	   	var x=0;
-	   	var y=0;
-	   	for (var i = 0; i < image.length; i+=4) {
-	     	if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
-	       		var x_pix=0;
-	       		var y_pix=0;
-	     	}else{
-	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-	     	}
-	    	if (x_pix >= 0.01){
-	      		counterX = counterX + 1;
-	      		x+=x_pix;
-	      	}
-	      	if (y_pix >= 0.01) {
-	        	counterY = counterY +1;
-	      		y+=y_pix;
-	      	}
 
-	   	}
+  	   	}
 
-	   	//get average chromaticity
-	  	var chromaticity_x=x/(counterX);
-	  	var chromaticity_y=y/(counterY);
-	   	// console.log(chromaticity_x)
-	   	//get offest / ratio between average and destination chromaticity
-	   	var offset_x = xD/chromaticity_x;
-	   	var offset_y = yD/chromaticity_y;
+  	   	//get average chromaticity
+  	  	var chromaticity_x=x/(counterX);
+  	  	var chromaticity_y=y/(counterY);
+  	   	// console.log(chromaticity_x)
+  	   	//get offest / ratio between average and destination chromaticity
+  	   	var offset_x = xD/chromaticity_x;
+  	   	var offset_y = yD/chromaticity_y;
 
-	   	// adjust XYZ values according to ratio
-	   	for (var i = 0; i < image.length; i+=4) {
+  	   	// adjust XYZ values according to ratio
+  	   	for (var i = 0; i < image.length; i+=4) {
 
-	    	if((image[i]+image[i+1]+image[i+2])==0){
-	       		var x_pix=0;
-	       		var y_pix=0;
-	     	}else{
-	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-	     	}
+  	    	if((image[i]+image[i+1]+image[i+2])==0){
+  	       		var x_pix=0;
+  	       		var y_pix=0;
+  	     	}else{
+  	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+  	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+  	     	}
 
-	     	x_pix=x_pix*offset_x;
-	     	y_pix=y_pix*offset_y;
+  	     	x_pix=x_pix*offset_x;
+  	     	y_pix=y_pix*offset_y;
 
-	     	if(y_pix==0){
-	       		output_new[i] = 0
-	       		output_new[i+2] = 0
-	     	}else{
-	       		output_new[i] = x_pix*image[i+1]/y_pix;
-	       		output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
-	     	}
+  	     	if(y_pix==0){
+  	       		output_new[i] = 0
+  	       		output_new[i+2] = 0
+  	     	}else{
+  	       		output_new[i] = x_pix*image[i+1]/y_pix;
+  	       		output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
+  	     	}
 
-	     	output_new[i+1] = image[i+1];
-	     	output_new[i+3] = 255;
+  	     	output_new[i+1] = image[i+1];
+  	     	output_new[i+3] = 255;
 
-	   	}
-   		//console.log(output_new)
-   		//return XYZ values
-   		return output_new;
- 	}*/
+  	   	}
+     		//console.log(output_new)
+     		//return XYZ values
+     		return output_new;
+    }
+ 	}
 
 
  	function getTemperature(image){
@@ -982,69 +1038,235 @@ body{
  	}
 
 
- 	function fixBrightnessAmbient(fixedAmbient,exp){
-  		standardExp=0.0446;
-  		lowExp=0.02;
-  		highExp = 0.08;
-  		var temp = new Float32Array(fixedAmbient.length)
-  		console.log(fixedAmbient)
-  		random = Math.floor(Math.random() * 3);
-  		console.log(random)
-  		if (random == 0)
-    		toExp = standardExp;
-  		else if (random == 1)
-    		toExp = lowExp;
-  		else
-    		toExp = highExp;
+ 	function fixBrightnessAmbient(input){
+  sumOfBrightness = 0;
+  cnt = 0;
+  for (var i = 0; i < input.length; i+=4) {
+    var x = input[i];
+    var y = input[i+1];
+    var z = input[i+2];
 
-  		ratio = toExp / exp;
-  		console.log(ratio);  
-  		for (var i = 0; i < fixedAmbient.length; i+=4) {
-    		temp[i] = fixedAmbient[i]*ratio;
-		    temp[i+1] = fixedAmbient[i+1]*ratio;
-		    temp[i+2] = fixedAmbient[i+2]*ratio;
-		    temp[i+3] = 255;
-  		}
-  		document.getElementById("changedExp").value = toExp;
+    var white = [0.9504, 1.0000, 1.089];
+    var lab = xyz2lab(x,y,z,white);
+    if (lab[0] > 0.01){
+        // console.log("lab[0]")
+        // console.log(lab[0])
+        sumOfBrightness = sumOfBrightness+lab[0];
+        cnt = cnt + 1;
+    }
+  }
+  brightness = sumOfBrightness/cnt
+
+  console.log(sumOfBrightness/cnt)
+  darkRoom = 10;
+  // normal = 39.3;
+  bright = 110;
+  var random = Math.floor(Math.random() * (bright - darkRoom)) + darkRoom; 
+  ratio = random / brightness
+  console.log(random)
+  var temp = new Float32Array(input.length)
+  for (var i = 0; i < input.length; i+=4) {
+     temp[i] = input[i]*ratio;
+      temp[i+1] = input[i+1]*ratio;
+      temp[i+2] = input[i+2]*ratio;
+      temp[i+3] = 255;
+    }
+  		// standardExp=0.0446;
+  		// lowExp=0.02;
+  		// highExp = 0.08;
+  		// var temp = new Float32Array(fixedAmbient.length)
+  		// console.log(fixedAmbient)
+  		// random = Math.floor(Math.random() * 3);
+  		// console.log(random)
+  		// if (random == 0)
+    // 		toExp = standardExp;
+  		// else if (random == 1)
+    // 		toExp = lowExp;
+  		// else
+    // 		toExp = highExp;
+
+  		// ratio = toExp / exp;
+  		// console.log(ratio);  
+  		// for (var i = 0; i < fixedAmbient.length; i+=4) {
+    // 		temp[i] = fixedAmbient[i]*ratio;
+		  //   temp[i+1] = fixedAmbient[i+1]*ratio;
+		  //   temp[i+2] = fixedAmbient[i+2]*ratio;
+		  //   temp[i+3] = 255;
+  		// }
+  		document.getElementById("changedBrightness").value = random;
   		return temp;
  	}
 
-  function fixColorAmbient(input){
+  function fixColorAmbient(image){
 
-    var output = new Float32Array(input.length);
-    color = Math.floor(Math.random() * 100);
-    // console.log(color)
-    // console.log(30*color/50-30)
-    // console.log(roD)
-    for (var i = 0; i < input.length; i+=4) {
-        // console.log("her")
-        var x = input[i];
-        var y = input[i+1];
-        var z = input[i+2];
-        // console.log(temp[i])
-        // console.log(temp[i+1])
-        // console.log(temp[i+2])
-        // console.log("rgb")
 
-        var white = [0.9504, 1.0000, 1.089];
-        var lab = xyz2lab(x,y,z,white);
+    tempChange = Math.floor(Math.random() * (60- 35)) + 35;
+    output_new = new Float32Array(output.length);
+      //t=1500 + ((temperature-1)/100)*8500;
+    var t= getTemperature(image);
+    console.log("temp")
+    console.log(tempChange)
+      if (t == 50) 
+        return image;
+      else
+      {var changeNorm=(tempChange-50)/50;
+      // console.log("changeNorm")
+      // console.log(changeNorm);
 
-       // console.log(lab[2])
-        lab[2]=lab[2]-(20*color/50-30);
+      var newTemp = (math.round(t+changeNorm*5856));
+      // newTemp = t;
 
-        var xyz= lab2xyz(lab,white);
+      // console.log("temperature")
+      // console.log(newTemp);
+      if(newTemp<1000){newTemp=1000;}
 
-        // console.log(rgb)
-        output[i] = xyz[0];
-        output[i+1] = xyz[1];
-        output[i+2] = xyz[2];
-        output[i+3] = input[i+3];
-        
+      var xD, yD=0;
+
+      // get xy from temperature
+      // if(temperature <= 7000){
+      //   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
+      // }else{
+      //   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
+      // }
+      // yD=-3*xD**2 + 2.870*xD - 0.275;
+      if(newTemp<2000){
+        r=getRatio(newTemp,1500,2000);
+        r_x=(0.5267-0.5857)/100;
+        // console.log("here");
+        // console.log(r);
+        xD=0.5857+r*r_x;
+        r_y=(0.4133-0.3931)/100;
+        yD=0.3931+r*r_y;
+        // console.log(newTemp*r_x)
+        // console.log(xD);
+        // console.log(yD);
+      }else if (newTemp<2500) {
+        r=getRatio(newTemp,2000,2500);
+        r_x=(0.4770-0.5267)/100;
+        xD=0.5267+r*r_x;
+        r_y=(0.4137-0.4133)/100;
+        yD=0.4133+r*r_y;
+      }else if (newTemp<2856) {
+        r=getRatio(newTemp,2500,2856);
+        r_x=(0.4475-0.4770)/100;
+        xD=0.4770+r*r_x;
+        r_y=(0.4074-0.4137)/100;
+        yD=0.4137+r*r_y;
+      }else if (newTemp<4000) {
+        r=getRatio(newTemp,2856,4000);
+        r_x=(0.3802-0.4475)/100;
+        xD=0.4475+r*r_x;
+        r_y=(0.3767-0.4074)/100;
+        yD=0.4074+r*r_y;
+      }else if (newTemp<5000) {
+        r=getRatio(newTemp,4000,5000);
+        r_x=(0.3444-0.3802)/100;
+        xD=0.3802+r*r_x;
+        r_y=(0.3513-0.3767)/100;
+        yD=0.3767+r*r_y;
+      }else if (newTemp<5500){
+        r=getRatio(newTemp,5000,5500);
+        r_x=(0.3314-0.3444)/100;
+        xD=0.3444+r*r_x;
+        r_y=(0.3405-0.3513)/100;
+        yD=0.3513+r*r_y;
+      }else if (newTemp<6500) {
+        r=getRatio(newTemp,5500,6500);
+        r_x=(0.3118-0.3314)/100;
+        xD=0.3314+r*r_x;
+        r_y=(0.3224-0.3405)/100;
+        yD=0.3405+r*r_y;
+      }else if (newTemp<7500) {
+        r=getRatio(newTemp,6500,7500);
+        r_x=(0.2978-0.3118)/100;
+        xD=0.3118+r*r_x;
+        r_y=(0.3083-0.3224)/100;
+        yD=0.3224+r*r_y;
+      }else{
+        r=getRatio(newTemp,7500,10000);
+        r_x=(0.2762-0.2978)/100;
+        xD=0.2978+r*r_x;
+        r_y=(0.2840-0.3083)/100;
+        yD=0.3083+r*r_y;
+      }
+
+      // xD = x;
+      // yD = y;
+      // console.log(r);
+      // console.log(r_x);
+      // console.log(r_y);
+      // -
+      // console.log("destination")
+      // // console.log(x);
+      // // console.log(y);
+      // console.log(xD);
+      // console.log(yD)
+      var counterX = 0;
+      var counterY = 0;
+
+      xD = math.abs(xD);
+      yD = math.abs(yD);
+      //sum up chromaticity over whole input image
+      var x=0;
+      var y=0;
+      for (var i = 0; i < image.length; i+=4) {
+        if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
+            var x_pix=0;
+            var y_pix=0;
+        }else{
+            var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+            var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+        }
+        if (x_pix >= 0.01){
+            counterX = counterX + 1;
+            x+=x_pix;
+          }
+          if (y_pix >= 0.01) {
+            counterY = counterY +1;
+            y+=y_pix;
+          }
+
+
+      }
+
+      //get average chromaticity
+      var chromaticity_x=x/(counterX);
+      var chromaticity_y=y/(counterY);
+      // console.log(chromaticity_x)
+      //get offest / ratio between average and destination chromaticity
+      var offset_x = xD/chromaticity_x;
+      var offset_y = yD/chromaticity_y;
+
+      // adjust XYZ values according to ratio
+      for (var i = 0; i < image.length; i+=4) {
+
+        if((image[i]+image[i+1]+image[i+2])==0){
+            var x_pix=0;
+            var y_pix=0;
+        }else{
+            var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+            var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+        }
+
+        x_pix=x_pix*offset_x;
+        y_pix=y_pix*offset_y;
+
+        if(y_pix==0){
+            output_new[i] = 0
+            output_new[i+2] = 0
+        }else{
+            output_new[i] = x_pix*image[i+1]/y_pix;
+            output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
+        }
+
+        output_new[i+1] = image[i+1];
+        output_new[i+3] = 255;
+
+      }
+      //console.log(output_new)
+      //return XYZ values
+      return output_new;
     }
-    document.getElementById("changedColor").value = color;
-    // console.log(input);
-    // console.log(output);
-    return output;
   }
 
 

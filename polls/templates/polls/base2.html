@@ -136,12 +136,12 @@ body{
 
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
-      	var exp = document.getElementById("exp").innerHTML;
+      	// var exp = document.getElementById("exp").innerHTML;
         var ambientValue = document.getElementById("ambientValue").innerHTML;
         var flashValue = document.getElementById("flashValue").innerHTML;
         var flashTemp = document.getElementById("flashTemp").innerHTML;
         var ambientTemp = document.getElementById("ambientTemp").innerHTML;
-
+        var ambientBrightness = document.getElementById("ambientBrightness").innerHTML;
       	var flashData, ambientData,output2Data,matrix,firstData, flashOutputData;
       	var zarib;
       	var MA, M, invMA;
@@ -175,6 +175,7 @@ body{
         	des = parseInt(des);
           // ambientValue = parseInt(ambientValue)
           flashValue = parseInt(flashValue)
+
           ambientTemp = parseInt(ambientTemp)
 
         	XYZtoCamera = new Array(3);
@@ -201,8 +202,8 @@ body{
 
         	
           // change the ambient brightness randomly
-          // fixedAmbient = fixBrightnessAmbient(fixedAmbient,exp);
-          fixedAmbient = fixColorAmbient(fixedAmbient, ambientTemp);
+          fixedAmbient = fixBrightnessAmbient(fixedAmbient, ambientBrightness);
+          fixedAmbient = fixTemp2(fixedAmbient, ambientTemp);
       		// console.log(fixedAmbient)
 
         	zarib = fixWhitePoint(des);
@@ -210,13 +211,10 @@ body{
         	//flashContext.putImageData(flashData, 0, 0);
 
         	//blend fixed images
-          blend2(fixedAmbient,fixedFlash,flashValue,ambientValue,firstData.data,zarib);
-          firstData.data = adjustColor(firstData.data,flashTemp)
+          // blend2(fixedAmbient,fixedFlash,flashValue,ambientValue,firstData.data,zarib);
+          // firstData.data = adjustColor(firstData.data,flashTemp)
         	// blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
-
-          //update canvases
-        	// output2Context.putImageData(output2Data, 0, 0);
-        	firstContext.putImageData(firstData, 0, 0);
+       
         	
           //outputContext.drawImage(first, 0,0,500, 500);
         	//outputData = outputContext.getImageData(0, 0, flashimg.width, flashimg.height);
@@ -239,6 +237,23 @@ body{
           //set current images
           currentFlash=fixedFlash;
           currentAmbient=fixedAmbient;
+          currentFlash = adjustBrightness(fixedFlash,flashValue);
+
+          currentFlash=fixTemp2(currentFlash,flashTemp);
+          currentAmbient = adjustBrightness(fixedAmbient,ambientValue)
+          console.log("flash")
+          console.log(currentFlash)
+          console.log("ambient")
+          console.log(currentAmbient)
+          //update canvases
+          // output2Context.putImageData(output2Data, 0, 0);
+          var output = blendImages(currentAmbient,currentFlash,zarib);
+          let update = new ImageData(output,flashimg.width,flashimg.height);
+          console.log("see output")
+          console.log(output)
+           // update output
+          firstContext.putImageData(update, 0, 0);
+          // firstContext.putImageData(firstData, 0, 0);
     	}
 
 
@@ -614,172 +629,174 @@ body{
 
 
 
+    function fixTemp2(image,tempChange){
+      output_new = new Float32Array(output.length);
+      //t=1500 + ((temperature-1)/100)*8500;
+      var t= getTemperature(image);
+      // console.log("slider")
+      // console.log(tempChange)
+      if (t == 50) 
+        return image;
+      else
+      {var changeNorm=(tempChange-50)/50;
+      // console.log("changeNorm")
+      // console.log(changeNorm);
 
-  	/*function fixTemp2(image,tempChange){
-	   	output_new = new Float32Array(output.length);
-	   	//t=1500 + ((temperature-1)/100)*8500;
-	   	var t= getTemperature(image);
-	   	// console.log("slider")
-	   	// console.log(tempChange)
-	   	var changeNorm=(tempChange-50)/50;
-	   	// console.log("changeNorm")
-	   	// console.log(changeNorm);
+      var newTemp = (math.round(t+changeNorm*5856));
+      // newTemp = t;
 
-   		var newTemp = (math.round(t+changeNorm*5856));
-   		// newTemp = t;
+      // console.log("temperature")
+      // console.log(newTemp);
+      if(newTemp<1000){newTemp=1000;}
 
-   		// console.log("temperature")
-   		// console.log(newTemp);
-   		if(newTemp<1000){newTemp=1000;}
+      var xD, yD=0;
 
-   		var xD, yD=0;
+      // get xy from temperature
+      // if(temperature <= 7000){
+      //   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
+      // }else{
+      //   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
+      // }
+      // yD=-3*xD**2 + 2.870*xD - 0.275;
+      if(newTemp<2000){
+        r=getRatio(newTemp,1500,2000);
+        r_x=(0.5267-0.5857)/100;
+        // console.log("here");
+        // console.log(r);
+        xD=0.5857+r*r_x;
+        r_y=(0.4133-0.3931)/100;
+        yD=0.3931+r*r_y;
+        // console.log(newTemp*r_x)
+        // console.log(xD);
+        // console.log(yD);
+      }else if (newTemp<2500) {
+        r=getRatio(newTemp,2000,2500);
+        r_x=(0.4770-0.5267)/100;
+        xD=0.5267+r*r_x;
+        r_y=(0.4137-0.4133)/100;
+        yD=0.4133+r*r_y;
+      }else if (newTemp<2856) {
+        r=getRatio(newTemp,2500,2856);
+        r_x=(0.4475-0.4770)/100;
+        xD=0.4770+r*r_x;
+        r_y=(0.4074-0.4137)/100;
+        yD=0.4137+r*r_y;
+      }else if (newTemp<4000) {
+        r=getRatio(newTemp,2856,4000);
+        r_x=(0.3802-0.4475)/100;
+        xD=0.4475+r*r_x;
+        r_y=(0.3767-0.4074)/100;
+        yD=0.4074+r*r_y;
+      }else if (newTemp<5000) {
+        r=getRatio(newTemp,4000,5000);
+        r_x=(0.3444-0.3802)/100;
+        xD=0.3802+r*r_x;
+        r_y=(0.3513-0.3767)/100;
+        yD=0.3767+r*r_y;
+      }else if (newTemp<5500){
+        r=getRatio(newTemp,5000,5500);
+        r_x=(0.3314-0.3444)/100;
+        xD=0.3444+r*r_x;
+        r_y=(0.3405-0.3513)/100;
+        yD=0.3513+r*r_y;
+      }else if (newTemp<6500) {
+        r=getRatio(newTemp,5500,6500);
+        r_x=(0.3118-0.3314)/100;
+        xD=0.3314+r*r_x;
+        r_y=(0.3224-0.3405)/100;
+        yD=0.3405+r*r_y;
+      }else if (newTemp<7500) {
+        r=getRatio(newTemp,6500,7500);
+        r_x=(0.2978-0.3118)/100;
+        xD=0.3118+r*r_x;
+        r_y=(0.3083-0.3224)/100;
+        yD=0.3224+r*r_y;
+      }else{
+        r=getRatio(newTemp,7500,10000);
+        r_x=(0.2762-0.2978)/100;
+        xD=0.2978+r*r_x;
+        r_y=(0.2840-0.3083)/100;
+        yD=0.3083+r*r_y;
+      }
 
-   		// get xy from temperature
-   		// if(temperature <= 7000){
-   		//   xD=0.244063+(-4.6070*10**9/temperature**3)+(2.9678*10**6/temperature**2)+(0.09911*10**3/temperature);
-   		// }else{
-   		//   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
-   		// }
-   		// yD=-3*xD**2 + 2.870*xD - 0.275;
-	   	if(newTemp<2000){
-	    	r=getRatio(newTemp,1500,2000);
-	     	r_x=(0.5267-0.5857)/100;
-	     	// console.log("here");
-	     	// console.log(r);
-	     	xD=0.5857+r*r_x;
-	     	r_y=(0.4133-0.3931)/100;
-	     	yD=0.3931+r*r_y;
-	     	// console.log(newTemp*r_x)
-	     	// console.log(xD);
-	     	// console.log(yD);
-	   	}else if (newTemp<2500) {
-	     	r=getRatio(newTemp,2000,2500);
-	     	r_x=(0.4770-0.5267)/100;
-	     	xD=0.5267+r*r_x;
-	     	r_y=(0.4137-0.4133)/100;
-	     	yD=0.4133+r*r_y;
-	   	}else if (newTemp<2856) {
-	     	r=getRatio(newTemp,2500,2856);
-	     	r_x=(0.4475-0.4770)/100;
-	     	xD=0.4770+r*r_x;
-	     	r_y=(0.4074-0.4137)/100;
-	     	yD=0.4137+r*r_y;
-	   	}else if (newTemp<4000) {
-	     	r=getRatio(newTemp,2856,4000);
-	     	r_x=(0.3802-0.4475)/100;
-	     	xD=0.4475+r*r_x;
-	     	r_y=(0.3767-0.4074)/100;
-	     	yD=0.4074+r*r_y;
-	   	}else if (newTemp<5000) {
-	     	r=getRatio(newTemp,4000,5000);
-	     	r_x=(0.3444-0.3802)/100;
-	     	xD=0.3802+r*r_x;
-	     	r_y=(0.3513-0.3767)/100;
-	     	yD=0.3767+r*r_y;
-	   	}else if (newTemp<5500){
-	     	r=getRatio(newTemp,5000,5500);
-	     	r_x=(0.3314-0.3444)/100;
-	     	xD=0.3444+r*r_x;
-	     	r_y=(0.3405-0.3513)/100;
-	     	yD=0.3513+r*r_y;
-	   	}else if (newTemp<6500) {
-	     	r=getRatio(newTemp,5500,6500);
-	     	r_x=(0.3118-0.3314)/100;
-	     	xD=0.3314+r*r_x;
-	     	r_y=(0.3224-0.3405)/100;
-	     	yD=0.3405+r*r_y;
-	   	}else if (newTemp<7500) {
-	     	r=getRatio(newTemp,6500,7500);
-	     	r_x=(0.2978-0.3118)/100;
-	     	xD=0.3118+r*r_x;
-	     	r_y=(0.3083-0.3224)/100;
-	     	yD=0.3224+r*r_y;
-	   	}else{
-	     	r=getRatio(newTemp,7500,10000);
-	     	r_x=(0.2762-0.2978)/100;
-	     	xD=0.2978+r*r_x;
-	     	r_y=(0.2840-0.3083)/100;
-	     	yD=0.3083+r*r_y;
-	   	}
+      // xD = x;
+      // yD = y;
+      // console.log(r);
+      // console.log(r_x);
+      // console.log(r_y);
+      // -
+      // console.log("destination")
+      // // console.log(x);
+      // // console.log(y);
+      // console.log(xD);
+      // console.log(yD)
+      var counterX = 0;
+      var counterY = 0;
 
-	   	// xD = x;
-	   	// yD = y;
-	   	// console.log(r);
-	   	// console.log(r_x);
-	   	// console.log(r_y);
-	   	// -
-	   	// console.log("destination")
-	   	// // console.log(x);
-	   	// // console.log(y);
-	   	// console.log(xD);
-	   	// console.log(yD)
-	   	var counterX = 0;
-	   	var counterY = 0;
-
-	   	xD = math.abs(xD);
-	   	yD = math.abs(yD);
-	   	//sum up chromaticity over whole input image
-	   	var x=0;
-	   	var y=0;
-	   	for (var i = 0; i < image.length; i+=4) {
-	     	if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
-	       		var x_pix=0;
-	       		var y_pix=0;
-	     	}else{
-	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-	     	}
-	    	if (x_pix >= 0.01){
-	      		counterX = counterX + 1;
-	      		x+=x_pix;
-	      	}
-	      	if (y_pix >= 0.01) {
-	        	counterY = counterY +1;
-	      		y+=y_pix;
-	      	}
-
-	   	}
-
-	   	//get average chromaticity
-	  	var chromaticity_x=x/(counterX);
-	  	var chromaticity_y=y/(counterY);
-	   	// console.log(chromaticity_x)
-	   	//get offest / ratio between average and destination chromaticity
-	   	var offset_x = xD/chromaticity_x;
-	   	var offset_y = yD/chromaticity_y;
-
-	   	// adjust XYZ values according to ratio
-	   	for (var i = 0; i < image.length; i+=4) {
-
-	    	if((image[i]+image[i+1]+image[i+2])==0){
-	       		var x_pix=0;
-	       		var y_pix=0;
-	     	}else{
-	       		var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
-	       		var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
-	     	}
-
-	     	x_pix=x_pix*offset_x;
-	     	y_pix=y_pix*offset_y;
-
-	     	if(y_pix==0){
-	       		output_new[i] = 0
-	       		output_new[i+2] = 0
-	     	}else{
-	       		output_new[i] = x_pix*image[i+1]/y_pix;
-	       		output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
-	     	}
-
-	     	output_new[i+1] = image[i+1];
-	     	output_new[i+3] = 255;
-
-	   	}
-   		//console.log(output_new)
-   		//return XYZ values
-   		return output_new;
- 	}*/
+      xD = math.abs(xD);
+      yD = math.abs(yD);
+      //sum up chromaticity over whole input image
+      var x=0;
+      var y=0;
+      for (var i = 0; i < image.length; i+=4) {
+        if(image[i]==0 && image[i+1]==0 && image[i+2]==0){
+            var x_pix=0;
+            var y_pix=0;
+        }else{
+            var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+            var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+        }
+        if (x_pix >= 0.01){
+            counterX = counterX + 1;
+            x+=x_pix;
+          }
+          if (y_pix >= 0.01) {
+            counterY = counterY +1;
+            y+=y_pix;
+          }
 
 
+      }
+
+      //get average chromaticity
+      var chromaticity_x=x/(counterX);
+      var chromaticity_y=y/(counterY);
+      // console.log(chromaticity_x)
+      //get offest / ratio between average and destination chromaticity
+      var offset_x = xD/chromaticity_x;
+      var offset_y = yD/chromaticity_y;
+
+      // adjust XYZ values according to ratio
+      for (var i = 0; i < image.length; i+=4) {
+
+        if((image[i]+image[i+1]+image[i+2])==0){
+            var x_pix=0;
+            var y_pix=0;
+        }else{
+            var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+            var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+        }
+
+        x_pix=x_pix*offset_x;
+        y_pix=y_pix*offset_y;
+
+        if(y_pix==0){
+            output_new[i] = 0
+            output_new[i+2] = 0
+        }else{
+            output_new[i] = x_pix*image[i+1]/y_pix;
+            output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
+        }
+
+        output_new[i+1] = image[i+1];
+        output_new[i+3] = 255;
+
+      }
+      //console.log(output_new)
+      //return XYZ values
+      return output_new;
+    }
+  }
  	function getTemperature(image){
    		var x =0.0;
    		var y =0.0;
@@ -824,37 +841,46 @@ body{
  	}
 
 
- 	function fixBrightnessAmbient(fixedAmbient,exp){
-  		standardExp=0.0446;
-  		lowExp=0.02;
-  		highExp = 0.08;
-  		var temp = new Float32Array(fixedAmbient.length)
-  		console.log(fixedAmbient)
-  		random = Math.floor(Math.random() * 3);
-  		console.log(random)
-  		if (random == 0)
-    		toExp = standardExp;
-  		else if (random == 1)
-    		toExp = lowExp;
-  		else
-    		toExp = highExp;
+ 	function fixBrightnessAmbient(input,desBrightness){
+  sumOfBrightness = 0;
+  cnt = 0;
+  for (var i = 0; i < input.length; i+=4) {
+    var x = input[i];
+    var y = input[i+1];
+    var z = input[i+2];
 
-  		ratio = toExp / exp;
-  		console.log(ratio);  
-  		for (var i = 0; i < fixedAmbient.length; i+=4) {
-    		temp[i] = fixedAmbient[i]*ratio;
-		    temp[i+1] = fixedAmbient[i+1]*ratio;
-		    temp[i+2] = fixedAmbient[i+2]*ratio;
-		    temp[i+3] = 255;
-  		}
-  		document.getElementById("changedExp").value = toExp;
-  		return temp;
+    var white = [0.9504, 1.0000, 1.089];
+    var lab = xyz2lab(x,y,z,white);
+    if (lab[0] > 0.01){
+        // console.log("lab[0]")
+        // console.log(lab[0])
+        sumOfBrightness = sumOfBrightness+lab[0];
+        cnt = cnt + 1;
+    }
+  }
+  brightness = sumOfBrightness/cnt
+
+  console.log(sumOfBrightness/cnt)
+  // darkRoom = 10;
+  // // normal = 39.3;
+  // bright = 110;
+  // var random = Math.floor(Math.random() * (bright - darkRoom)) + darkRoom; 
+  ratio = desBrightness / brightness
+  // console.log(random)
+  var temp = new Float32Array(input.length)
+  for (var i = 0; i < input.length; i+=4) {
+     temp[i] = input[i]*ratio;
+      temp[i+1] = input[i+1]*ratio;
+      temp[i+2] = input[i+2]*ratio;
+      temp[i+3] = 255;
+    }
+  return temp;
  	}
 
-  function fixColorAmbient(input){
+  function fixColorAmbient(input, color){
 
     var output = new Float32Array(input.length);
-    color = Math.floor(Math.random() * 100);
+    // color = Math.floor(Math.random() * 100);
     // console.log(color)
     // console.log(30*color/50-30)
     // console.log(roD)

@@ -827,8 +827,9 @@ body{
       console.log("image temperature")
       console.log(t);
       var ratio = (t - 1000)/5856;
-      console.log("ratio")
-      console.log(ratio)
+      var ratio2 = (10000- t)/5856;
+      console.log("ratio2")
+      console.log(ratio2)
 	   	// console.log("slider")
 	   	// console.log(tempChange)
       if (tempChange == 50)
@@ -837,6 +838,8 @@ body{
   	   	{var changeNorm=(tempChange-50)/50;
         if (changeNorm < 0)
             changeNorm = changeNorm*ratio;
+        if (changeNorm > 0)
+          changeNorm = changeNorm*ratio2;  
   	   	console.log("changeNorm")
   	   	console.log(changeNorm);
 
@@ -1173,7 +1176,7 @@ body{
   function fixColorAmbient(image){
 
 
-    tempChange = Math.floor(Math.random() * (60- 35)) + 35;
+    tempChange = Math.floor(Math.random() * (60- 40)) + 40;
     output_new = new Float32Array(output.length);
       //t=1500 + ((temperature-1)/100)*8500;
     var t= getTemperature(image);

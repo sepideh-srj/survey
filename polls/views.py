@@ -82,8 +82,8 @@ def vote(request, question_id, userID):
     des = int(image.info['Description'])
     matrix = image.info['Comment']
     # print(float(image.info['Warning']))
-    exp = float(image.info['Warning'])
-    print(request.POST)
+    # exp = float(image.info['Warning'])
+    # print(request.POST)
     user = User.objects.get(userID=userID)
     pointer = user.pointer
     if request.method == 'POST':

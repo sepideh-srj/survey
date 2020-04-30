@@ -147,6 +147,8 @@ body{
       	var flashOutputContext = flashOutput.getContext("2d");
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
+        var color = document.getElementById("color").innerHTML;
+        console.log(color)
       	// var exp = document.getElementById("exp").innerHTML;
 
       	var flashData, ambientData,output2Data,matrix,firstData, flashOutputData;
@@ -167,7 +169,22 @@ body{
       	var cold = [0.5187, 0.6519, 1];
       	var coldFlash, hotFlash;
       	var outFlash;
+        var neutral;
+        color = color.split('    ').map(function(item) {
+              return parseFloat(item, 10);
+          });        
 
+        color = color.filter(function (value) {
+         return !Number.isNaN(value);
+      });
+        console.log(color)
+           // t= getTemperature(fixedFlash);
+        t = getTemperature2(color[0], color[1], color[2]);
+        neutral = (t - 1000)/90;
+        console.log("image temperature")
+        console.log(t);
+        console.log(neutral)
+        document.getElementById("flashTempRange").value = neutral;
     	// output1.innerHTML = slider.value;
       	window.onload = function() {
 
@@ -185,10 +202,13 @@ body{
 
 
           //initialize camera matrix
+          console.log(matrix)
+          
         	matrix = matrix.split('    ').map(function(item) {
           		return parseFloat(item, 10);
         	});
-
+         
+          console.log(color)
         	des = parseInt(des);
 
         	XYZtoCamera = new Array(3);
@@ -253,6 +273,14 @@ body{
           //set current images
           currentFlash=fixedFlash;
           currentAmbient=fixedAmbient;
+
+          // t= getTemperature(fixedFlash);
+          // t = getTemperature2(color[0], color[2], color[3]);
+          // neutral = (t - 1500)/65;
+          // console.log("image temperature")
+          // console.log(t);
+          // console.log(neutral)
+          // document.getElementById("flashTempRange").value = neutral;
 
     	}
 
@@ -830,24 +858,27 @@ body{
 	   	//t=1500 + ((temperature-1)/100)*8500;
       //var brightest=findBrightestPixels(image);
 	   	var t= getTemperature(image);
+      t2 = getTemperature2(color[0], color[1], color[2]);
       console.log("image temperature")
       console.log(t);
-      var ratio = (t - 1000)/5856;
-      var ratio2 = (10000- t)/5856;
-      console.log("ratio2")
-      console.log(ratio2)
+      var ratio = (t - 2000)/5856;
+      var ratio2 = (7500- t)/5856;
+      console.log("ratio")
+      console.log(ratio)
+      console.log(tempChange)
 	   	// console.log("slider")
 	   	// console.log(tempChange)
-      if (tempChange == 50)
+      if (tempChange == neutral)
         return image;
       else
-  	   	{var changeNorm=(tempChange-50)/50;
+  	   	{var changeNorm=(tempChange-neutral)/50;
+  	   	console.log(changeNorm);
+
         if (changeNorm < 0)
             changeNorm = changeNorm*ratio;
         if (changeNorm > 0)
           changeNorm = changeNorm*ratio2;  
   	   	console.log("changeNorm")
-  	   	console.log(changeNorm);
 
      		var newTemp = (math.round(t+changeNorm*5856));
      		// newTemp = t;
@@ -1077,6 +1108,23 @@ body{
     return [math.abs(xD),math.abs(yD)];
   }
 
+  function getTemperature2(x,y,z){
+
+
+      var x = x/(x+y+z);
+      var y = y/(x+y+z);
+
+      // console.log(x)
+      // console.log(x)
+      // console.log(y)
+      var n = (x-0.3320)/(0.1858-y);
+
+      CCT = 437*n**3 + 3601*n**2 + 6861*n + 5517;
+      // console.log("original temperature")
+      // console.log(CCT)
+      return math.round(CCT);
+  }
+
 
  	function getTemperature(image){
    		var x =0.0;
@@ -1143,9 +1191,9 @@ body{
 
       console.log(sumOfBrightness/cnt)
       darkRoom = 10;
-      // normal = 39.3;
-      bright = 110;
-      var random = Math.floor(Math.random() * (bright - darkRoom)) + darkRoom;
+      normal = 39.3;
+      // bright = 0;
+      var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
       ratio = random / brightness
       console.log(random)
       var temp = new Float32Array(input.length)

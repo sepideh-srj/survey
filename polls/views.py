@@ -61,8 +61,10 @@ def process(request):
     image = Image.open(image)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
-    # print(float(image.info['Warning']))
     exp = float(image.info['Warning'])
+    print("warning")
+    print(float(image.info['Warning']))
+
     flash = 100
     ambient = 100
     flashTemp = 38
@@ -81,8 +83,8 @@ def vote(request, question_id, userID):
     image = Image.open(image)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
-    # print(float(image.info['Warning']))
-    # exp = float(image.info['Warning'])
+    color =image.info['Warning']
+    print(color)
     # print(request.POST)
     user = User.objects.get(userID=userID)
     pointer = user.pointer
@@ -115,7 +117,7 @@ def vote(request, question_id, userID):
             return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
     vote_form = voteForm()
     print(request)
-    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
+    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'color': color, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt

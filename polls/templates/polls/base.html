@@ -229,8 +229,8 @@ body{
           //fix images with camera Matrix
         	fixedAmbient = fixColorMap(ambientData.data);
         	fixedFlash = fixColorMap(flashData.data);
-          console.log("first flash")
-          console.log(fixedFlash)
+          // console.log("first flash")
+          // console.log(fixedFlash)
         	// console.log(fixedAmbient)
 
 
@@ -861,8 +861,8 @@ body{
       t2 = getTemperature2(color[0], color[1], color[2]);
       console.log("image temperature")
       console.log(t);
-      var ratio = (t - 2000)/5856;
-      var ratio2 = (7500- t)/5856;
+      var ratio = (t - 1500)/5856;
+      var ratio2 = (7000- t)/5856;
       console.log("ratio")
       console.log(ratio)
       console.log(tempChange)
@@ -883,7 +883,7 @@ body{
      		var newTemp = (math.round(t+changeNorm*5856));
      		// newTemp = t;
         console.log(tempChange)
-     		console.log("temperature")
+     		console.log("new temperature")
      		console.log(newTemp);
      		if(newTemp<1000){newTemp=1000;}
 
@@ -1189,12 +1189,13 @@ body{
       }
       brightness = sumOfBrightness/cnt
 
-      console.log(sumOfBrightness/cnt)
+      console.log(brightness)
       darkRoom = 10;
       normal = 39.3;
       // bright = 0;
       var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
       ratio = random / brightness
+      console.log("brightness")
       console.log(random)
       var temp = new Float32Array(input.length)
       for (var i = 0; i < input.length; i+=4) {

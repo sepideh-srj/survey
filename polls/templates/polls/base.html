@@ -180,7 +180,7 @@ body{
         console.log(originalTemp);
         // if (originalTemp > 6200)
         // originalTemp = 4000;
-        neutral = (originalTemp - 2500)/75;
+        neutral = (originalTemp - 2000)/75;
         console.log("image temperature")
         console.log(neutral)
         document.getElementById("flashTempRange").value = neutral;
@@ -210,16 +210,16 @@ body{
           console.log(color)
         	des = parseInt(des);
 
-        	XYZtoCamera = new Array(3);
-        	for (var i = 0; i < 3; i++) {
-          		XYZtoCamera[i] = new Array(3)
-          		for (var j = 0; j < 3; j++) {
-            		XYZtoCamera[i][j] = matrix[i*3 + j];
-          		}
-        	}
+        	// XYZtoCamera = new Array(3);
+        	// for (var i = 0; i < 3; i++) {
+         //  		XYZtoCamera[i] = new Array(3)
+         //  		for (var j = 0; j < 3; j++) {
+         //    		XYZtoCamera[i][j] = matrix[i*3 + j];
+         //  		}
+        	// }
 
         	// console.log(XYZtoCamera)
-        	invXYZtoCamera = math.inv(XYZtoCamera);
+        	// invXYZtoCamera = math.inv(XYZtoCamera);
         	// console.log(invXYZtoCamera)
         	height = flash.height;
         	width = flash.width;
@@ -230,6 +230,7 @@ body{
           //fix images with camera Matrix
         	fixedAmbient = fixColorMap(ambientData.data);
         	fixedFlash = fixColorMap(flashData.data);
+
           // console.log("first flash")
           // console.log(fixedFlash)
         	// console.log(fixedAmbient)
@@ -369,7 +370,7 @@ body{
         console.log("current flash generated");
         // apply changed flash temperature to overall image.
       	var output=blendImages(currentAmbient,currentFlash,zarib);
-
+        console.log(output)
         let update = new ImageData(output,flashimg.width,flashimg.height);
 
         // update output
@@ -783,6 +784,7 @@ body{
         // output = math.zeros(data.length);
         // console.log(math.max(data));
         // console.log("ge")
+        var invXYZtoCamera=[[1, 0, 0], [0, 1, 0], [0, 0, 1]];
         // console.log(output)
         for (var i = 0; i < data.length; i+=4) {
 	      	output[i+3] = 255;
@@ -863,7 +865,7 @@ body{
       console.log(tempChange)
       console.log("image temperature")
       // console.log(t);
-      var ratio = (t2 - 2500)/5856;
+      var ratio = (t2 - 2000)/5856;
       var ratio2 = (10000- t2)/5856;
       console.log("ratio")
       console.log(ratio)

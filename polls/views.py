@@ -84,6 +84,7 @@ def vote(request, question_id, userID):
     # pointer = pointer +1
     image = quest.flashPic
     image = Image.open(image)
+
     des = int(image.info['Description'])
     matrix = image.info['Comment']
     color =image.info['Warning']
@@ -94,7 +95,8 @@ def vote(request, question_id, userID):
         color = 4500
     if (question_id==26 or question_id==27 or question_id==31):
         color = 5500
-    
+    if (question_id == 33):
+        color = 4000;
     colorAm = image.info['Warning']
 
     print(color)

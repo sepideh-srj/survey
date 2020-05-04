@@ -148,7 +148,10 @@ body{
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
         var color = document.getElementById("color").innerHTML;
+        console.log("color")
         console.log(color)
+        var colorAm = document.getElementById("colorAm").innerHTML;
+
       	// var exp = document.getElementById("exp").innerHTML;
 
       	var flashData, ambientData,output2Data,matrix,firstData, flashOutputData;
@@ -170,19 +173,15 @@ body{
       	var coldFlash, hotFlash;
       	var outFlash;
         var neutral;
-        color = color.split('    ').map(function(item) {
-              return parseFloat(item, 10);
-          });        
-
-        color = color.filter(function (value) {
-         return !Number.isNaN(value);
-      });
-        console.log(color)
+   
+        originalTemp = parseInt(color);
            // t= getTemperature(fixedFlash);
-        t = getTemperature2(color[0], color[1], color[2]);
-        neutral = (t - 1000)/90;
+        // var originalTemp = getTemperature2(color[0], color[1], color[2]);
+        console.log(originalTemp);
+        // if (originalTemp > 6200)
+        // originalTemp = 4000;
+        neutral = (originalTemp - 2500)/75;
         console.log("image temperature")
-        console.log(t);
         console.log(neutral)
         document.getElementById("flashTempRange").value = neutral;
     	// output1.innerHTML = slider.value;
@@ -225,6 +224,8 @@ body{
         	height = flash.height;
         	width = flash.width;
 
+          originalTemp2 = parseInt(colorAm);
+          neutral2 = (originalTemp2 - 1000)/90;
 
           //fix images with camera Matrix
         	fixedAmbient = fixColorMap(ambientData.data);
@@ -857,12 +858,13 @@ body{
 	   	output_new = new Float32Array(output.length);
 	   	//t=1500 + ((temperature-1)/100)*8500;
       //var brightest=findBrightestPixels(image);
-	   	var t= getTemperature(image);
-      t2 = getTemperature2(color[0], color[1], color[2]);
+	   	// var t= getTemperature(image);
+      t2 = originalTemp;
+      console.log(tempChange)
       console.log("image temperature")
-      console.log(t);
-      var ratio = (t - 1500)/5856;
-      var ratio2 = (7000- t)/5856;
+      // console.log(t);
+      var ratio = (t2 - 2500)/5856;
+      var ratio2 = (10000- t2)/5856;
       console.log("ratio")
       console.log(ratio)
       console.log(tempChange)
@@ -872,6 +874,7 @@ body{
         return image;
       else
   	   	{var changeNorm=(tempChange-neutral)/50;
+        console.log("changeNorm")
   	   	console.log(changeNorm);
 
         if (changeNorm < 0)
@@ -879,10 +882,10 @@ body{
         if (changeNorm > 0)
           changeNorm = changeNorm*ratio2;  
   	   	console.log("changeNorm")
-
-     		var newTemp = (math.round(t+changeNorm*5856));
+// 1500 = t2 + changeNorm*5856
+     		var newTemp = (math.round(t2+changeNorm*5856));
      		// newTemp = t;
-        console.log(tempChange)
+        // console.log(tempChange)
      		console.log("new temperature")
      		console.log(newTemp);
      		if(newTemp<1000){newTemp=1000;}
@@ -988,7 +991,8 @@ body{
 
 
   	   	//get average chromaticity
-        var chromCurrent=getChromFromTemp(t);
+        var chromCurrent=getChromFromTemp(t2);
+        console.log(t2)
   	  	var chromaticity_x=chromCurrent[0];
   	  	var chromaticity_y=chromCurrent[1];
   	   	// console.log(chromaticity_x)
@@ -1233,24 +1237,31 @@ body{
   function fixColorAmbient(image){
 
 
-    tempChange = Math.floor(Math.random() * (60- 40)) + 40;
+    tempChange = Math.floor(Math.random() * (20)) -10;
+    console.log("tempChange ambient")
+    console.log(tempChange)
+    // tempChange = neutral2;
     output_new = new Float32Array(output.length);
       //t=1500 + ((temperature-1)/100)*8500;
-    var t= getTemperature(image);
-    console.log("temp")
-    console.log(tempChange)
-      if (t == 50)
+    // var t= getTemperature(image);
+    t = originalTemp2;
+    console.log("temp ambient")
+    console.log(t)
+      if (tempChange == 0)
+      {
+        console.log("here")
         return image;
+      }
       else
-      {var changeNorm=(tempChange-50)/50;
-      // console.log("changeNorm")
-      // console.log(changeNorm);
+      {var changeNorm=(tempChange)/50;
+      console.log("changeNorm")
+      console.log(changeNorm);
 
       var newTemp = (math.round(t+changeNorm*5856));
       // newTemp = t;
-
-      // console.log("temperature")
-      // console.log(newTemp);
+      console.log(changeNorm*5856)
+      console.log("temperature ambient")
+      console.log(newTemp);
       if(newTemp<1000){newTemp=1000;}
 
       var xD, yD=0;
@@ -1361,10 +1372,15 @@ body{
 
 
       }
-
-      //get average chromaticity
-      var chromaticity_x=x/(counterX);
-      var chromaticity_y=y/(counterY);
+        //get average chromaticity
+        var chromCurrent=getChromFromTemp(originalTemp2);
+        // console.log(t2)
+        var chromaticity_x=chromCurrent[0];
+        var chromaticity_y=chromCurrent[1];
+        // console.log(chromaticity_x)
+        //get offest / ratio between average and destination chromaticity
+        var offset_x = xD/chromaticity_x;
+        var offset_y = yD/chromaticity_y;
       // console.log(chromaticity_x)
       //get offest / ratio between average and destination chromaticity
       var offset_x = xD/chromaticity_x;

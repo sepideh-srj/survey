@@ -55,23 +55,26 @@ def end(request):
 
 
 def process(request):
-    quest = Question.objects.get(question_id=9)
+    quest = Question.objects.get(question_id=14)
 
     image = quest.ambientPic
     image = Image.open(image)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
-    exp = float(image.info['Warning'])
+    color = float(image.info['Warning'])
     print("warning")
     print(float(image.info['Warning']))
+    image = quest.ambientPic
+    image = Image.open(image)
 
-    flash = 100
-    ambient = 100
-    flashTemp = 38
-    ambientTemp = 75
-    ambientBrightness = 24
+    colorAm = image.info['Warning']
+    flash = 159
+    ambient = 27
+    flashTemp = 83
+    ambientTemp = 50
+    ambientBrightness = 35
 
-    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness})
+    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'colorAm': colorAm, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness, 'color':color})
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
@@ -79,11 +82,21 @@ def vote(request, question_id, userID):
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     # pointer = pointer +1
-    image = quest.ambientPic
+    image = quest.flashPic
     image = Image.open(image)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
     color =image.info['Warning']
+    image = quest.ambientPic
+    image = Image.open(image)
+
+    if (question_id==2 or question_id==13 or question_id==18 or question_id==19 or question_id==30 or question_id==32):
+        color = 4500
+    if (question_id==26 or question_id==27 or question_id==31):
+        color = 5500
+    
+    colorAm = image.info['Warning']
+
     print(color)
     # print(request.POST)
     user = User.objects.get(userID=userID)
@@ -117,7 +130,7 @@ def vote(request, question_id, userID):
             return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
     vote_form = voteForm()
     print(request)
-    return render(request, 'polls/vote.html', {'question': quest, 'vote_form':vote_form, 'des': des, 'color': color, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
+    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'color': color, 'colorAm': colorAm, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt

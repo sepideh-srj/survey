@@ -91,12 +91,13 @@ def vote(request, question_id, userID):
     image = quest.ambientPic
     image = Image.open(image)
 
-    if (question_id==2 or question_id==13 or question_id==18 or question_id==19 or question_id==30 or question_id==32):
-        color = 4500
-    if (question_id==26 or question_id==27 or question_id==31):
-        color = 5500
-    if (question_id == 33):
-        color = 4000;
+    # if (question_id==2 or question_id==13 or question_id==18 or question_id==19 or question_id==30 or question_id==32):
+    #     color = 4500
+    # if (question_id==26 or question_id==27 or question_id==31):
+    #     color = 5500
+    # if (question_id == 34):
+    #     color = 4846;
+    color = 5846;
     colorAm = image.info['Warning']
 
     print(color)

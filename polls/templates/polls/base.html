@@ -173,7 +173,7 @@ body{
       	var coldFlash, hotFlash;
       	var outFlash;
         var neutral;
-   
+
         originalTemp = parseInt(color);
            // t= getTemperature(fixedFlash);
         // var originalTemp = getTemperature2(color[0], color[1], color[2]);
@@ -202,11 +202,11 @@ body{
 
           //initialize camera matrix
           console.log(matrix)
-          
+
         	matrix = matrix.split('    ').map(function(item) {
           		return parseFloat(item, 10);
         	});
-         
+
           console.log(color)
         	des = parseInt(des);
 
@@ -243,7 +243,7 @@ body{
       		// console.log(fixedAmbient)
 
         	zarib = fixWhitePoint(des);
-     
+
           console.log("test")
           console.log(test)
         	//ambientContext.putImageData(ambientData, 0, 0);
@@ -459,93 +459,93 @@ body{
       }
 
 
-      function adjustColor(input, color, blend){
-
-        var output = new Float32Array(input.length);
-        var source = zarib;
-        // console.log(color)
-        // console.log(30*color/50-30)
-        // console.log(roD)
-        originalTemp = 0;
-        cnt = 0;
-        for (var i = 0; i < input.length; i+=4) {
-            // console.log("her")
-            var x = input[i];
-            var y = input[i+1];
-            var z = input[i+2];
-            // console.log(temp[i])
-            // console.log(temp[i+1])
-            // console.log(temp[i+2])
-            // console.log("rgb")
-
-            var white = [0.9504, 1.0000, 1.089];
-            var lab = xyz2lab(x,y,z,white);
-
-            // console.log("check lab")
-            // console.log(lab[0])
-           // console.log(lab[2])
-            originalTemp = originalTemp + lab[2];
-            cnt = cnt +1;
-        }
-
-        originalTemp = originalTemp/cnt;
-        console.log("originalTemp")
-        console.log(originalTemp)
-        for (var i = 0; i < input.length; i+=4) {
-            // console.log("her")
-            var x = input[i];
-            var y = input[i+1];
-            var z = input[i+2];
-            // console.log(temp[i])
-            // console.log(temp[i+1])
-            // console.log(temp[i+2])
-            // console.log("rgb")
-
-            var white = [0.9504, 1.0000, 1.089];
-            var lab = xyz2lab(x,y,z,white);
-
-            // console.log("check lab")
-            // console.log(lab[0])
-           // console.log(lab[2])
-            lab[2]=lab[2]-(30*(color)/40-30);
-
-            // console.log(lab[0])
-            var xyz= lab2xyz(lab,white);
-
-            // console.log(rgb)
-            output[i] = xyz[0];
-            output[i+1] = xyz[1];
-            output[i+2] = xyz[2];
-            output[i+3] = 255;
-        }
-        Temp = 0;
-        cnt = 0;
-        for (var i = 0; i < output.length; i+=4) {
-            // console.log("her")
-            var x = output[i];
-            var y = output[i+1];
-            var z = output[i+2];
-            // console.log(temp[i])
-            // console.log(temp[i+1])
-            // console.log(temp[i+2])
-            // console.log("rgb")
-
-            var white = [0.9504, 1.0000, 1.089];
-            var lab = xyz2lab(x,y,z,white);
-
-            // console.log("check lab")
-            // console.log(lab[0])
-           // console.log(lab[2])
-            Temp = Temp + lab[2];
-            cnt = cnt +1;
-        }
-
-        Temp = Temp/cnt;
-        console.log("temp");
-        console.log(Temp);
-
-        return output;
-      }
+      // function adjustColor(input, color, blend){
+      //
+      //   var output = new Float32Array(input.length);
+      //   var source = zarib;
+      //   // console.log(color)
+      //   // console.log(30*color/50-30)
+      //   // console.log(roD)
+      //   originalTemp = 0;
+      //   cnt = 0;
+      //   for (var i = 0; i < input.length; i+=4) {
+      //       // console.log("her")
+      //       var x = input[i];
+      //       var y = input[i+1];
+      //       var z = input[i+2];
+      //       // console.log(temp[i])
+      //       // console.log(temp[i+1])
+      //       // console.log(temp[i+2])
+      //       // console.log("rgb")
+      //
+      //       var white = [0.9504, 1.0000, 1.089];
+      //       var lab = xyz2lab(x,y,z,white);
+      //
+      //       // console.log("check lab")
+      //       // console.log(lab[0])
+      //      // console.log(lab[2])
+      //       originalTemp = originalTemp + lab[2];
+      //       cnt = cnt +1;
+      //   }
+      //
+      //   originalTemp = originalTemp/cnt;
+      //   console.log("originalTemp")
+      //   console.log(originalTemp)
+      //   for (var i = 0; i < input.length; i+=4) {
+      //       // console.log("her")
+      //       var x = input[i];
+      //       var y = input[i+1];
+      //       var z = input[i+2];
+      //       // console.log(temp[i])
+      //       // console.log(temp[i+1])
+      //       // console.log(temp[i+2])
+      //       // console.log("rgb")
+      //
+      //       var white = [0.9504, 1.0000, 1.089];
+      //       var lab = xyz2lab(x,y,z,white);
+      //
+      //       // console.log("check lab")
+      //       // console.log(lab[0])
+      //      // console.log(lab[2])
+      //       lab[2]=lab[2]-(30*(color)/40-30);
+      //
+      //       // console.log(lab[0])
+      //       var xyz= lab2xyz(lab,white);
+      //
+      //       // console.log(rgb)
+      //       output[i] = xyz[0];
+      //       output[i+1] = xyz[1];
+      //       output[i+2] = xyz[2];
+      //       output[i+3] = 255;
+      //   }
+      //   Temp = 0;
+      //   cnt = 0;
+      //   for (var i = 0; i < output.length; i+=4) {
+      //       // console.log("her")
+      //       var x = output[i];
+      //       var y = output[i+1];
+      //       var z = output[i+2];
+      //       // console.log(temp[i])
+      //       // console.log(temp[i+1])
+      //       // console.log(temp[i+2])
+      //       // console.log("rgb")
+      //
+      //       var white = [0.9504, 1.0000, 1.089];
+      //       var lab = xyz2lab(x,y,z,white);
+      //
+      //       // console.log("check lab")
+      //       // console.log(lab[0])
+      //      // console.log(lab[2])
+      //       Temp = Temp + lab[2];
+      //       cnt = cnt +1;
+      //   }
+      //
+      //   Temp = Temp/cnt;
+      //   console.log("temp");
+      //   console.log(Temp);
+      //
+      //   return output;
+      // }
 
 
   		// function blend(ambient,flash, slider,output,zarib) {
@@ -658,7 +658,7 @@ body{
 		    	// zarib =  [[0.8446965, -0.1179225,  0.3948108],
        //              [-0.1366303,  1.1041226,  0.1291718],
        //              [0.0798489, -0.1348999,  3.1924009]];
-          zarib =   
+          zarib =
                 [[0.8652435 , 0.0000000,  0.0000000],
                  [0.0000000,  1.0000000,  0.0000000],
                  [0.0000000,  0.0000000,  3.0598005]];
@@ -674,7 +674,7 @@ body{
 		    //     makhraj = [0.9807, 1.0000, 1.1822];
 		    else if (calibrationIlluminant == 20)
           //d55
-          zarib =   
+          zarib =
                    [[0.9933634,  0.0000000,  0.0000000],
                    [0.0000000,  1.0000000, 0.0000000],
                    [0.0000000,  0.0000000  ,1.1815972]];
@@ -905,7 +905,7 @@ body{
         if (changeNorm < 0)
             changeNorm = changeNorm*ratio;
         if (changeNorm > 0)
-          changeNorm = changeNorm*ratio2;  
+          changeNorm = changeNorm*ratio2;
   	   	console.log("changeNorm")
 // 1500 = t2 + changeNorm*5856
      		var newTemp = (math.round(t2+changeNorm*5856));

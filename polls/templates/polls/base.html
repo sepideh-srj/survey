@@ -228,8 +228,11 @@ body{
           neutral2 = (originalTemp2 - 3000)/80;
 
           //fix images with camera Matrix
+          zarib = fixWhitePoint(des);
         	fixedAmbient = fixColorMap(ambientData.data);
         	fixedFlash = fixColorMap(flashData.data);
+
+
 
           // console.log("first flash")
           // console.log(fixedFlash)
@@ -240,9 +243,10 @@ body{
           //fixedAmbient_orig=fixedAmbient;
           fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           fixedAmbient = fixColorAmbient(fixedAmbient);
-      		// console.log(fixedAmbient)
+          console.log('des');
+          console.log(des);
 
-        	zarib = fixWhitePoint(des);
+        	//zarib = fixWhitePoint(des);
 
           console.log("test")
           console.log(test)
@@ -656,8 +660,8 @@ body{
 		    if (calibrationIlluminant == 17)
           //a
 		    	// zarib =  [[0.8446965, -0.1179225,  0.3948108],
-       //              [-0.1366303,  1.1041226,  0.1291718],
-       //              [0.0798489, -0.1348999,  3.1924009]];
+          //           [-0.1366303,  1.1041226,  0.1291718],
+          //           [0.0798489, -0.1348999,  3.1924009]];
           zarib =
                 [[0.8652435 , 0.0000000,  0.0000000],
                  [0.0000000,  1.0000000,  0.0000000],
@@ -721,7 +725,20 @@ body{
 
 
       // function from http://www.brucelindbloom.com/
-      function xyz2lab(X,Y,Z,white) {
+      function xyz2lab(X,Y,Z,index) {
+
+        if(index==17){
+          white = [1.09850,1.00000,0.35585];
+        }else if (index==19) {
+          white=[0.9807, 1.0000, 1.1822];
+
+        }else if (index==20){
+          white= [0.9568, 1.0000, 0.9214];
+        }else if (index==21){
+          white = [0.9504, 1.0000, 1.089];
+        }else if (index==23){
+          white =  [0.9642, 1.0000, 0.8251];
+        }
 
 
         X = X /white[0];
@@ -817,8 +834,11 @@ body{
 	        	// console.log(data[i+2])
 	        	// console.log("hhhh")
 	        	// console.log(invXYZtoCamera[j][0] * data[i]+ invXYZtoCamera[j][1] * data[i+1] + invXYZtoCamera[j][2] * data[i+2])
-	        	output[i+j] = invXYZtoCamera[j][0] * data[i]/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]/255;
+	        	output[i+j] = invXYZtoCamera[j][0] * data[i]*1.1/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]*0.9/(255);
 	      	}
+           //output[i]=output[i]*zarib[0][0];
+           //output[i+1]=output[i+1]*zarib[1][1];
+           //output[i+2]=output[i+2]*zarib[2][2];
 
         }
         return output;
@@ -1022,8 +1042,8 @@ body{
   	       		output_new[i] = 0
   	       		output_new[i+2] = 0
   	     	}else{
-  	       		output_new[i] = x_pix*image[i+1]/y_pix;
-  	       		output_new[i+2] = (1-x_pix-y_pix)*image[i+1]/y_pix;
+  	       		output_new[i] = (x_pix*image[i+1]/y_pix);
+  	       		output_new[i+2] = ((1-x_pix-y_pix)*image[i+1]/y_pix);
   	     	}
 
   	     	output_new[i+1] = image[i+1];
@@ -1186,8 +1206,8 @@ body{
           var y = input[i+1];
           var z = input[i+2];
 
-          var white = [0.9504, 1.0000, 1.089];
-          var lab = xyz2lab(x,y,z,white);
+          var white = 17;//[0.9504, 1.0000, 1.089];
+          var lab = xyz2lab(x,y,z,des);
           if (lab[0] > 0.01){
               // console.log("lab[0]")
               // console.log(lab[0])

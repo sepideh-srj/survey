@@ -1227,7 +1227,7 @@ body{
 
       console.log(brightness)
       darkRoom = 10;
-      normal = 39.3;
+      normal = 30.3;
       // bright = 0;
       if (picID == 101) {
         random = darkRoom
@@ -1236,7 +1236,7 @@ body{
         random = normal;
       else
         var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
-      ratio = random / brightness
+      ratio = random / brightness;
       console.log("brightness")
       console.log(random)
       var temp = new Float32Array(input.length)
@@ -1285,6 +1285,7 @@ body{
     if (picID == 104) {
       tempChange = 20;
     }
+
     console.log("tempChange ambient")
     console.log(tempChange)
     // tempChange = neutral2;

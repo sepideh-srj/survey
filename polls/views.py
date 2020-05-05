@@ -23,7 +23,10 @@ def home(request):
 
             ids = []
             for question in questions:
-                ids.append(question.question_id)
+                if question.question_id != 101 and question.question_id != 102 and question.question_id != 103 and question.question_id!=104:
+                    print("here")
+                    ids.append(question.question_id)
+            print("here2")
             print(ids)
             random.shuffle(ids)    
             listToStr = ','.join([str(elem) for elem in ids]) 
@@ -78,7 +81,7 @@ def process(request):
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
-    numberOfPics = Question.objects.count()
+    numberOfPics = Question.objects.count()-4;
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     # pointer = pointer +1
@@ -128,7 +131,7 @@ def vote(request, question_id, userID):
             order = user.order
             order = order.split(',')
             print("userID:{}".format(userID))
-            if (Question.objects.count() == pointer):
+            if (Question.objects.count()-4 == pointer):
                 return redirect("/polls/end/")
             question_id = int(order[pointer])
             print("question_id:{}".format(question_id))

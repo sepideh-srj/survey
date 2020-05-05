@@ -148,8 +148,10 @@ body{
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
         var color = document.getElementById("color").innerHTML;
-        console.log("color")
-        console.log(color)
+        var picID = document.getElementById("picID").innerHTML;
+        picID = parseInt(picID)
+        console.log("picID")
+        console.log(picID)
         var colorAm = document.getElementById("colorAm").innerHTML;
 
       	// var exp = document.getElementById("exp").innerHTML;
@@ -1227,7 +1229,13 @@ body{
       darkRoom = 10;
       normal = 39.3;
       // bright = 0;
-      var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
+      if (picID == 101) {
+        random = darkRoom
+      }
+      else if (picID == 102 || picID == 103 || picID==104)
+        random = normal;
+      else
+        var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
       ratio = random / brightness
       console.log("brightness")
       console.log(random)
@@ -1267,7 +1275,16 @@ body{
   function fixColorAmbient(image){
 
 
-    tempChange = Math.floor(Math.random() * (20)) -10;
+    tempChange = Math.floor(Math.random() * (25)) -5;
+    if (picID == 101 || picID == 102) {
+      tempChange = 0;
+    }
+    if (picID == 103) {
+      tempChange = -5;
+    }
+    if (picID == 104) {
+      tempChange = 20;
+    }
     console.log("tempChange ambient")
     console.log(tempChange)
     // tempChange = neutral2;

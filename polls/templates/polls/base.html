@@ -1038,6 +1038,12 @@ body{
   	     	x_pix=x_pix*offset_x;
   	     	y_pix=y_pix*offset_y;
 
+          if(x_pix+y_pix>0.96){
+            limit=x_pix+y_pix;
+            x_pix=x_pix*(0.96/limit);
+            y_pix=y_pix*(0.96/limit);
+          }
+
   	     	if(y_pix==0){
   	       		output_new[i] = 0
   	       		output_new[i+2] = 0

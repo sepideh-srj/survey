@@ -102,7 +102,7 @@ def vote(request, question_id, userID):
     #     color = 4846;
     color = 6507;
     if question_id==18 or question_id==13 or question_id==19:
-        color = 5815;
+        color = 4015;
     colorAm = image.info['Warning']
 
     print(color)

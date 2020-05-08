@@ -836,7 +836,7 @@ body{
 	        	// console.log(data[i+2])
 	        	// console.log("hhhh")
 	        	// console.log(invXYZtoCamera[j][0] * data[i]+ invXYZtoCamera[j][1] * data[i+1] + invXYZtoCamera[j][2] * data[i+2])
-	        	output[i+j] = invXYZtoCamera[j][0] * data[i]*1.1/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]*0.9/(255);
+	        	output[i+j] = invXYZtoCamera[j][0] * data[i]/255+ invXYZtoCamera[j][1] * data[i+1]/255+ invXYZtoCamera[j][2] * data[i+2]/(255);
 	      	}
            //output[i]=output[i]*zarib[0][0];
            //output[i+1]=output[i+1]*zarib[1][1];

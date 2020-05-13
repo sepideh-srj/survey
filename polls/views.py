@@ -23,9 +23,8 @@ def home(request):
 
             ids = []
             for question in questions:
-                if question.question_id != 101 and question.question_id != 102 and question.question_id != 103 and question.question_id!=104:
-                    print("here")
-                    ids.append(question.question_id)
+                ids.append(question.question_id)
+                ids.append(question.question_id)
             print("here2")
             print(ids)
             random.shuffle(ids)    
@@ -81,7 +80,7 @@ def process(request):
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
-    numberOfPics = Question.objects.count()-4;
+    numberOfPics = Question.objects.count()*2;
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     # pointer = pointer +1
@@ -90,22 +89,12 @@ def vote(request, question_id, userID):
 
     des = int(image.info['Description'])
     matrix = image.info['Comment']
-    color =image.info['Warning']
-    image = quest.ambientPic
-    image = Image.open(image)
+    # color =image.info['Warning']
+    # image = quest.ambientPic
+    # image = Image.open(image)
+    # colorAm = image.info['Warning']
 
-    # if (question_id==2 or question_id==13 or question_id==18 or question_id==19 or question_id==30 or question_id==32):
-    #     color = 4500
-    # if (question_id==26 or question_id==27 or question_id==31):
-    #     color = 5500
-    # if (question_id == 34):
-    #     color = 4846;
-    color = 5500;
-    if question_id==18 or question_id==13 or question_id==19:
-        color = 4015;
-    colorAm = image.info['Warning']
-
-    print(color)
+    # print(color)
     # print(request.POST)
     user = User.objects.get(userID=userID)
     pointer = user.pointer
@@ -131,14 +120,14 @@ def vote(request, question_id, userID):
             order = user.order
             order = order.split(',')
             print("userID:{}".format(userID))
-            if (Question.objects.count()-4 == pointer):
+            if (Question.objects.count()*2 == pointer):
                 return redirect("/polls/end/")
             question_id = int(order[pointer])
             print("question_id:{}".format(question_id))
             return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
     vote_form = voteForm()
     print(request)
-    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'color': color, 'colorAm': colorAm, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
+    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
 
 # from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt

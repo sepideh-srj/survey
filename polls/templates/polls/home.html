@@ -10,13 +10,32 @@
  <br>
  <h2> click the start button to begin the survey. </h2>
  <br>
- 	<p> After clicking start, you'll go to the first picture, please edit the picture and go to the next one. After you go through all the pictures you'll see the end page.</p>
+ 	<p> Please edit each of the following images in a way that looks the best for you. You can use all of the sliders to get your desirable result.</p>
+ 	<br>
+ 	
+ 	<div class="row">
+  <div class="column">
+    <img src="/media/1.gif" alt="Snow" style="width:100%">
+    <p> Change the brightness of ambient light</p>
+  </div>
+  <div class="column">
+    <img src="/media/2.gif" alt="Forest" style="width:100%">
+    <p> Change the brightness of flash light</p>
+  </div>
+  <div class="column">
+    <img src="/media/3.gif" alt="Mountains" style="width:100%">
+    <p> Change the color of flash light</p>
+  </div>
+</div>
+ 	
  	<br>
  	<br>
- 	<br>
+ 
  	<form method="post" id="test">
 	{% csrf_token %}
    <button type="submit" name="start" class="button button2">Start</button>
+   <br>
+   <br><br>
 </form>
     <!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
     </div>

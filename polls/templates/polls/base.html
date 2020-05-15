@@ -961,8 +961,8 @@ body{
      		//   xD=0.237040+(-2.0064*10**9/temperature**3)+(1.9018*10**6/temperature**2)+(0.24748*10**3/temperature);
      		// }
      		// yD=-3*xD**2 + 2.870*xD - 0.275;
-        if (t<=9000 && t>5500){
-        r=getRatio(t,5500,9000)
+        if (t<=10000 && t>6500){
+        r=getRatio(t,6500,10000)
         xD = 0.3;
         yD = 0.3;
         xS = 0.3118;
@@ -1020,11 +1020,11 @@ body{
         r_y=(yD-yS)/100;
         yD=yS+r*r_y;
       }
-        else if (t >=3500 && t < 4000){
+        else if (t >=0 && t < 4000){
 
-        r=getRatio(t,4000,3500);
-        xD =  0.5141;
-        yD =  0.3434;
+        r=getRatio(t,4000,0);
+        xD =  0.5041;
+        yD =  0.3334;
         xS = 0.4949;
         yS = 0.3564;
         r_x=(xD-xS)/100;
@@ -1061,8 +1061,8 @@ body{
         console.log(t);
         var xD, yD=0;
 
-        if (t >=4500 && t <= 8500){
-        r=getRatio(t,4500,8500)
+        if (t >=4500 && t <= 7500){
+        r=getRatio(t,4500,7500)
         // rgb = [254, 250, 219];
         // xyz = xyz2rgb(rgb);
         xD = 0.17;
@@ -1111,10 +1111,10 @@ body{
         yD=yS+r*r_y;
         }
 
-        else if (t >=1500 && t < 3500){
-        r=getRatio(t,3500,1500);
-        xD = 0.5389;
-        yD = 0.2963;
+        else if (t >0 && t < 3500){
+        r=getRatio(t,3500,0);
+        xD = 0.5189;
+        yD = 0.3063;
         xS =  0.5141;
         yS =  0.3434;
         r_x=(xD-xS)/100;
@@ -1332,7 +1332,7 @@ body{
 
       console.log(brightness)
       darkRoom = 10;
-      normal = 30.3;
+      normal = 20.3;
       // bright = 0;
       if (picID == 101) {
         random = darkRoom

@@ -22,12 +22,20 @@ def home(request):
             questions = Question.objects.all()
 
             ids = []
+            ids2 = []
             for question in questions:
                 ids.append(question.question_id)
-                ids.append(question.question_id)
+                ids2.append(question.question_id)
+
+            random.shuffle(ids)
+            random.shuffle(ids2)
+            for i in range(len(ids2)):
+                ids.append(ids2[i])
+                # ids2.append(question.question_id)
+
             print("here2")
             print(ids)
-            random.shuffle(ids)    
+            print("ccc")
             listToStr = ','.join([str(elem) for elem in ids]) 
             userID = lastUser.userID +1;
             newUser = User(userID = userID, order= listToStr, pointer=0)

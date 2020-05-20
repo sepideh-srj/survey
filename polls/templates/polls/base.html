@@ -1165,6 +1165,8 @@ body{
   	   	}
 
      		//return XYZ values
+        changedTemp = t - t2
+        document.getElementById("changedColorFlash").value = changedTemp;
      		return output_new;
     
  	}
@@ -1383,6 +1385,7 @@ body{
       warm = 4700;
       cold = 6000;
       t = (Math.random()*1300)+4700;
+
       console.log(t)
       console.log(t);
       // var ratio = (t2 - 3000)/5856;
@@ -1605,7 +1608,11 @@ body{
       }
       //console.log(output_new)
       //return XYZ values
+      changedTemp = t - t2
+      document.getElementById("changedColor").value = changedTemp;
+
       return output_new;
+
     }
   
 

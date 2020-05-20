@@ -25,6 +25,8 @@ class Choice(models.Model):
     flash = models.IntegerField(default=0)
     ambient = models.IntegerField(default=0)
     flashTemp = models.IntegerField(default=0)
+    flashTempRange = models.IntegerField(default=0)
     ambientTemp =  models.IntegerField(default=0)
     ambientBrightness = models.FloatField(default=0)
     user = models.IntegerField(default=0)
+    illuminant = models.IntegerField(default=0)

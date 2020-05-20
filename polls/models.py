@@ -22,6 +22,7 @@ class User(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
+    questionID = models.IntegerField(default=0)
     flash = models.IntegerField(default=0)
     ambient = models.IntegerField(default=0)
     flashTemp = models.IntegerField(default=0)

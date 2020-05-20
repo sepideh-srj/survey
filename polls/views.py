@@ -115,7 +115,7 @@ def vote(request, question_id, userID):
         if 'next' in request.POST:
             
             vote_form = voteForm()
-            quest.choice_set.create(ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
+            quest.choice_set.create(questionID = question_id, ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
                 flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'], 
                  ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des)

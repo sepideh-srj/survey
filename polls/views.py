@@ -22,15 +22,15 @@ def home(request):
             questions = Question.objects.all()
 
             ids = []
-            ids2 = []
+            # ids2 = []
             for question in questions:
                 ids.append(question.question_id)
-                ids2.append(question.question_id)
+                # ids2.append(question.question_id)
 
             random.shuffle(ids)
-            random.shuffle(ids2)
-            for i in range(len(ids2)):
-                ids.append(ids2[i])
+            # random.shuffle(ids2)
+            # for i in range(len(ids2)):
+            #     ids.append(ids2[i])
                 # ids2.append(question.question_id)
 
             print("here2")
@@ -88,7 +88,7 @@ def process(request):
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
-    numberOfPics = Question.objects.count()*2;
+    numberOfPics = Question.objects.count();
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     # pointer = pointer +1
@@ -115,7 +115,7 @@ def vote(request, question_id, userID):
         if 'next' in request.POST:
             
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, ambient=request.POST['ambientRange'], flash=request.POST['flashRange'],
+            quest.choice_set.create(questionID = question_id, ambient=request.POST['mixRange'], flash=request.POST['flashRange'],
                 flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'], 
                  ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des)
@@ -130,7 +130,7 @@ def vote(request, question_id, userID):
             order = user.order
             order = order.split(',')
             print("userID:{}".format(userID))
-            if (Question.objects.count()*2 == pointer):
+            if (Question.objects.count()== pointer):
                 return redirect("/polls/end/")
             question_id = int(order[pointer])
             print("question_id:{}".format(question_id))

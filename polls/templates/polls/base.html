@@ -203,24 +203,11 @@ body{
       	var output1 = document.getElementById("demo");
       	var flashSlider = document.getElementById("flashRange");
       	var ambientSlider = document.getElementById("ambientRange");
-
+        var mixSlider = document.getElementById("mixRange");
       	var fixedAmbient, fixedAmbient_orig, fixedFlash, currentAmbient, currentFlash;
-
-      	// var hot = [0.94972, 1.00000, 1.22638];
-      	var hot = [1.00985, 1, 0.35585];
-      	// var cold = [0.95047, 1, 1.08883];
-      	// var hot = [1, 0.0337, 0];
-      	var cold = [0.5187, 0.6519, 1];
-      	var coldFlash, hotFlash;
       	var outFlash;
         var neutral;
 
-        // originalTemp = parseInt(color);
-           // t= getTemperature(fixedFlash);
-        // var originalTemp = getTemperature2(color[0], color[1], color[2]);
-        // console.log(originalTemp);
-        // if (originalTemp > 6200)
-        // originalTemp = 4000;
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
         else if (des == 21) {neutral = 42;}
@@ -233,6 +220,8 @@ body{
        document.getElementById("flashTempRange").value = neutral;
         document.getElementById("ambientRange").value = 100;
         document.getElementById("flashRange").value = 100;
+        document.getElementById("mixRange").value = 100;
+
         }
     	// output1.innerHTML = slider.value;
       	window.onload = function() {
@@ -343,7 +332,39 @@ body{
 
     	}
 
+      mixSlider.oninput = function(){
 
+
+        //if the slider is in neutral position...
+        if(this.value==100){
+            //... set the current ambient value to original value...
+            currentAmbient=fixedAmbient;
+            currentFlash = fixedFlash;
+        }else{
+            //... else adjust current ambient value.
+
+              currentAmbient = adjustBrightness(fixedAmbient,200-this.value);
+              currentFlash = adjustBrightness(fixedFlash,this.value);
+              console.log("sliders")
+              console.log(this.value)
+              console.log(100-this.value)
+     
+            if (flashSlider.value != 0){
+                currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
+        }
+
+        //console.log(currentAmbient)
+        // apply changed ambient brightness to overall image.
+        var output=blendImages(currentAmbient,currentFlash,zarib);
+
+        let update = new ImageData(output,flashimg.width,flashimg.height);
+
+
+        // update output
+        output2Context.putImageData(update,0,0);
+
+
+      }
 
 
 
@@ -418,8 +439,8 @@ body{
         }else{
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
-            currentAmbient = adjustBrightness(fixedAmbient,ambientSlider.value);
-            currentFlash = adjustBrightness(fixedFlash,flashSlider.value);
+            currentAmbient = adjustBrightness(fixedAmbient,200 - mixSlider.value);
+            currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
             if(flashSlider.value != 0){
               currentFlash=fixTemp2(currentFlash,this.value);}
         }

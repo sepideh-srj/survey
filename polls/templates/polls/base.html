@@ -218,9 +218,9 @@ body{
 
         function myFunction() {
        document.getElementById("flashTempRange").value = neutral;
-        document.getElementById("ambientRange").value = 100;
-        document.getElementById("flashRange").value = 100;
-        document.getElementById("mixRange").value = 100;
+        // document.getElementById("ambientRange").value = 100;
+        // document.getElementById("flashRange").value = 100;
+        document.getElementById("mixRange").value = 110;
 
         }
     	// output1.innerHTML = slider.value;
@@ -280,7 +280,10 @@ body{
 
           // change the ambient brightness randomly
           //fixedAmbient_orig=fixedAmbient;
-          fixedFlash = fixBrightnessFlash(fixedFlash);
+          if (picID == 30 || picID==20 || picID==49 || picID==14 || picID==45){
+
+            fixedFlash = fixBrightnessFlash(fixedFlash);
+          }
           fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           fixedAmbient = fixColorAmbient(fixedAmbient);
           console.log('des');
@@ -1324,8 +1327,8 @@ body{
       brightness = sumOfBrightness/cnt
       console.log("brightness flash")
       console.log(brightness)
-      bright = brightness + 30;
-      normal = brightness + 10;
+      bright = brightness + 40;
+      normal = brightness + 20;
       var random = Math.floor(Math.random() * (bright - normal)) + normal;
       ratio = random / brightness;
       console.log("brightness")

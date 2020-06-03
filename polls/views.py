@@ -24,7 +24,8 @@ def home(request):
             ids = []
             # ids2 = []
             for question in questions:
-                ids.append(question.question_id)
+                if question.question_id != 3:
+                    ids.append(question.question_id)
                 # ids2.append(question.question_id)
 
             random.shuffle(ids)
@@ -32,7 +33,7 @@ def home(request):
             # for i in range(len(ids2)):
             #     ids.append(ids2[i])
                 # ids2.append(question.question_id)
-
+            ids.insert(0,3)
             print("here2")
             print(ids)
             print("ccc")
@@ -115,9 +116,8 @@ def vote(request, question_id, userID):
         if 'next' in request.POST:
             
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, ambient=request.POST['mixRange'], flash=request.POST['flashRange'],
-                flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'], 
-                 ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
+            quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=200 - int(request.POST['flashRange']),
+                flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des)
             quest.save()
             question_list = Question.objects.all()

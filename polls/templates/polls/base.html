@@ -977,7 +977,7 @@ body{
         r_y=(yD-yS)/100;
         yD=yS+r*r_y;
       }
-        else if (t >=5000 && t <= 5500){
+        else if (t >=5000 && t < 5500){
         r=getRatio(t,5500,5000)
 
         // rgb = [254, 250, 219];
@@ -1143,11 +1143,7 @@ body{
   	     	x_pix=x_pix*offset_x;
   	     	y_pix=y_pix*offset_y;
 
-          if(x_pix+y_pix>0.96){
-            limit=x_pix+y_pix;
-            x_pix=x_pix*(0.96/limit);
-            y_pix=y_pix*(0.96/limit);
-          }
+      
 
   	     	if(y_pix==0){
   	       		output_new[i] = 0

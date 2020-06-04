@@ -207,6 +207,7 @@ body{
       	var fixedAmbient, fixedAmbient_orig, fixedFlash, currentAmbient, currentFlash;
       	var outFlash;
         var neutral;
+        var defaultBrightness;
 
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
@@ -286,53 +287,19 @@ body{
           }
           fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           fixedAmbient = fixColorAmbient(fixedAmbient);
-          console.log('des');
-          console.log(des);
-
-        	//zarib = fixWhitePoint(des);
-
-          console.log("test")
-          console.log(test)
-        	//ambientContext.putImageData(ambientData, 0, 0);
-        	//flashContext.putImageData(flashData, 0, 0);
-
+ 
         	//blend fixed images
           blend2(fixedAmbient,fixedFlash,100,100,firstData.data,zarib);
         	blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
-
+          defaultBrightness = getBrightness(firstData.data)
           //update canvases
         	output2Context.putImageData(output2Data, 0, 0);
         	firstContext.putImageData(firstData, 0, 0);
-
-          //outputContext.drawImage(first, 0,0,500, 500);
-        	//outputData = outputContext.getImageData(0, 0, flashimg.width, flashimg.height);
-
-
-        	// blend(fixedFlash, fixedFlash,50,firstData.data,zarib);
-        	//flashContext2.putImageData(firstData, 0,0);
-        	//flashOutputContext.putImageData(firstData, 0,0);
-
-        	//flashOutputData = flashOutputContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        	MA =	[[0.4002400,  0.7076000, -0.0808100] ,
-              		[-0.2263000,  1.1653200,  0.0457000] ,
-              		[0.0000000,  0.0000000,  0.9182200]]
-        	invMA = math.inv(MA);
-
-        	//coldFlash = fixTemp(fixedFlash, cold);
-        	//hotFlash = fixTemp(fixedFlash, hot);
-        	//outFlash = new Float32Array(fixedAmbient.length);
 
           //set current images
           currentFlash=fixedFlash;
           currentAmbient=fixedAmbient;
 
-          // t= getTemperature(fixedFlash);
-          // t = getTemperature2(color[0], color[2], color[3]);
-          // neutral = (t - 1500)/65;
-          // console.log("image temperature")
-          // console.log(t);
-          // console.log(neutral)
-          // document.getElementById("flashTempRange").value = neutral;
 
     	}
 
@@ -349,9 +316,6 @@ body{
 
               currentAmbient = adjustBrightness(fixedAmbient,200-this.value);
               currentFlash = adjustBrightness(fixedFlash,this.value);
-              console.log("sliders")
-              console.log(this.value)
-              console.log(100-this.value)
      
             if (flashSlider.value != 0){
                 currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
@@ -361,6 +325,7 @@ body{
         // apply changed ambient brightness to overall image.
         var output=blendImages(currentAmbient,currentFlash,zarib);
 
+        output = fixBrightness(output)
         let update = new ImageData(output,flashimg.width,flashimg.height);
 
 
@@ -1377,6 +1342,71 @@ body{
   		   document.getElementById("changedBrightness").value = random;
   		   return temp;
  	}
+
+  function fixBrightness(input){
+      sumOfBrightness = 0;
+      cnt = 0;
+      for (var i = 0; i < input.length; i+=4) {
+          var x = input[i];
+          var y = input[i+1];
+          var z = input[i+2];
+
+          var white = 17;//[0.9504, 1.0000, 1.089];
+          var lab = xyz2lab(x,y,z,des);
+          if (lab[0] > 0.01){
+              // console.log("lab[0]")
+              // console.log(lab[0])
+              sumOfBrightness = sumOfBrightness+lab[0];
+              cnt = cnt + 1;
+          }
+      }
+      brightness = sumOfBrightness/cnt
+
+ 
+      ratio = defaultBrightness / brightness;
+      // console.log("brightness")
+      // console.log(random)
+      var temp = new Uint8ClampedArray(input.length)
+      for (var i = 0; i < input.length; i+=4) {
+         temp[i] = input[i]*ratio;
+          temp[i+1] = input[i+1]*ratio;
+          temp[i+2] = input[i+2]*ratio;
+          temp[i+3] = 255;
+        }
+         return temp;
+  }
+
+  function getBrightness(input){
+      sumOfBrightness = 0;
+      cnt = 0;
+      for (var i = 0; i < input.length; i+=4) {
+          var x = input[i];
+          var y = input[i+1];
+          var z = input[i+2];
+          var lab = xyz2lab(x,y,z,des);
+          if (lab[0] > 0.01){
+              // console.log("lab[0]")
+              // console.log(lab[0])
+              sumOfBrightness = sumOfBrightness+lab[0];
+              cnt = cnt + 1;
+          }
+      }
+      brightness = sumOfBrightness/cnt
+
+      return brightness;
+      // ratio = random / brightness;
+      console.log("overall brightness")
+      console.log(brightness)
+      // var temp = new Float32Array(input.length)
+      // for (var i = 0; i < input.length; i+=4) {
+      //    temp[i] = input[i]*ratio;
+      //     temp[i+1] = input[i+1]*ratio;
+      //     temp[i+2] = input[i+2]*ratio;
+      //     temp[i+3] = 255;
+      //   }
+      //    document.getElementById("changedBrightness").value = random;
+      //    return temp;
+  }
 
   function fixColorAmbient(image){
 

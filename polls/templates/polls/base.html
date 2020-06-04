@@ -317,7 +317,7 @@ body{
               currentAmbient = adjustBrightness(fixedAmbient,200-this.value);
               currentFlash = adjustBrightness(fixedFlash,this.value);
 
-            if (flashSlider.value != 0){
+            if (this.value != 0){
                 currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
         }
 
@@ -352,7 +352,7 @@ body{
       			//preBlend2(currentFlash,this.value,outFlash);
             currentAmbient = adjustBrightness(fixedAmbient,200 - mixSlider.value);
             currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
-            if(flashSlider.value != 0){
+            if(mixSlider.value != 0){
               currentFlash=fixTemp2(currentFlash,this.value);}
         }
 //
@@ -1198,7 +1198,7 @@ body{
       brightness = sumOfBrightness/cnt;
 
 
-      ratio = 480 / brightness;
+      ratio = defaultBrightness / brightness;
       console.log(brightness);
       // console.log(defaultBrightness)
       console.log(ratio)

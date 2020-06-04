@@ -360,57 +360,13 @@ body{
         // apply changed flash temperature to overall image.
       	var output=blendImages(currentAmbient,currentFlash,zarib);
         // console.log(output)
+        output = fixBrightness(output)
         let update = new ImageData(output,flashimg.width,flashimg.height);
 
         // update output
       	output2Context.putImageData(update, 0, 0);
   		}
 
-
-
-		  ////// utility functions //////////////////////
-
-/*  		function preBlend(ambient,flash,slider,output) {
-
-      		var temp = new Float32Array(ambient.length)
-
-      		//console.log(ambient);
-      		for (var i = 0; i < ambient.length; i+= 4) {
-			    temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
-			    temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
-			    temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
-      		}
-       		//console.log(temp)
-       		//console.log(output)
-        	for (var i = 0; i < ambient.length; i+=4) {
-		        output[i] = temp[i];
-		        output[i+1] = temp[i+1];
-		        output[i+2] = temp[i+2];
-		        output[i+3] = 255;
-        	}
-    	}*/
-
-
-/*		  function preBlend2(flash,slider,output) {
-    		// console.log(ambient)
-    		//  console.log(flash)
-    		// console.log(slider)
-      		var temp = new Float32Array(flash.length);
-      		temp=fixTemp2(flash,slider);
-      		var diff= new Float32Array(flash.length);
-
-    		// console.log(temp)
-    		// console.log(output)
-      		for (var i = 0; i < flash.length; i+=4) {
-        		//diff[i]=temp[i]-flash[i];
-        		output[i] = temp[i];
-        		output[i+1] = temp[i+1];
-        		output[i+2] = temp[i+2];
-        		output[i+3] = 255;
-
-      		}
-      		//console.log(temp);
-  		}*/
 
 
       function adjustBrightness(input,slider) {
@@ -445,126 +401,7 @@ body{
       }
 
 
-      // function adjustColor(input, color, blend){
-      //
-      //   var output = new Float32Array(input.length);
-      //   var source = zarib;
-      //   // console.log(color)
-      //   // console.log(30*color/50-30)
-      //   // console.log(roD)
-      //   originalTemp = 0;
-      //   cnt = 0;
-      //   for (var i = 0; i < input.length; i+=4) {
-      //       // console.log("her")
-      //       var x = input[i];
-      //       var y = input[i+1];
-      //       var z = input[i+2];
-      //       // console.log(temp[i])
-      //       // console.log(temp[i+1])
-      //       // console.log(temp[i+2])
-      //       // console.log("rgb")
-      //
-      //       var white = [0.9504, 1.0000, 1.089];
-      //       var lab = xyz2lab(x,y,z,white);
-      //
-      //       // console.log("check lab")
-      //       // console.log(lab[0])
-      //      // console.log(lab[2])
-      //       originalTemp = originalTemp + lab[2];
-      //       cnt = cnt +1;
-      //   }
-      //
-      //   originalTemp = originalTemp/cnt;
-      //   console.log("originalTemp")
-      //   console.log(originalTemp)
-      //   for (var i = 0; i < input.length; i+=4) {
-      //       // console.log("her")
-      //       var x = input[i];
-      //       var y = input[i+1];
-      //       var z = input[i+2];
-      //       // console.log(temp[i])
-      //       // console.log(temp[i+1])
-      //       // console.log(temp[i+2])
-      //       // console.log("rgb")
-      //
-      //       var white = [0.9504, 1.0000, 1.089];
-      //       var lab = xyz2lab(x,y,z,white);
-      //
-      //       // console.log("check lab")
-      //       // console.log(lab[0])
-      //      // console.log(lab[2])
-      //       lab[2]=lab[2]-(30*(color)/40-30);
-      //
-      //       // console.log(lab[0])
-      //       var xyz= lab2xyz(lab,white);
-      //
-      //       // console.log(rgb)
-      //       output[i] = xyz[0];
-      //       output[i+1] = xyz[1];
-      //       output[i+2] = xyz[2];
-      //       output[i+3] = 255;
-      //   }
-      //   Temp = 0;
-      //   cnt = 0;
-      //   for (var i = 0; i < output.length; i+=4) {
-      //       // console.log("her")
-      //       var x = output[i];
-      //       var y = output[i+1];
-      //       var z = output[i+2];
-      //       // console.log(temp[i])
-      //       // console.log(temp[i+1])
-      //       // console.log(temp[i+2])
-      //       // console.log("rgb")
-      //
-      //       var white = [0.9504, 1.0000, 1.089];
-      //       var lab = xyz2lab(x,y,z,white);
-      //
-      //       // console.log("check lab")
-      //       // console.log(lab[0])
-      //      // console.log(lab[2])
-      //       Temp = Temp + lab[2];
-      //       cnt = cnt +1;
-      //   }
-      //
-      //   Temp = Temp/cnt;
-      //   console.log("temp");
-      //   console.log(Temp);
-      //
-      //   return output;
-      // }
-
-
-  		// function blend(ambient,flash, slider,output,zarib) {
-    //   		// console.log(ambient)
-    //   		// console.log(flash)
-    //   		// console.log(slider)
-    //   		var temp = new Float32Array(ambient.length)
-    //   		for (var i = 0; i < ambient.length; i+= 4) {
-    //     		temp[i] = ambient[i]*slider/100 + flash[i]*(100-slider)/100;
-    //     		temp[i+1] = ambient[i+1]*slider/100 + flash[i+1]*(100-slider)/100;
-    //     		temp[i+2] = ambient[i+2]*slider/100+ flash[i+2]*(100-slider)/100;
-    //   		}
-    //   		// console.log(temp)
-    //   		for (var i = 0; i < ambient.length; i+=4) {
-    //     		// console.log("her")
-    //     		var x = temp[i];
-    //     		var y = temp[i+1];
-    //     		var z = temp[i+2];
-				// // console.log(temp[i])
-    //     		// console.log(temp[i+1])
-    //     		// console.log(temp[i+2])
-    //     		// console.log("rgb")
-    //     		var rgb = xyz2rgb(x,y,z,zarib);
-    //     		// console.log(rgb)
-    //     		output[i] = rgb[0]*255;
-    //     		output[i+1] = rgb[1]*255;
-    //     		output[i+2] = rgb[2]*255;
-    //     		output[i+3] = 255;
-    //     		// console.log(rgb[0]*255)
-    //     		// console.log(output[i])
-    //   		}
-		  // }
-
+     
 
 		  function blend2(ambient,flash, flashSlider,ambientSlider, output,zarib) {
     		  // console.log(ambient)
@@ -1350,8 +1187,6 @@ body{
           var x = input[i];
           var y = input[i+1];
           var z = input[i+2];
-
-          var white = 17;//[0.9504, 1.0000, 1.089];
           var lab = xyz2lab(x,y,z,des);
           if (lab[0] > 0.01){
               // console.log("lab[0]")
@@ -1360,10 +1195,13 @@ body{
               cnt = cnt + 1;
           }
       }
-      brightness = sumOfBrightness/cnt
+      brightness = sumOfBrightness/cnt;
 
  
-      ratio = defaultBrightness / brightness;
+      ratio = 530 / brightness;
+      console.log(brightness);
+      // console.log(defaultBrightness)
+      console.log(ratio)
       // console.log("brightness")
       // console.log(random)
       var temp = new Uint8ClampedArray(input.length)

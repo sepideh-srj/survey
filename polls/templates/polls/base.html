@@ -212,7 +212,7 @@ body{
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
         else if (des == 21) {neutral = 42;}
-        
+
         console.log("image temperature")
         console.log(neutral)
         document.getElementById("flashTempRange").value = neutral;
@@ -248,7 +248,7 @@ body{
         	});
 
           // console.log(color)
-        	
+
 
         	XYZtoCamera = new Array(3);
         	for (var i = 0; i < 3; i++) {
@@ -287,7 +287,7 @@ body{
           }
           fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           fixedAmbient = fixColorAmbient(fixedAmbient);
- 
+
         	//blend fixed images
           blend2(fixedAmbient,fixedFlash,100,100,firstData.data,zarib);
         	blend2(fixedAmbient,fixedFlash,100,100,output2Data.data,zarib);
@@ -316,7 +316,7 @@ body{
 
               currentAmbient = adjustBrightness(fixedAmbient,200-this.value);
               currentFlash = adjustBrightness(fixedFlash,this.value);
-     
+
             if (flashSlider.value != 0){
                 currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
         }
@@ -355,7 +355,7 @@ body{
             if(flashSlider.value != 0){
               currentFlash=fixTemp2(currentFlash,this.value);}
         }
-// 
+//
         // console.log("current flash generated");
         // apply changed flash temperature to overall image.
       	var output=blendImages(currentAmbient,currentFlash,zarib);
@@ -401,7 +401,7 @@ body{
       }
 
 
-     
+
 
 		  function blend2(ambient,flash, flashSlider,ambientSlider, output,zarib) {
     		  // console.log(ambient)
@@ -729,7 +729,7 @@ body{
       // console.log(t);
       // var ratio = (t2 - 3000)/5856;
       // var ratio2 = (10000- t2)/5856;
-  
+
 	   	// console.log("slider")
 	   	// console.log(tempChange)
       if (tempChange == neutral)
@@ -832,7 +832,7 @@ body{
         console.log(xD);
         console.log(yD);
   	  	var chromaticity_x= 0.3580;
-  	  	var chromaticity_y=0.3239; 
+  	  	var chromaticity_y=0.3239;
       }
       }
       else if (des == 21){
@@ -842,7 +842,7 @@ body{
       // console.log(t);
       // var ratio = (t2 - 3000)/5856;
       // var ratio2 = (10000- t2)/5856;
-  
+
       // console.log("slider")
       // console.log(tempChange)
       if (tempChange == neutral)
@@ -920,7 +920,7 @@ body{
         yD=yS+r*r_y;
         }
         var chromaticity_x= 0.4231;
-        var chromaticity_y=0.3304; 
+        var chromaticity_y=0.3304;
 
       }
     }
@@ -945,7 +945,7 @@ body{
   	     	x_pix=x_pix*offset_x;
   	     	y_pix=y_pix*offset_y;
 
-      
+
 
   	     	if(y_pix==0){
   	       		output_new[i] = 0
@@ -964,7 +964,7 @@ body{
         changedTemp = t - t2
         document.getElementById("changedColorFlash").value = changedTemp;
      		return output_new;
-    
+
  	}
 
 
@@ -1197,8 +1197,8 @@ body{
       }
       brightness = sumOfBrightness/cnt;
 
- 
-      ratio = 530 / brightness;
+
+      ratio = 480 / brightness;
       console.log(brightness);
       // console.log(defaultBrightness)
       console.log(ratio)
@@ -1260,13 +1260,13 @@ body{
       console.log(t);
       // var ratio = (t2 - 3000)/5856;
       // var ratio2 = (10000- t2)/5856;
-  
+
       // console.log("slider")
       // console.log(tempChange)
       if (t == t2)
         return image;
       else{
-   
+
         var xD, yD=0;
 
         // get xy from temperature
@@ -1350,7 +1350,7 @@ body{
         console.log(xD);
         console.log(yD);
         var chromaticity_x= 0.3580;
-        var chromaticity_y=0.3239; 
+        var chromaticity_y=0.3239;
       }
       }
       else if (des == 21){
@@ -1364,7 +1364,7 @@ body{
       // console.log(t);
       // var ratio = (t2 - 3000)/5856;
       // var ratio2 = (10000- t2)/5856;
-  
+
       // console.log("slider")
       // console.log(tempChange)
       if (t2 == t)
@@ -1436,11 +1436,11 @@ body{
         yD=yS+r*r_y;
         }
         var chromaticity_x= 0.4231;
-        var chromaticity_y=0.3304; 
+        var chromaticity_y=0.3304;
 
       }
     }
-       
+
         // console.log(chromaticity_x)
         //get offest / ratio between average and destination chromaticity
         var offset_x = xD/chromaticity_x;
@@ -1484,7 +1484,7 @@ body{
       return output_new;
 
     }
-  
+
 
 
 

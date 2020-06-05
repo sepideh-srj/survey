@@ -314,7 +314,7 @@ body{
         }else{
             //... else adjust current ambient value.
 
-              currentAmbient = adjustBrightness(fixedAmbient,200-this.value);
+              currentAmbient = adjustBrightness(fixedAmbient,220-this.value);
               currentFlash = adjustBrightness(fixedFlash,this.value);
 
             if (this.value != 0){
@@ -325,7 +325,7 @@ body{
         // apply changed ambient brightness to overall image.
         var output=blendImages(currentAmbient,currentFlash,zarib);
 
-        output = fixBrightness(output)
+        // output = fixBrightness(output)
         let update = new ImageData(output,flashimg.width,flashimg.height);
 
 

@@ -15,7 +15,7 @@ import random
 
 # from skimage import img_as_float,color
 def home(request):
-  
+
     if request.method == 'POST':
         if 'start' in request.POST:
             lastUser = User.objects.all().last()
@@ -37,7 +37,7 @@ def home(request):
             print("here2")
             print(ids)
             print("ccc")
-            listToStr = ','.join([str(elem) for elem in ids]) 
+            listToStr = ','.join([str(elem) for elem in ids])
             userID = lastUser.userID +1;
             newUser = User(userID = userID, order= listToStr, pointer=0)
             newUser.save()
@@ -114,9 +114,9 @@ def vote(request, question_id, userID):
         #     return render(request, 'polls/index.html', context)
 
         if 'next' in request.POST:
-            
+
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=200 - int(request.POST['mixRange']),
+            quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),
                 flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des)
             quest.save()

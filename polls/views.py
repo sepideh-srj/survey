@@ -117,7 +117,7 @@ def vote(request, question_id, userID):
 
             vote_form = voteForm()
             quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),
-                flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], ambientTemp= float(request.POST['changedColor']), flashTemp= float(request.POST['changedColorFlash'])
+                flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des)
             quest.save()
             question_list = Question.objects.all()

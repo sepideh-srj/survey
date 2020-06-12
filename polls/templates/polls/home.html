@@ -8,7 +8,7 @@
 <br>
 <div style="text-align: center;">
  <br>
- <h2> Click the "Start" button to begin the survey. </h2>
+
  <br>
  	<p> Please edit each of the following images in a way that looks the best for you.<br>
     <ol>
@@ -45,10 +45,53 @@
  	 -->
  	<br>
  	<br>
+  <p style="font-size: larger"> Please enter your age, gender and proficiency in image editing, then click the "Start" button to begin the survey. </p>
+<br>
+<div class="container" style="text-align: left;">
 
- 	<form method="post" id="test">
-	{% csrf_token %}
-   <button type="submit" name="start" class="button button2">Start</button>
+  <form method="post" id="test">
+      {% csrf_token %}
+
+    <div class="row">
+      <div class="col-25">
+        <label for="fname"><strong>Age </strong></label>
+      </div>
+      <div class="col-75">
+        <input type="number" id="age" name="age" min="1" max="100" placeholder="Your age..">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-25">
+        <label for="gende"><strong> Gender</strong></label>
+      </div>
+      <div class="col-75">
+        <select id="gender" name="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+      <div class="row">
+      <div class="col-25">
+        <label for="experience"><strong> proficiency in image editing </strong> </label>
+      </div>
+      <div class="col-75">
+        <select id="experience" name="experience">
+          <option value="Novice">Novice</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+   <button  type="submit" name="start" class="button button2">Start</button>
+    </div>
+  </form>
+</div>
+
    <br>
    <br><br>
 </form>

@@ -39,7 +39,9 @@ def home(request):
             print("ccc")
             listToStr = ','.join([str(elem) for elem in ids])
             userID = lastUser.userID +1;
-            newUser = User(userID = userID, order= listToStr, pointer=0)
+            gender=request.POST['gender']
+            print(gender)
+            newUser = User(userID = userID, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
             newUser.save()
             print(listToStr)
             questions = Question.objects.all()

@@ -24,7 +24,7 @@ def home(request):
             ids = []
             # ids2 = []
             for question in questions:
-                if question.question_id != 3:
+                if question.question_id != 3 or question.question_id != 120:
                     ids.append(question.question_id)
                 # ids2.append(question.question_id)
 

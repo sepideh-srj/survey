@@ -226,7 +226,13 @@ input[type=submit]:hover {
 
     <script type="text/javascript">
 
-
+        function validateForm() {
+          var x =  document.getElementById("age").value
+          if (x == "" || x == null) {
+            alert("Please enter your age");
+            return false;
+          }
+        }
       	var flash = document.getElementById("flashCan");
       	var ambient = document.getElementById("ambientCan");
       	var output = document.getElementById("output");

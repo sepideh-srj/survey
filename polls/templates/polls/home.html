@@ -49,7 +49,7 @@
 <br>
 <div class="container" style="text-align: left;">
 
-  <form method="post" id="test">
+  <form method="post" id="test"  onsubmit="return validateForm()">
       {% csrf_token %}
 
     <div class="row">

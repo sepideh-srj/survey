@@ -410,7 +410,7 @@ input[type=submit]:hover {
         }else{
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
-            currentAmbient = adjustBrightness(fixedAmbient,200 - mixSlider.value);
+            currentAmbient = adjustBrightness(fixedAmbient,220 - mixSlider.value);
             currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
             if(mixSlider.value != 0){
               currentFlash=fixTemp2(currentFlash,this.value);}

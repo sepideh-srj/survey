@@ -8,6 +8,6 @@ urlpatterns = [
     # path('<int:question_id>/', views.vote, name='vote'),
     path('process', views.process, name='process'),
     path('vote/<int:userID>/<int:question_id>', views.vote, name='vote'),
-    path('end/', views.end, name='end'),
+    path('end/<int:userID>', views.end, name='end'),
     # path('<int:question_id>/returnBlend', views.returnBlend, name='returnBlend')
 ]

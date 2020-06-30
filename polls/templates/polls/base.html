@@ -152,8 +152,8 @@ input[type=submit]:hover {
   -webkit-appearance: none;
   width: 100%;
   height: 25px;
-  background-image: url('/media/graySlide.jpg');
-  background-repeat:no-repeat;
+/*  background-image: url('/media/graySlide.jpg');
+  background-repeat:no-repeat;*/
   background-size: 100% 100%;
   outline: none;
   opacity: 0.7;
@@ -1191,12 +1191,12 @@ input[type=submit]:hover {
       brightness = sumOfBrightness/cnt
       console.log("brightness flash")
       console.log(brightness)
-      bright = brightness + 40;
+      bright = brightness*1.5;
       normal = brightness + 20;
-      var random = Math.floor(Math.random() * (bright - normal)) + normal;
-      ratio = random / brightness;
+      // var random = Math.floor(Math.random() * (bright - normal)) + normal;
+      ratio = bright / brightness;
       console.log("brightness")
-      console.log(random)
+      console.log(bright)
       var temp = new Float32Array(input.length)
       for (var i = 0; i < input.length; i+=4) {
          temp[i] = input[i]*ratio;
@@ -1204,7 +1204,7 @@ input[type=submit]:hover {
           temp[i+2] = input[i+2]*ratio;
           temp[i+3] = 255;
         }
-         document.getElementById("changedBrightnessFlash").value = random;
+         document.getElementById("changedBrightnessFlash").value = bright;
          return temp;
   }
 
@@ -1230,11 +1230,11 @@ input[type=submit]:hover {
 
       console.log(brightness)
       darkRoom = 10;
-      normal = 20.3;
-      var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
-      ratio = random / brightness;
+      // normal = 20.3;
+      // var random = Math.floor(Math.random() * (normal - darkRoom)) + darkRoom;
+      ratio = darkRoom / brightness;
       console.log("brightness")
-      console.log(random)
+      // console.log(random)
       var temp = new Float32Array(input.length)
       for (var i = 0; i < input.length; i+=4) {
          temp[i] = input[i]*ratio;
@@ -1242,7 +1242,7 @@ input[type=submit]:hover {
           temp[i+2] = input[i+2]*ratio;
           temp[i+3] = 255;
         }
-  		   document.getElementById("changedBrightness").value = random;
+  		   document.getElementById("changedBrightness").value = darkRoom;
   		   return temp;
  	}
 

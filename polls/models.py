@@ -20,6 +20,7 @@ class User(models.Model):
     gender = models.CharField(max_length=10, default='Male')
     age = models.IntegerField(default=0)
     experience = models.CharField(max_length=40, default='')
+    code = models.IntegerField(default=0)
     def __str__(self):
         return str(self.userID)
 

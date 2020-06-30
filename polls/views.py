@@ -24,7 +24,7 @@ def home(request):
             ids = []
             # ids2 = []
             for question in questions:
-                if question.question_id != 3 or question.question_id != 120:
+                if question.question_id != 3:
                     ids.append(question.question_id)
                 # ids2.append(question.question_id)
 
@@ -33,6 +33,8 @@ def home(request):
             # for i in range(len(ids2)):
             #     ids.append(ids2[i])
                 # ids2.append(question.question_id)
+            print("here")
+            print(ids)
             ids.insert(0,3)
             print("here2")
             print(ids)
@@ -41,7 +43,9 @@ def home(request):
             userID = lastUser.userID +1;
             gender=request.POST['gender']
             print(gender)
-            newUser = User(userID = userID, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
+            code = random.randint(1000,10000)  
+            print(code)  
+            newUser = User(userID = userID,code=code, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
             newUser.save()
             print(listToStr)
             questions = Question.objects.all()
@@ -62,9 +66,10 @@ def home(request):
     # return render(request, 'polls/index.html', context)
 
 
-def end(request):
-
-    return render(request, 'polls/end.html')
+def end(request,userID):
+    user = User.objects.get(userID=userID)
+    code = user.code
+    return render(request, 'polls/end.html', {'code': code})
 
 
 def process(request):
@@ -133,7 +138,7 @@ def vote(request, question_id, userID):
             order = order.split(',')
             print("userID:{}".format(userID))
             if (Question.objects.count()== pointer):
-                return redirect("/polls/end/")
+                return redirect("/polls/end/"+str(userID))
             question_id = int(order[pointer])
             print("question_id:{}".format(question_id))
             return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))

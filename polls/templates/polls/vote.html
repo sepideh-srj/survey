@@ -34,10 +34,33 @@
 	<input name="changedColor" id="changedColor" value ="50" style="display: none"> </input>
 	<input name="changedColorFlash" id="changedColorFlash" value ="0" style="display: none"> </input>
 	<p> temperture of flash light adjustment </p>
-	<input name="flashTempRange" type="range" min="30" max="66" step = "9" value="50" class="slider slideTemp" id="flashTempRange">
-	<p> flash and ambient lighting adjustment </p>
-	<input name="mixRange" type="range" min="20" max="220" step="50" value="120" class="slider" id="mixRange">
+		<input type="range" name="flashTempRange" id="flashTempRange" class=slider2  min="30" max="66" step="6" value="50" list="tickmarks">
 
+<datalist id="tickmarks">
+  <option value="30"></option>
+  <option value="36"></option>
+  <option value="42"></option>
+  <option value="48"></option>
+  <option value="54"></option>
+  <option value="60"></option>
+  <option value="66"></option>
+
+</datalist>
+	<!-- <input name="flashTempRange" type="range" min="30" max="66" step = "6" value="50" class="slider slideTemp" id="flashTempRange"> -->
+	<p> flash and ambient lighting adjustment </p>
+	<!-- <input name="mixRange" type="range" min="20" max="218" step="33" value="119" class="slider" id="mixRange"> -->
+	<input type="range" name="mixRange" id="mixRange" class=slider2  min="20" max="218" step="33" value="119" list="tickmarks2">
+
+<datalist id="tickmarks2">
+  <option value="20"></option>
+  <option value="53"></option>
+  <option value="86"></option>
+  <option value="119"></option>
+  <option value="152"></option>
+  <option value="185"></option>
+  <option value="218"></option>
+
+</datalist>
 	<!-- <p> ambient and flash lighting adjusment </p> -->
 
 

@@ -42,7 +42,7 @@ def home(request):
             listToStr = ','.join([str(elem) for elem in ids])
             userID = lastUser.userID +1;
             gender=request.POST['gender']
-            print(gender)
+            print(request.POST['age'])
             code = random.randint(1000,10000)  
             print(code)  
             newUser = User(userID = userID,code=code, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])

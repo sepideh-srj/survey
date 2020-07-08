@@ -17,9 +17,9 @@ class User(models.Model):
     userID = models.IntegerField(default=0)
     pointer = models.IntegerField(default=0, blank=True)
     order = models.CharField(max_length=200, blank=True)
-    gender = models.CharField(max_length=10, default='Male')
-    age = models.IntegerField(default=0)
-    experience = models.CharField(max_length=40, default='')
+    gender = models.CharField(max_length=100, default='rather not say')
+    age = models.CharField(max_length=200, default='rather not say')
+    experience = models.CharField(max_length=40, default='rather not say')
     code = models.IntegerField(default=0)
     def __str__(self):
         return str(self.userID)

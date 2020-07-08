@@ -45,7 +45,7 @@
  	 -->
  	<br>
  	<br>
-  <p style="font-size: larger"> Please enter your age, gender and proficiency in image editing, then click the "Start" button to begin the survey. </p>
+  <p style="font-size: larger"> Please fill out the following form by entering your age, gender and proficiency in image editing, then click the "Start" button to begin the survey. Your demographic information will be used only for academic research purposes. </p>
 <br>
 <div class="container" style="text-align: left;">
 
@@ -57,7 +57,20 @@
         <label for="fname"><strong>Age </strong></label>
       </div>
       <div class="col-75">
-        <input type="number" id="age" name="age" min="1" max="100" placeholder="Your age..">
+          <select id="age" name="age">
+          
+          <option value="under12">Under 12 years old</option>
+          <option value="12-17">12-17 years old</option>
+          <option value="18-24">18-24 years old</option>
+          <option value="25-34">25-34 years old</option>
+          <option value="35-44">35-44 years old</option>
+          <option value="45-54">45-54 years old</option>
+          <option value="55-64">55-64 years old</option>
+          <option value="65-74">65-74 years old</option>
+          <option value="above 75">75 years or older</option>
+          <option value="rather not say">Rather not say</option>
+
+        </select>
       </div>
     </div>
 
@@ -70,6 +83,7 @@
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
+          <option value="Rather not say">Rather not say</option>
         </select>
       </div>
     </div>
@@ -82,6 +96,7 @@
           <option value="Novice">Novice: I sometimes use applications to make images look better.</option>
           <option value="Intermediate">Intermediate: I know how to work with photographs using tools like Lightroom or Photoshop.</option>
           <option value="Expert">Expert: I can proficiently use advanced photography editing software.</option>
+          <option value="Rather not say">Rather not say</option>
         </select>
       </div>
     </div>

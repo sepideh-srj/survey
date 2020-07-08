@@ -113,6 +113,7 @@ def vote(request, question_id, userID):
     # print(color)
     # print(request.POST)
     user = User.objects.get(userID=userID)
+
     pointer = user.pointer
     if request.method == 'POST':
         # if 'back' in request.POST:
@@ -123,9 +124,9 @@ def vote(request, question_id, userID):
         if 'next' in request.POST:
 
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),
+            quest.choice_set.create(questionID = question_id, flash=10*float(request.POST['mixRange']), ambient=220 - 10*float(request.POST['mixRange']),
                 flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], flashTemp= float(request.POST['changedColorFlash'])
-                ,user = userID, illuminant=des)
+                ,user = userID, illuminant=des, code = user.code)
             quest.save()
             question_list = Question.objects.all()
             user = User.objects.get(userID=userID)

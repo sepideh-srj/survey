@@ -1,5 +1,5 @@
-{% load static %}
-{% load static %}
+
+
 
 
 <!DOCTYPE html>
@@ -13,7 +13,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="{%static 'poll/main.css'%}">
+    <link rel="stylesheet" type="text/css" href="/static/poll/main.css">
+
+	<link rel="stylesheet" type="text/css" href="/static/poll/bootstrap-slider.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css"> -->
     <style>
 .slidecontainer {
   width: 100%;
@@ -187,6 +191,10 @@ input[type=submit]:hover {
   
   width: 100%;
 }
+.slider{
+	width: 100%;
+	background-color: #3f484a;
+}
 @media screen and (max-width: 540px) {
     .first {
       display: none;
@@ -215,17 +223,15 @@ input[type=submit]:hover {
     </div>
   </nav>
 </header> -->
-
 	<div class="container">
 	{% block content %}
 	{% endblock %}
-
-	</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.6.0/math.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script type="text/javascript">
 
         function validateForm() {
@@ -259,8 +265,9 @@ input[type=submit]:hover {
         picID = parseInt(picID)
         console.log("picID")
         console.log(picID)
-        // var colorAm = document.getElementById("colorAm").innerHTML;
 
+
+		// mixSlider.oninput({console.log("here")})
       	// var exp = document.getElementById("exp").innerHTML;
 
       	var flashData, ambientData,output2Data,matrix,firstData, flashOutputData;
@@ -279,18 +286,22 @@ input[type=submit]:hover {
 
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
-        else if (des == 21) {neutral = 42;}
+        else if (des == 21) {neutral = 40;}
 
         console.log("image temperature")
         console.log(neutral)
-        document.getElementById("flashTempRange").value = neutral;
-
+        document.getElementById("flashTempRange").data_slider_value = neutral;
+        $("#flashTempRange").attr('data-slider-value', neutral);
+        document.getElementById("mixRange").data_slider_value = 11.9;
+        $("#mixRange").attr('data-slider-value', 11.9);
+    	// $("#flashTempRange").slider('refresh');
         function myFunction() {
-       document.getElementById("flashTempRange").value = neutral;
-        // document.getElementById("ambientRange").value = 100;
-        // document.getElementById("flashRange").value = 100;
-        document.getElementById("mixRange").value = 110;
-
+       // document.getElementById("flashTempRange").value = neutral;
+        $("#flashTempRange").attr('data-slider-value', neutral);
+    	$("#flashTempRange").slider('refresh');
+    	$("#mixRange").attr('data-slider-value', 110);
+    	$("#mixRange").slider('refresh');
+ 
         }
     	// output1.innerHTML = slider.value;
       	window.onload = function() {
@@ -357,8 +368,8 @@ input[type=submit]:hover {
           // fixedAmbient = fixColorAmbient(fixedAmbient);
 
         	//blend fixed images
-          blend2(fixedAmbient,fixedFlash,110,110,firstData.data,zarib);
-        	blend2(fixedAmbient,fixedFlash,110,110,output2Data.data,zarib);
+          blend2(fixedAmbient,fixedFlash,119,99,firstData.data,zarib);
+        	blend2(fixedAmbient,fixedFlash,119,99,output2Data.data,zarib);
           defaultBrightness = getBrightness(firstData.data)
           //update canvases
         	output2Context.putImageData(output2Data, 0, 0);
@@ -371,19 +382,20 @@ input[type=submit]:hover {
 
     	}
 
-      mixSlider.oninput = function(){
-
+      mixSlider.onchange = function(){
+      	console.log("here")
+      	console.log(this.value)
 
         //if the slider is in neutral position...
-        if(this.value==100){
+        if(this.value==11.9){
             //... set the current ambient value to original value...
             currentAmbient=fixedAmbient;
             currentFlash = fixedFlash;
         }else{
             //... else adjust current ambient value.
 
-              currentAmbient = adjustBrightness(fixedAmbient,220-this.value);
-              currentFlash = adjustBrightness(fixedFlash,this.value);
+              currentAmbient = adjustBrightness(fixedAmbient,218-this.value*10);
+              currentFlash = adjustBrightness(fixedFlash,this.value*10);
 
             if (this.value != 0){
                 currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
@@ -408,8 +420,8 @@ input[type=submit]:hover {
 
 
       // if flash temperature is adjusted /////
-  		flashTempSlider.oninput = function() {
-
+  		flashTempSlider.onchange = function() {
+  			console.log("here")
         //if the slider is in neutral position...
         if(this.value==this.flashTempRange/2){
 
@@ -418,8 +430,8 @@ input[type=submit]:hover {
         }else{
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
-            currentAmbient = adjustBrightness(fixedAmbient,220 - mixSlider.value);
-            currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
+            currentAmbient = adjustBrightness(fixedAmbient,218 - mixSlider.value*10);
+            currentFlash = adjustBrightness(fixedFlash,mixSlider.value*10);
             if(mixSlider.value != 0){
               currentFlash=fixTemp2(currentFlash,this.value);}
         }

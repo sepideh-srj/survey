@@ -34,23 +34,26 @@
 	<input name="changedColor" id="changedColor" value ="50" style="display: none"> </input>
 	<input name="changedColorFlash" id="changedColorFlash" value ="0" style="display: none"> </input>
 	<p> temperture of flash light adjustment </p>
-		<input type="range" name="flashTempRange" id="flashTempRange" class=slider2  min="30" max="66" step="6" value="50" list="tickmarks">
-
-<datalist id="tickmarks">
-  <option value="30"></option>
-  <option value="36"></option>
-  <option value="42"></option>
-  <option value="48"></option>
-  <option value="54"></option>
-  <option value="60"></option>
-  <option value="66"></option>
-
-</datalist>
+		<input type="range" style="width:100%" name="flashTempRange" id="flashTempRange" class=slider2   data-provide="slider"
+              data-slider-ticks="[36,40,44,48,52,56,60]"
+              data-slider-min="36"
+              data-slider-max="60"
+              data-slider-step="4"
+              data-slider-value= "50"
+              data-slider-tooltip="hide">
+    <br>
 	<!-- <input name="flashTempRange" type="range" min="30" max="66" step = "6" value="50" class="slider slideTemp" id="flashTempRange"> -->
 	<p> flash and ambient lighting adjustment </p>
 	<!-- <input name="mixRange" type="range" min="20" max="218" step="33" value="119" class="slider" id="mixRange"> -->
-	<input type="range" name="mixRange" id="mixRange" class=slider2  min="20" max="218" step="33" value="119" list="tickmarks2">
-
+	<input type="range" style="width:100%" name="mixRange" id="mixRange" class=slider2   data-provide="slider"
+              data-slider-ticks="[2, 5.3, 8.6, 11.9,15.2,18.5,21.8]"
+              data-slider-min="2"
+              data-slider-max="21.8"
+              data-slider-step="3.3"
+              data-slider-value= "11.9"
+              data-slider-tooltip="hide"
+           >
+<!-- 
 <datalist id="tickmarks2">
   <option value="20"></option>
   <option value="53"></option>
@@ -60,7 +63,7 @@
   <option value="185"></option>
   <option value="218"></option>
 
-</datalist>
+</datalist> -->
 	<!-- <p> ambient and flash lighting adjusment </p> -->
 
 
@@ -79,6 +82,10 @@
 	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
 
 <!-- </form> -->
+<!-- <input id="ex13" style="width:100%; background-color: white" type="text"  data-slider-ticks-snap-bounds="100" data-slider-min="100"
+              data-slider-max="500"
+              data-slider-step="100"
+              data-slider-tooltip="hide"/> -->
 
 </div>
 </div>

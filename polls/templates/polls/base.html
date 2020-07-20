@@ -285,8 +285,8 @@ input[type=submit]:hover {
         var defaultBrightness;
 
         des = parseInt(des);
-        if (des ==17) {neutral = 48;}
-        else if (des == 21) {neutral = 40;}
+        neutral = 48;
+
 
         console.log("image temperature")
         console.log(neutral)
@@ -351,25 +351,40 @@ input[type=submit]:hover {
         	fixedAmbient = fixColorMap(ambientData.data);
         	fixedFlash = fixColorMap(flashData.data);
 
-
-
-          // console.log("first flash")
-          // console.log(fixedFlash)
-        	// console.log(fixedAmbient)
-
+          if (des == 21)
+          {
+            fixedFlash2 = fixTempd65(fixedFlash);
+          
 
           // change the ambient brightness randomly
           //fixedAmbient_orig=fixedAmbient;
           if (picID == 30 || picID==20 || picID==49 || picID==14 || picID==45){
 
+            fixedFlash2 = fixBrightnessFlash(fixedFlash2);
             fixedFlash = fixBrightnessFlash(fixedFlash);
           }
           fixedAmbient = fixBrightnessAmbient(fixedAmbient);
           // fixedAmbient = fixColorAmbient(fixedAmbient);
 
         	//blend fixed images
+
+          blend2(fixedAmbient,fixedFlash2,119,99,firstData.data,zarib);
+        	blend2(fixedAmbient,fixedFlash2,119,99,output2Data.data,zarib);
+        }
+        else
+        {
+          if (picID == 30 || picID==20 || picID==49 || picID==14 || picID==45){
+
+            fixedFlash = fixBrightnessFlash(fixedFlash);
+          }
+            fixedAmbient = fixBrightnessAmbient(fixedAmbient);
+          // fixedAmbient = fixColorAmbient(fixedAmbient);
+
+          //blend fixed images
+
           blend2(fixedAmbient,fixedFlash,119,99,firstData.data,zarib);
-        	blend2(fixedAmbient,fixedFlash,119,99,output2Data.data,zarib);
+          blend2(fixedAmbient,fixedFlash,119,99,output2Data.data,zarib);
+        }
           defaultBrightness = getBrightness(firstData.data)
           //update canvases
         	output2Context.putImageData(output2Data, 0, 0);
@@ -387,20 +402,22 @@ input[type=submit]:hover {
       	console.log(this.value)
 
         //if the slider is in neutral position...
-        if(this.value==11.9){
-            //... set the current ambient value to original value...
-            currentAmbient=fixedAmbient;
-            currentFlash = fixedFlash;
-        }else{
-            //... else adjust current ambient value.
+        // if(this.value==11.9){
+        //     //... set the current ambient value to original value...
+        //     currentAmbient=fixedAmbient;
+        //     currentFlash = fixedFlash;
+        //     // if (des == 21)
+        //     //   currentFlash = fixTempd65(currentFlash);
+        //     currentFlash=fixTemp2(currentFlash,flashTempSlider.value);
+        // }else{
+        //     //... else adjust current ambient value.
 
               currentAmbient = adjustBrightness(fixedAmbient,218-this.value*10);
               currentFlash = adjustBrightness(fixedFlash,this.value*10);
 
-            if (this.value != 0){
-                currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
-        }
-
+          
+              currentFlash=fixTemp2(currentFlash,flashTempSlider.value);
+        
         //console.log(currentAmbient)
         // apply changed ambient brightness to overall image.
         var output=blendImages(currentAmbient,currentFlash,zarib);
@@ -423,18 +440,14 @@ input[type=submit]:hover {
   		flashTempSlider.onchange = function() {
   			console.log("here")
         //if the slider is in neutral position...
-        if(this.value==this.flashTempRange/2){
-
-            //... set the current flash temp value to original value...
-      			currentFlash=fixedFlash;
-        }else{
+ 
             //... else adjust current flash value.
       			//preBlend2(currentFlash,this.value,outFlash);
             currentAmbient = adjustBrightness(fixedAmbient,218 - mixSlider.value*10);
             currentFlash = adjustBrightness(fixedFlash,mixSlider.value*10);
-            if(mixSlider.value != 0){
-              currentFlash=fixTemp2(currentFlash,this.value);}
-        }
+            
+              currentFlash=fixTemp2(currentFlash,this.value);
+        
 //
         // console.log("current flash generated");
         // apply changed flash temperature to overall image.
@@ -796,13 +809,121 @@ input[type=submit]:hover {
     //   return [xlocal,ylocal,zlocal];
     // }
 
+    function fixTempd65(image){
+      output_new = new Float32Array(output.length);
+
+      t2 = 4500;
+
+      t = 5000;
+   
+        var xD, yD=0;
+
+        if (t >=4500 && t <= 7500){
+        r=getRatio(t,4500,7500)
+        // rgb = [254, 250, 219];
+        // xyz = xyz2rgb(rgb);
+        xD = 0.17;
+        yD = 0.17;
+        xS = 0.4231;
+        yS = 0.3304;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+      }
+
+        else if (t < 4500 && t >= 4000){
+
+        r=getRatio(t,4500,4000)
+        xD = 0.4949;
+        yD = 0.3564;
+        xS = 0.4231;
+        yS = 0.3304;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+      }
+        else if (t >=3500 && t < 4000){
+
+        r=getRatio(t,4000,3500);
+        xD =  0.5141;
+        yD =  0.3434;
+        xS = 0.4949;
+        yS = 0.3564;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+        }
+
+        else if (t >0 && t < 3500){
+        r=getRatio(t,3500,0);
+        xD = 0.5189;
+        yD = 0.3063;
+        xS =  0.5141;
+        yS =  0.3434;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+        }
+        var chromaticity_x= 0.4231;
+        var chromaticity_y=0.3304;
+
+      
+    
+        //get offest / ratio between average and destination chromaticity
+        var offset_x = xD/chromaticity_x
+        var offset_y = yD/chromaticity_y
+
+        console.log("destination")
+        console.log(xD)
+        console.log(yD)
+        // adjust XYZ values according to ratio
+        for (var i = 0; i < image.length; i+=4) {
+
+          if((image[i]+image[i+1]+image[i+2])==0){
+              var x_pix=0;
+              var y_pix=0;
+          }else{
+              var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+              var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+          }
+
+          x_pix=x_pix*offset_x;
+          y_pix=y_pix*offset_y;
+
+
+
+          if(y_pix==0){
+              output_new[i] = 0
+              output_new[i+2] = 0
+          }else{
+              output_new[i] = (x_pix*image[i+1]/y_pix);
+              output_new[i+2] = ((1-x_pix-y_pix)*image[i+1]/y_pix);
+          }
+
+          output_new[i+1] = image[i+1];
+          output_new[i+3] = 255;
+
+        }
+
+        //return XYZ values
+        changedTemp = t - t2
+        return output_new;
+
+
+  }
+
+
 
 
   	function fixTemp2(image,tempChange){
 	   	output_new = new Float32Array(output.length);
       console.log("illuminant")
       console.log(des)
-      if (des == 17){
+      if (des == 17 ){
       t2 = 5500;
       console.log(tempChange)
       console.log("image temperature")
@@ -925,15 +1046,13 @@ input[type=submit]:hover {
 
       // console.log("slider")
       // console.log(tempChange)
-      if (tempChange == neutral)
-        return image;
-      else{
+  
 
         var changeNorm=(tempChange-neutral)/100;
         console.log("changeNorm")
         console.log(changeNorm);
         var t = (math.round(t2+changeNorm*5856));
-
+        t = t + 500;
         console.log("new temperature")
         console.log(t);
         var xD, yD=0;
@@ -1003,7 +1122,7 @@ input[type=submit]:hover {
         var chromaticity_y=0.3304;
 
       }
-    }
+    
   	   	//get offest / ratio between average and destination chromaticity
   	   	var offset_x = xD/chromaticity_x
   	   	var offset_y = yD/chromaticity_y

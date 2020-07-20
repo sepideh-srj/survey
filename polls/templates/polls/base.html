@@ -234,10 +234,20 @@ input[type=submit]:hover {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script type="text/javascript">
 
-        function validateForm() {
+            function validateForm() {
           var x =  document.getElementById("age").value
           if (x == "" || x == null) {
             alert("Please enter your age");
+            return false;
+          }
+          x =  document.getElementById("gender").value
+          if (x == "" || x == null) {
+            alert("Please enter your gender");
+            return false;
+          }
+          x =  document.getElementById("experience").value
+          if (x == "" || x == null) {
+            alert("Please enter your experience");
             return false;
           }
         }

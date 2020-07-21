@@ -37,3 +37,4 @@ class Choice(models.Model):
     user = models.IntegerField(default=0)
     illuminant = models.IntegerField(default=0)
     code = models.IntegerField(default=0)
+    time = models.IntegerField(default=0)

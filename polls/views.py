@@ -11,8 +11,10 @@ from PIL import Image
 from django.core.files.images import ImageFile
 from .resources import QuestionResource
 import random
-
-
+import time
+from datetime import datetime
+notInNext = True
+oldtime = 0
 # from skimage import img_as_float,color
 def home(request):
 
@@ -27,7 +29,6 @@ def home(request):
                 if question.question_id != 3:
                     ids.append(question.question_id)
                 # ids2.append(question.question_id)
-
             random.shuffle(ids)
             # random.shuffle(ids2)
             # for i in range(len(ids2)):
@@ -43,6 +44,7 @@ def home(request):
             userID = lastUser.userID +1;
             gender=request.POST['gender']
             print(request.POST['age'])
+            
             code = random.randint(1000,10000)  
             print(code)  
             newUser = User(userID = userID,code=code, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
@@ -102,7 +104,15 @@ def vote(request, question_id, userID):
     # pointer = pointer +1
     image = quest.flashPic
     image = Image.open(image)
-
+    startTime = datetime.now()
+    global notInNext
+    global oldtime
+    # this.notInNext = notInNext
+    print("boolean:{}".format(notInNext))
+    if (notInNext):
+        oldtime = startTime
+        print("time:{}".format(startTime))
+        notInNext = False
     des = int(image.info['Description'])
     matrix = image.info['Comment']
     # color =image.info['Warning']
@@ -124,7 +134,13 @@ def vote(request, question_id, userID):
         if 'next' in request.POST:
 
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, flash=10*float(request.POST['mixRange']), ambient=220 - 10*float(request.POST['mixRange']),
+            finishTime = datetime.now()
+            thisTime = (finishTime - oldtime).total_seconds()
+            notInNext = True
+            print("this time:{}".format(thisTime))
+            print("finish time:{}".format(finishTime))
+            print("start time:{}".format(startTime))
+            quest.choice_set.create(time = thisTime, questionID = question_id, flash=10*float(request.POST['mixRange']), ambient=220 - 10*float(request.POST['mixRange']),
                 flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], flashTemp= float(request.POST['changedColorFlash'])
                 ,user = userID, illuminant=des, code = user.code)
             quest.save()
@@ -222,3 +238,4 @@ def vote(request, question_id, userID):
 # print("sepide")
 # randomVar = random.randint(1,50)
 # print("main:{}".format(shuffle))
+

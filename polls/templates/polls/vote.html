@@ -9,86 +9,82 @@
 <p id="matrix" style="display: none;"> {{matrix}} </p>
 <!-- <p id="color" style="display: none;"> {{color}} </p> -->
 <p id="picID" style="display: none;"> {{question_id}} </p>
-
-<!-- /*<p id="colorAm" style="display: none;"> {{colorAm}} </p>*/
- --><!-- <p id="exp" style="display: none;"> {{exp}} </p> -->
+<p id="choiceSet" style="display: none"> {{choiceSet}}</p>
+<p id="setNum" style="display: none"> {{setNum}}</p>
 <img src="{{question.ambientPic.url}}" style="display: none;" id="ambient">
 <img src="{{question.flashPic.url}}" style="display: none;" id="flash" >
 
 <canvas id="flashCan" width="500" height="500" style="display: none;" ></canvas>
 <canvas id="ambientCan" width="500" height="500" style="display: none;"></canvas>
-<canvas class="first" id="first" width="500" height="400" style="text-align: right"></canvas>
 <canvas id="output" width="500" height="500"style="display: none"></canvas>
-<canvas id="output2" width="500" height="400"></canvas>
 
-<div class="slidecontainer">
+<div class="slidecontainer" style="text-align: center">
   
+
+	<br>
+	<!-- <p> ambient lighting adjustment </p> -->
+
+	<h3> choose the image that has the best illumination by clicking on it or click on "no preference" if you can not decide. Then click next.</h3>
+	<p> When you click on your choice for the image it will be shown by a yellow bar on the top of the image. When you click on 'no preference' button it will be shown by changing the background color to yellow. After clicking next you will see the next question and you cannot go back! </p>
+	<div class="row" >
+		{% if setNum < 3 and setNum > -3 %}
+
+		<div class="col-md-6">
+			<button class="canvasBtn" id="canvasBtn" onclick="choose1()" style="margin:0; padding:0; padding-top: 5%; padding-right: -10px;"> <canvas class="first" id="first" width="430" height="434"></canvas></button>
+		</div>
+		<div class="col-md-6">
+    		<button class="canvasBtn" id="canvasBtn2" onclick="choose2()" style=" margin: 0; padding: 0; padding-top: 5%;  "><canvas id="output2" width="430" height="434"></canvas></button>
+		</div>
+
+		{% else %}
+		<div class="col-md-4">
+			<button class="canvasBtn" id="canvasBtn" onclick="choose1()" style="margin:0; padding:0; padding-top: 5%; "> <canvas class="first" id="first" width="430" height="434"></canvas></button>
+		</div>
+		<div class="col-md-4">
+    		<button class="canvasBtn" id="canvasBtn2" onclick="choose2()" style=" margin: 0; padding: 0; padding-top: 5%;  "><canvas id="output2" width="430" height="434"></canvas></button>
+		</div>
+				<div class="col-md-4">
+    		<button class="canvasBtn" id="canvasBtn3" onclick="choose4()" style=" margin: 0; padding: 0; padding-top: 5%;  "><canvas id="output3" width="430" height="434"></canvas></button>
+		</div>
+		{% endif %}
+	</div>
+	<button class="buttonNeither" onclick="choose3()">no preference</button>
+</div>
+<br>
+<br>
+<br>
 <form method="post" id="test">
 <!-- 	{{ finalChoice_form.as_p }}
  -->	{{ Choice_form.as_p }}
 	{% csrf_token %}
-	<!-- <p> ambient lighting adjustment </p> -->
-
 	<input name="changedBrightness" id="changedBrightness" value ="0.4" style="display: none"> </input>
 	<input name="changedBrightnessFlash" id="changedBrightnessFlash" value ="0" style="display: none"> </input>
 	<input name="changedColor" id="changedColor" value ="50" style="display: none"> </input>
 	<input name="changedColorFlash" id="changedColorFlash" value ="0" style="display: none"> </input>
-	<p> temperture of flash light adjustment </p>
-		<input type="range" name="flashTempRange" id="flashTempRange" class=slider2  min="30" max="66" step="6" value="50" list="tickmarks">
-
-<datalist id="tickmarks">
-  <option value="30"></option>
-  <option value="36"></option>
-  <option value="42"></option>
-  <option value="48"></option>
-  <option value="54"></option>
-  <option value="60"></option>
-  <option value="66"></option>
-
-</datalist>
-	<!-- <input name="flashTempRange" type="range" min="30" max="66" step = "6" value="50" class="slider slideTemp" id="flashTempRange"> -->
-	<p> flash and ambient lighting adjustment </p>
-	<!-- <input name="mixRange" type="range" min="20" max="218" step="33" value="119" class="slider" id="mixRange"> -->
-	<input type="range" name="mixRange" id="mixRange" class=slider2  min="20" max="218" step="33" value="119" list="tickmarks2">
-
-<datalist id="tickmarks2">
-  <option value="20"></option>
-  <option value="53"></option>
-  <option value="86"></option>
-  <option value="119"></option>
-  <option value="152"></option>
-  <option value="185"></option>
-  <option value="218"></option>
-
-</datalist>
-	<!-- <p> ambient and flash lighting adjusment </p> -->
-
+	<!-- <p> temperture of flash light adjustment </p> -->
+	<input name="choice" id="choice" value ="0" style="display: none"> </input>
+	<input name="flashBrightness" id="flashBrightness" style="display:none"value ="0" > </input>
+	<input name="flashTemp" id="flashTemp" value ="0" style="display: none"> </input>
 
   <p style="display: none;">Value: <span id="demo"></span></p>
 	<!-- <img src="/{{ MEDIA_URL }}media/slide.jpg" / width="100%" height="30px"> -->
 	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
+	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
+	<button type="submit"  form="test" name="next" class="button3 button2">next</button>
+
 	<br>
 	<br>
 </form>
-	<button name="reset" onclick="myFunction()" class="button4 button2">reset</button>
-
-	<button type="submit"  form="test" name="next" class="button3 button2">next</button>
-
-	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
-	<br>
-	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
+<!-- 
+	<button type="submit"  form="test" name="next" class="button3 button2">image 1</button>
+	<button type="submit"  form="test" name="next" class="button3 button2">image 2</button>
+ -->	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
 
 <!-- </form> -->
 
 </div>
-</div>
 
-<canvas id="flashCanvas" width="500" height="500" style="display: none;"></canvas>
-<canvas id="flashOutput" width="500" height="500" style="display: none;"></canvas>
-<br>
 
-</div>
-</div>
 
 
 

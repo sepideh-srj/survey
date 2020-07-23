@@ -8,7 +8,7 @@ class voteForm(forms.ModelForm):
     class Meta:
 
         model = Choice
-        fields = ['flash', 'ambient', 'flashTemp','ambientBrightness']
+        fields = ['setNum', 'choice']
 
 
 

@@ -1,0 +1,95 @@
+{% extends "./base.html%}
+
+{% block content%}
+
+<div style="text-align: center">
+<h1>image number {{ pointer | add:1}} from {{numberOfPics}} images</h1>
+<hr>
+<p id="des" style="display: none;"> {{des}} </p>
+<p id="matrix" style="display: none;"> {{matrix}} </p>
+<!-- <p id="color" style="display: none;"> {{color}} </p> -->
+<p id="picID" style="display: none;"> {{question_id}} </p>
+
+<!-- /*<p id="colorAm" style="display: none;"> {{colorAm}} </p>*/
+ --><!-- <p id="exp" style="display: none;"> {{exp}} </p> -->
+<img src="{{question.ambientPic.url}}" style="display: none;" id="ambient">
+<img src="{{question.flashPic.url}}" style="display: none;" id="flash" >
+
+<canvas id="flashCan" width="500" height="500" style="display: none;" ></canvas>
+<canvas id="ambientCan" width="500" height="500" style="display: none;"></canvas>
+<canvas class="first" id="first" width="500" height="400" style="text-align: right"></canvas>
+<canvas id="output" width="500" height="500"style="display: none"></canvas>
+<canvas id="output2" width="500" height="400"></canvas>
+
+<div class="slidecontainer">
+  
+<form method="post" id="test">
+<!-- 	{{ finalChoice_form.as_p }}
+ -->	{{ Choice_form.as_p }}
+	{% csrf_token %}
+	<!-- <p> ambient lighting adjustment </p> -->
+
+	<input name="changedBrightness" id="changedBrightness" value ="0.4" style="display: none"> </input>
+	<input name="changedBrightnessFlash" id="changedBrightnessFlash" value ="0" style="display: none"> </input>
+	<input name="changedColor" id="changedColor" value ="50" style="display: none"> </input>
+	<input name="changedColorFlash" id="changedColorFlash" value ="0" style="display: none"> </input>
+	<p> temperture of flash light adjustment </p>
+		<input type="range" name="flashTempRange" id="flashTempRange" class=slider2  min="30" max="66" step="6" value="50" list="tickmarks">
+
+<datalist id="tickmarks">
+  <option value="30"></option>
+  <option value="36"></option>
+  <option value="42"></option>
+  <option value="48"></option>
+  <option value="54"></option>
+  <option value="60"></option>
+  <option value="66"></option>
+
+</datalist>
+	<!-- <input name="flashTempRange" type="range" min="30" max="66" step = "6" value="50" class="slider slideTemp" id="flashTempRange"> -->
+	<p> flash and ambient lighting adjustment </p>
+	<!-- <input name="mixRange" type="range" min="20" max="218" step="33" value="119" class="slider" id="mixRange"> -->
+	<input type="range" name="mixRange" id="mixRange" class=slider2  min="20" max="218" step="33" value="119" list="tickmarks2">
+
+<datalist id="tickmarks2">
+  <option value="20"></option>
+  <option value="53"></option>
+  <option value="86"></option>
+  <option value="119"></option>
+  <option value="152"></option>
+  <option value="185"></option>
+  <option value="218"></option>
+
+</datalist>
+	<!-- <p> ambient and flash lighting adjusment </p> -->
+
+
+  <p style="display: none;">Value: <span id="demo"></span></p>
+	<!-- <img src="/{{ MEDIA_URL }}media/slide.jpg" / width="100%" height="30px"> -->
+	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->
+	<br>
+	<br>
+</form>
+	<button name="reset" onclick="myFunction()" class="button4 button2">reset</button>
+
+	<button type="submit"  form="test" name="next" class="button3 button2">next</button>
+
+	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
+	<br>
+	<!-- <button type="submit" name="back" class="btn btn-danger">back</button> -->
+
+<!-- </form> -->
+
+</div>
+</div>
+
+<canvas id="flashCanvas" width="500" height="500" style="display: none;"></canvas>
+<canvas id="flashOutput" width="500" height="500" style="display: none;"></canvas>
+<br>
+
+</div>
+</div>
+
+
+
+{% endblock content%}	

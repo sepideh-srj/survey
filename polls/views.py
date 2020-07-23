@@ -11,7 +11,9 @@ from PIL import Image
 from django.core.files.images import ImageFile
 from .resources import QuestionResource
 import random
-
+from datetime import datetime
+notInNext = True
+oldtime = 0
 
 # from skimage import img_as_float,color
 def home(request):
@@ -22,30 +24,66 @@ def home(request):
             questions = Question.objects.all()
 
             ids = []
-            # ids2 = []
+            ids2 = []
+            ids3 = []
+            ids4 = []
+            ids5 = []
+            ids6 = []
             for question in questions:
-                if question.question_id != 3:
-                    ids.append(question.question_id)
-                # ids2.append(question.question_id)
+                # if question.question_id == 3:
+                question.choiceSet = 0
+                question.setNum = 1
+                question.save()
+                ids.append(question.question_id)
+                    # ids.append(question.question_id)
+                    # ids.append(question.question_id)
+                    # ids.append(question.question_id)
+                    # ids.append(question.question_id)
+                    # ids.append(question.question_id)
+
+            for question in questions:
+                ids2.append(question.question_id) 
+            for question in questions:
+                ids3.append(question.question_id) 
+            for question in questions:
+                ids4.append(question.question_id) 
+            for question in questions:
+                ids5.append(question.question_id)           
+            for question in questions:
+                ids6.append(question.question_id) 
 
             random.shuffle(ids)
-            # random.shuffle(ids2)
-            # for i in range(len(ids2)):
-            #     ids.append(ids2[i])
-                # ids2.append(question.question_id)
+            random.shuffle(ids2)
+            random.shuffle(ids3)
+            random.shuffle(ids4)
+            random.shuffle(ids5)
+            random.shuffle(ids6)
+
+            for i in range(len(ids2)):
+                ids.append(ids2[i])
+            for i in range(len(ids2)):
+                ids.append(ids3[i])
+            for i in range(len(ids2)):
+                ids.append(ids4[i])
+            for i in range(len(ids2)):
+                ids.append(ids5[i]) 
+            for i in range(len(ids2)):
+                ids.append(ids6[i])   
+       
             print("here")
             print(ids)
-            ids.insert(0,3)
+            # ids.insert(0,3)
             print("here2")
             print(ids)
             print("ccc")
             listToStr = ','.join([str(elem) for elem in ids])
+            print(listToStr)
             userID = lastUser.userID +1;
             gender=request.POST['gender']
             print(gender)
             code = random.randint(1000,10000)  
             print(code)  
-            newUser = User(userID = userID,code=code, order= listToStr, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
+            newUser = User(userID = userID,code=code, order= listToStr, setNum = 1, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
             newUser.save()
             print(listToStr)
             questions = Question.objects.all()
@@ -74,7 +112,7 @@ def end(request,userID):
 
 def process(request):
     quest = Question.objects.get(question_id=14)
-
+    setNum = quest.set
     image = quest.ambientPic
     image = Image.open(image)
     des = int(image.info['Description'])
@@ -92,132 +130,155 @@ def process(request):
     ambientTemp = 50
     ambientBrightness = 35
 
-    return render(request, 'polls/process.html', {'question': quest,'des': des, 'matrix': matrix, 'flash': flash, 'colorAm': colorAm, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness, 'color':color})
+    return render(request, 'polls/process.html', {'question': quest,'set': setNum,'des': des, 'matrix': matrix, 'flash': flash, 'colorAm': colorAm, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness, 'color':color})
 
 def vote(request, question_id, userID):
     quest = Question.objects.get(question_id=question_id)
-    numberOfPics = Question.objects.count();
+    numberOfPics = Question.objects.count()*6;
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
+    print("choiceset: {}".format(quest.choiceSet))
     # pointer = pointer +1
     image = quest.flashPic
     image = Image.open(image)
-
+    choiceSet = quest.choiceSet
+    setNum = quest.setNum
+    print(choiceSet)
     des = int(image.info['Description'])
     matrix = image.info['Comment']
+    global notInNext
+    global oldtime
     # color =image.info['Warning']
     # image = quest.ambientPic
     # image = Image.open(image)
     # colorAm = image.info['Warning']
-
+    startTime = datetime.now()
+    if (notInNext):
+        oldtime = startTime
+        print("time:{}".format(startTime))
+        notInNext = False
     # print(color)
     # print(request.POST)
     user = User.objects.get(userID=userID)
     pointer = user.pointer
+    setNum = quest.setNum
+    print("setNum:{}".format(setNum))
     if request.method == 'POST':
         # if 'back' in request.POST:
         #     question_list = Question.objects.all()
         #     context = {'question_list': question_list, 'userID': userID}
         #     return render(request, 'polls/index.html', context)
-
         if 'next' in request.POST:
 
             vote_form = voteForm()
-            quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),
-                flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], flashTemp= float(request.POST['changedColorFlash'])
-                ,user = userID, illuminant=des)
+            # quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),
+            #     flashTempRange=((float(request.POST['flashTempRange'])-30)/36)*100, ambientBrightness= request.POST['changedBrightness'],  flashBrightness= request.POST['changedBrightnessFlash'], flashTemp= float(request.POST['changedColorFlash'])
+            #     ,user = userID, illuminant=des)
             quest.save()
+            choice = request.POST['choice']
+            print("choice:{}".format(choice))
+            if quest.setNum == 1:
+                # more ambient
+                if choice == "1":
+                    quest.choiceSet = 1
+                elif choice == "2":
+                    #more flash
+                    print("here")
+                    quest.choiceSet = 2
+                elif choice == "3":
+                    # none
+                    quest.choiceSet = 3
+                quest.setNum = 2
+            elif quest.setNum == -1:
+                if choice == "1":
+                    # temp 42
+                    quest.choiceSet = -1
+                elif choice == "2":
+                    #temp 54
+                    quest.choiceSet = -2
+                elif choice == "3":
+                    quest.choiceSet = -3
+                quest.setNum = -2 
+            elif quest.setNum == 2:
+                print("choice:{}".format(choice))
+                print("quest.choiceSet:{}".format(quest.choiceSet))
+                if (choice == "1" and quest.choiceSet == 2):
+                    #more flash
+                    quest.choiceSet = 1
+                elif (choice == "2" and quest.choiceSet == 1):
+                    #more ambient
+                    print("here")
+                    quest.choiceSet = 2
+                elif (choice == "3" and quest.choiceSet == 3) :
+                    # none
+                    print("here4")
+                    quest.choiceSet = 3
+                else:
+                    quest.choiceSet = 4
+   
+                print("choice:{}".format(choice))
+                print("quest.choiceSet:{}".format(quest.choiceSet))
+                quest.setNum = 3
+            elif quest.setNum == -2:
+                print("choice:{}".format(choice))
+                print("quest.choiceSet:{}".format(quest.choiceSet))
+                if (choice == "1" and quest.choiceSet == -2):
+                    #temp 54
+                    quest.choiceSet = -1
+                elif (choice == "2" and quest.choiceSet == -1):
+                    #temp 42
+                    quest.choiceSet = -2
+                elif (choice == "3" and quest.choiceSet == -3) :
+                    print("here4")
+                    quest.choiceSet = -3
+                else:
+                    quest.choiceSet = -4
+                quest.setNum = -3
+            elif quest.setNum == 3:
+                print("quest set num is 3")
+                if (choice == "1"):
+                    quest.choiceSet = 1
+                elif (choice == "2"):
+                    quest.choiceset = 2
+                elif (choice == "3"):
+                    quest.choiceSet = 3
+                else:
+                    quest.choiceSet = 4    
+                # if (choice= "1")
+                #     quest.choiceSet = 1
+                quest.setNum = -1
+
+
+            quest.save()
+            print("choiceset:{}".format(quest.choiceSet))
+            finishTime = datetime.now()
+            thisTime = (finishTime - oldtime).total_seconds()
+            notInNext = True
+            print("flashBrightness:{}".format(request.POST['flashBrightness']))
+            quest.choice_set.create(time= thisTime, questionID = question_id, choice = request.POST['choice'], setNum = setNum, flash=int(request.POST['flashBrightness']), tempNum=request.POST['flashTemp'], temp = request.POST['changedColorFlash'])
             question_list = Question.objects.all()
             user = User.objects.get(userID=userID)
             pointer = user.pointer
             print("question_id:{}".format(question_id))
             pointer = pointer + 1
             user.pointer = pointer
-            user.save()
             order = user.order
+            print(order)
             order = order.split(',')
+            # order.append(quest.question_id)
+            # order = ','.join([str(elem) for elem in order])
+            # user.order = order
+            # print(order)
+
+            user.save()
             print("userID:{}".format(userID))
-            if (Question.objects.count()== pointer):
+            if (numberOfPics == pointer):
                 return redirect("/polls/end/"+str(userID))
+            print("number:{}".format(numberOfPics))    
             question_id = int(order[pointer])
             print("question_id:{}".format(question_id))
-            return redirect("/polls/vote/"+str(userID)+"/"+str(question_id))
+            return redirect("/polls/vote/"+str(userID)+"/"+str(question_id)) 
     vote_form = voteForm()
     print(request)
-    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics})
+    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'numberOfPics': numberOfPics, 'choiceSet': choiceSet, 'setNum': setNum})
 
-# from django.views.decorators.csrf import csrf_exempt
-# @csrf_exempt
-# def returnBlend(request, question_id):
-#     quest = Question.objects.get(pk=question_id)
-#     edit = request.POST['edit']
-#     image = merge_images(quest.flashPic,quest.ambientPic,float(edit))
-#     return HttpResponse(image.read(), content_type="image/jpeg")
-
-# def merge_images(field1,field2,opacity):
-
-#     image1 = Image.open(field1)
-#     image2 = Image.open(field2)
-#     height,width = image1.size
-#     des = int(image1.info['Description'])
-#     matrix = image1.info['Comment']
-#     matrix = list(map(float, matrix.split("     ")))
-
-#     image3 = img_as_float(image1)
-#     image4 = img_as_float(image2)
-#     blended = image3*opacity/100 + image4* (100-opacity)/100
-#     # blended = cameraToXYZtoSRGB(blended,matrix, des,image1.size)
-
-#     # plt.imshow(blended1)
-#     # im = (blended * 255 / np.max(blended)).astype('uint8')
-#     im = cameraToXYZtoSRGB(blended, matrix, des, image1.size)
-#     im = color.xyz2rgb(im)
-#     im = (im * 255 / np.max(im)).astype('uint8')
-#     im = Image.fromarray(im)
-
-#     output = io.BytesIO()
-#     im.save(output, format='PNG', quality=100)
-#     output.seek(0)
-#     return InMemoryUploadedFile(output, 'ImageField',
-#                                 field1.name,
-#                                 'im/jpeg',
-#                                 sys.getsizeof(output), None)
-
-# def fixWhitePoint(calibrationIlluminant):
-#     d65 = [0.9504, 1.0000, 1.0888]
-#     if (calibrationIlluminant == 17): # code a
-#         makhraj = [1.0985, 1.0000, 0.3558]
-#     elif calibrationIlluminant == 19: # code c
-#         makhraj = [0.9807, 1.0000, 1.1822]
-#     elif calibrationIlluminant == 20: # code d55
-#         makhraj = [0.9568, 1.0000, 0.9214]
-#     elif calibrationIlluminant == 21: # code d65
-#         makhraj = d65
-#     elif calibrationIlluminant == 23: # code d50
-#         makhraj =  [0.9642, 1.0000, 0.8251]
-#     return np.divide(d65,makhraj)
-
-
-# def cameraToXYZtoSRGB(imgFloat, colorMatrix, calibrationIlluminant,size):
-#     # imgFloat = img_as_float(image)
-#     XYZtoCamera = np.reshape(colorMatrix,(3,3),order='F')
-#     XYZtoCamera = np.transpose(XYZtoCamera)
-#     width, height = size
-
-#     imf = np.reshape(imgFloat, [width*height, 3], order='F')
-#     imf = np.transpose(imf)
-
-#     imf = np.linalg.lstsq(XYZtoCamera,imf)[0]
-
-#     imf = np.transpose(imf)
-#     imf = np.reshape(imf, [height, width, 3], order='F')
-#     zarib = fixWhitePoint(calibrationIlluminant)
-#     imf[:,:,0] = zarib[0] * imf[:,:,0]
-#     imf[:,:,2] = zarib[2] * imf[:,:,2]
-#     return imf
-# print("id")
-
-
-# print("sepide")
-# randomVar = random.randint(1,50)
-# print("main:{}".format(shuffle))

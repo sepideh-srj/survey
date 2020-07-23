@@ -24,7 +24,6 @@ body{
 * {
   box-sizing: border-box;
 }
-
 input[type=text], select, textarea {
   width: 100%;
   padding: 12px;
@@ -58,31 +57,6 @@ input[type=submit]:hover {
   background-color: #45a049;
 }
 
-.canvasBtn{
-  transition-duration: 0.4s;
-  background-color: #3f484a;
-  border-color: #3f484a;
-  /*border-radius: 3px;*/
-    /*border: 2px solid #3f484a;*/
-      border: none;
-    outline:none;
-
-}
-.canvasBtn:focus {
-  border: none;
-  outline: none;
-  background-color: yellow;
-  /*border-color: #3f484a;*/
-
- box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-.canvasBtn:hover{
-  border: none;
-  outline: none;
-  background-color: yellow;
-  /*border-color: yellow;*/
- box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
 
 .col-25 {
   float: left;
@@ -168,37 +142,7 @@ input[type=submit]:hover {
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
 }
-.buttonNeither {
-  background-color: #3f484a;
-  border-radius: 3px;
-  border: 2px solid white;
-  color: white;
-  padding: 10px 70px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 20px;
-  margin: 4px 2px;
-  cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  width: 50%;
-}
-.buttonNeither:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-  background-color: yellow;
-  border-radius: 3px;
-  border: 2px solid black;
-  color: black;
-}
 
-.buttonNeither:focus {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-  background-color: yellow;
-  border-radius: 3px;
-  border: 2px solid black;
-  color: black;
-}
 .button2:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
@@ -225,7 +169,6 @@ input[type=submit]:hover {
   opacity: 1;
 }
 
-
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -241,7 +184,7 @@ input[type=submit]:hover {
   cursor: pointer;
 }
 .slider2{
-
+  
   width: 100%;
 }
 @media screen and (max-width: 540px) {
@@ -291,16 +234,6 @@ input[type=submit]:hover {
             alert("Please enter your age");
             return false;
           }
-          x =  document.getElementById("gender").value
-          if (x == "" || x == null) {
-            alert("Please enter your gender");
-            return false;
-          }
-          x =  document.getElementById("experience").value
-          if (x == "" || x == null) {
-            alert("Please enter your experience");
-            return false;
-          }
         }
       	var flash = document.getElementById("flashCan");
       	var ambient = document.getElementById("ambientCan");
@@ -308,16 +241,17 @@ input[type=submit]:hover {
       	var first = document.getElementById("first");
       	var flashimg = document.getElementById("flash");
       	var ambientimg = document.getElementById("ambient");
-        
+      	var flashCanvas = document.getElementById("flashCanvas");
+      	var flashOutput = document.getElementById("flashOutput");
       	var output2 = document.getElementById("output2");
-        
-        
+
       	var output2Context = output2.getContext("2d");
       	var outputContext = output.getContext("2d");
       	var firstContext = first.getContext("2d");
       	var flashContext = flash.getContext("2d");
       	var ambientContext = ambient.getContext("2d");
-  
+      	var flashContext2 = flashCanvas.getContext("2d");
+      	var flashOutputContext = flashOutput.getContext("2d");
       	var des = document.getElementById("des").innerHTML;
       	var matrix = document.getElementById("matrix").innerHTML;
         // var color = document.getElementById("color").innerHTML;
@@ -325,15 +259,6 @@ input[type=submit]:hover {
         picID = parseInt(picID)
         console.log("picID")
         console.log(picID)
-        var choiceSet = document.getElementById("choiceSet").innerHTML;
-        var setNum = document.getElementById("setNum").innerHTML;
-        if (setNum == 3 || setNum == -3)
-        {
-          var output3 = document.getElementById("output3");
-          var output3Context = output3.getContext("2d");  
-        }
-        console.log("choiceSet")
-        console.log(choiceSet)
         // var colorAm = document.getElementById("colorAm").innerHTML;
 
       	// var exp = document.getElementById("exp").innerHTML;
@@ -351,7 +276,6 @@ input[type=submit]:hover {
       	var outFlash;
         var neutral;
         var defaultBrightness;
-   
 
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
@@ -359,177 +283,28 @@ input[type=submit]:hover {
 
         console.log("image temperature")
         console.log(neutral)
-       //  document.getElementById("flashTempRange").value = neutral;
+        document.getElementById("flashTempRange").value = neutral;
 
-       //  function myFunction() {
-       // document.getElementById("flashTempRange").value = neutral;
-       //  // document.getElementById("ambientRange").value = 100;
-       //  // document.getElementById("flashRange").value = 100;
-       //  document.getElementById("mixRange").value = 110;
+        function myFunction() {
+       document.getElementById("flashTempRange").value = neutral;
+        // document.getElementById("ambientRange").value = 100;
+        // document.getElementById("flashRange").value = 100;
+        document.getElementById("mixRange").value = 110;
 
-       //  }
+        }
     	// output1.innerHTML = slider.value;
-      function choose1(){
-        document.getElementById("choice").value = 1;
-        console.log("here")
-        if (setNum == 1) {
-          document.getElementById("flashBrightness").value = 50
-           document.getElementById("flashTemp").value = 0
-        }
+      	window.onload = function() {
 
-        if (setNum == 2) {
-          document.getElementById("flashBrightness").value = 170
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && choiceSet == 1) {
-          //more flash
-          document.getElementById("flashBrightness").value = 200
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && choiceSet == 2) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 20
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
-          //none
-          document.getElementById("flashBrightness").value = 200
-           document.getElementById("flashTemp").value = 0
-        }
-
-        if (setNum == -1) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 40
-        }
-        if (setNum == -2) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 56
-        }
-        if (setNum == -3 && choiceSet == -2) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 38
-        }
-        if (setNum == -3 && choiceSet == -1) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 52
-        }
-        if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 38
-        }
-      }
-      function choose2() {
-        document.getElementById("choice").value = 2;
-        if (setNum == 1) {
-          document.getElementById("flashBrightness").value = 170
-          document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 2) {
-          document.getElementById("flashBrightness").value = 50
-          document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && choiceSet == 1) {
-          //more flash
-          document.getElementById("flashBrightness").value = 170
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && choiceSet == 2) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 50
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
-          //none
-          document.getElementById("flashBrightness").value = 110
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == -1) {
-          document.getElementById("flashBrightness").value = 0
-          document.getElementById("flashTemp").value = 56
-        }
-        if (setNum == -2) {
-          document.getElementById("flashBrightness").value = 0
-          document.getElementById("flashTemp").value = 40
-        }
-
-        if (setNum == -3 && choiceSet == -2) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 40
-        }
-        if (setNum == -3 && choiceSet == -1) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 56
-        }
-        if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 48
-        }
-
-      }
-      function choose3() {
-        document.getElementById("choice").value = 3;
-        document.getElementById("flashBrightness").value = 0
-        document.getElementById("flashTemp").value = 0
-
- 
-      }
-      function choose4() {
-        document.getElementById("choice").value = 4;
-        if (setNum == 3 && choiceSet == 1) {
-          //more flash
-          document.getElementById("flashBrightness").value = 140
-           document.getElementById("flashTemp").value = 0
-        }
-        if (setNum == 3 && choiceSet == 2) {
-          //more ambient
-          document.getElementById("flashBrightness").value = 80
-           document.getElementById("flashTemp").value = 0
-        }
-
-        if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
-          //none
-          document.getElementById("flashBrightness").value = 20
-           document.getElementById("flashTemp").value = 0
-        }
-
-        if (setNum == -3 && choiceSet == -2) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 44
-        }
-        if (setNum == -3 && choiceSet == -1) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 60
-        }
-        if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)) {
-          document.getElementById("flashBrightness").value = 0
-           document.getElementById("flashTemp").value = 60
-        }
-
-      }
-      window.onload = function() {
-        document.getElementById("canvasBtn").style.width=(flashimg.width-2).toString()+"px";
-        document.getElementById("canvasBtn").style.height=flashimg.height.toString()+"px";
-        document.getElementById("canvasBtn2").style.width=(flashimg.width-2).toString()+"px";
-        document.getElementById("canvasBtn2").style.height=flashimg.height.toString()+"px";
-        if (setNum == 3 || setNum ==-3){
-         document.getElementById("canvasBtn3").style.width=(flashimg.width-2).toString()+"px";
-         document.getElementById("canvasBtn3").style.height=flashimg.height.toString()+"px";
-         output3Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-         output3Data = output3Context.getImageData(0, 0, flashimg.width, flashimg.height);
-        }
-        ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
-        flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-        output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	ambientContext.drawImage(ambientimg, 0,0,flashimg.width, flashimg.height);
+        	flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
+        	output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
 
 
-        flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
-        firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
-        output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
+        	flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
+        	ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
+        	firstData = firstContext.getImageData(0, 0, flashimg.width, flashimg.height);
+        	output2Data = output2Context.getImageData(0, 0, flashimg.width, flashimg.height);
 
 
 
@@ -582,85 +357,8 @@ input[type=submit]:hover {
           // fixedAmbient = fixColorAmbient(fixedAmbient);
 
         	//blend fixed images
-       
-          // currentFlash=fixTemp2(fixedFlash,45)
-          // negetive numbers are for cold and warm 
-          if (setNum == -1){
-            currentFlash=fixTemp2(fixedFlash,40)
-            blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
-            currentFlash=fixTemp2(fixedFlash,56)
-            blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
-
-          }
-          if (setNum == -2){
-            currentFlash=fixTemp2(fixedFlash,56)  
-            blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
-            currentFlash=fixTemp2(fixedFlash,40)
-            blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
-
-          }
-          if (setNum == 1){
-            blend2(fixedAmbient,fixedFlash,50,170,firstData.data,zarib);
-          	blend2(fixedAmbient,fixedFlash,170,50,output2Data.data,zarib);
-
-          }
-          if (setNum == 2){
-            blend2(fixedAmbient,fixedFlash,170,50,firstData.data,zarib);
-            blend2(fixedAmbient,fixedFlash,50,170,output2Data.data,zarib);
-
-          }
-          if (setNum == 3 && choiceSet == 2){
-            // more ambient 
-              console.log("here")
-              blend2(fixedAmbient,fixedFlash,20,200,firstData.data,zarib);
-              blend2(fixedAmbient,fixedFlash,50,170,output2Data.data,zarib);
-              blend2(fixedAmbient,fixedFlash,80,140,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-            }
-          if (setNum == 3 && choiceSet == 1) {
-            //more flash was selected
-              blend2(fixedAmbient,fixedFlash,200,20,firstData.data,zarib);
-              blend2(fixedAmbient,fixedFlash,170,50,output2Data.data,zarib);
-              blend2(fixedAmbient,fixedFlash,140,80,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-          }
-          if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
-            
-              blend2(fixedAmbient,fixedFlash,200,20,firstData.data,zarib);
-              blend2(fixedAmbient,fixedFlash,110,110,output2Data.data,zarib);
-              blend2(fixedAmbient,fixedFlash,20,200,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-          }
-          if (setNum == -3 && choiceSet == -1){
-            // temp 54
-              currentFlash=fixTemp2(fixedFlash,52) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,56) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,60) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-            }
-          if (setNum == -3 && choiceSet == -2){
-            // temp 40
-              currentFlash=fixTemp2(fixedFlash,38) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,40) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,44) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-            } 
-           if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)){
-            // temp 40
-              currentFlash=fixTemp2(fixedFlash,36) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,48) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
-              currentFlash=fixTemp2(fixedFlash,60) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
-              output3Context.putImageData(output3Data, 0, 0);
-            }  
+          blend2(fixedAmbient,fixedFlash,110,110,firstData.data,zarib);
+        	blend2(fixedAmbient,fixedFlash,110,110,output2Data.data,zarib);
           defaultBrightness = getBrightness(firstData.data)
           //update canvases
         	output2Context.putImageData(output2Data, 0, 0);
@@ -673,69 +371,69 @@ input[type=submit]:hover {
 
     	}
 
-      // mixSlider.oninput = function(){
+      mixSlider.oninput = function(){
 
 
-      //   //if the slider is in neutral position...
-      //   if(this.value==100){
-      //       //... set the current ambient value to original value...
-      //       currentAmbient=fixedAmbient;
-      //       currentFlash = fixedFlash;
-      //   }else{
-      //       //... else adjust current ambient value.
+        //if the slider is in neutral position...
+        if(this.value==100){
+            //... set the current ambient value to original value...
+            currentAmbient=fixedAmbient;
+            currentFlash = fixedFlash;
+        }else{
+            //... else adjust current ambient value.
 
-      //         currentAmbient = adjustBrightness(fixedAmbient,220-this.value);
-      //         currentFlash = adjustBrightness(fixedFlash,this.value);
+              currentAmbient = adjustBrightness(fixedAmbient,220-this.value);
+              currentFlash = adjustBrightness(fixedFlash,this.value);
 
-      //       if (this.value != 0){
-      //           currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
-      //   }
+            if (this.value != 0){
+                currentFlash=fixTemp2(currentFlash,flashTempSlider.value);}
+        }
 
-      //   //console.log(currentAmbient)
-      //   // apply changed ambient brightness to overall image.
-      //   var output=blendImages(currentAmbient,currentFlash,zarib);
+        //console.log(currentAmbient)
+        // apply changed ambient brightness to overall image.
+        var output=blendImages(currentAmbient,currentFlash,zarib);
 
-      //   // output = fixBrightness(output)
-      //   let update = new ImageData(output,flashimg.width,flashimg.height);
-
-
-      //   // update output
-      //   output2Context.putImageData(update,0,0);
+        // output = fixBrightness(output)
+        let update = new ImageData(output,flashimg.width,flashimg.height);
 
 
-      // }
+        // update output
+        output2Context.putImageData(update,0,0);
+
+
+      }
 
 
 
 
 
       // if flash temperature is adjusted /////
-//   		flashTempSlider.oninput = function() {
+  		flashTempSlider.oninput = function() {
 
-//         //if the slider is in neutral position...
-//         if(this.value==this.flashTempRange/2){
+        //if the slider is in neutral position...
+        if(this.value==this.flashTempRange/2){
 
-//             //... set the current flash temp value to original value...
-//       			currentFlash=fixedFlash;
-//         }else{
-//             //... else adjust current flash value.
-//       			//preBlend2(currentFlash,this.value,outFlash);
-//             currentAmbient = adjustBrightness(fixedAmbient,220 - mixSlider.value);
-//             currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
-//             if(mixSlider.value != 0){
-//               currentFlash=fixTemp2(currentFlash,this.value);}
-//         }
-// //
-//         // console.log("current flash generated");
-//         // apply changed flash temperature to overall image.
-//       	var output=blendImages(currentAmbient,currentFlash,zarib);
-//         // console.log(output)
-//         output = fixBrightness(output)
-//         let update = new ImageData(output,flashimg.width,flashimg.height);
+            //... set the current flash temp value to original value...
+      			currentFlash=fixedFlash;
+        }else{
+            //... else adjust current flash value.
+      			//preBlend2(currentFlash,this.value,outFlash);
+            currentAmbient = adjustBrightness(fixedAmbient,220 - mixSlider.value);
+            currentFlash = adjustBrightness(fixedFlash,mixSlider.value);
+            if(mixSlider.value != 0){
+              currentFlash=fixTemp2(currentFlash,this.value);}
+        }
+//
+        // console.log("current flash generated");
+        // apply changed flash temperature to overall image.
+      	var output=blendImages(currentAmbient,currentFlash,zarib);
+        // console.log(output)
+        output = fixBrightness(output)
+        let update = new ImageData(output,flashimg.width,flashimg.height);
 
-//         // update output
-//       	output2Context.putImageData(update, 0, 0);
-//   		}
+        // update output
+      	output2Context.putImageData(update, 0, 0);
+  		}
 
 
 

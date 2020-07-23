@@ -10,25 +10,21 @@
  <br>
 
  <br>
- 	<p> Please edit each of the following images in a way that looks the best for you.<br>
-    <ol>
-      <li>
-   The temperature of flash light can be changed. By going left, the temperature will get warmer and by going right, the temperature will be colder.
-        <img src="/media/1.gif" alt="Mountains" style="width:50%">
-<br>
-</li>
-      <li>
-    Each scene is illuminated by two sources of light, flash and ambient. You can choose how much ambient and flash light each scene will have. By going left, the image will be lit more by the ambient light. By going right, the image will be more lit by the flash light.
-        <img src="/media/2.gif" alt="Mountains" style="width:50%">
-<br>
-</li>
-
-    The changes can be very subtle. ِTake your time, and try to play with each slider until you feel satisfied with the result. Each image can take from 30 seconds to 1 minute to edit. There are 25 images in the survey. It should take around 20 minutes to edit all of the images.
+  <p> Please choose the image that has the best illumination.<br>
     <br>
-    Please use a pc to complete the survey. </p>
- 	<br>
+    You will see each image several times with different illuminations. Each time you can choose betweenn two or three different illuminants for the image. Please take your time with each of them and select the best one in your opinion. If you can not decide, choose the 'no preference' button, the differences between images can be subtle.
 
-<!--  	<div class="row">
+<br>
+<br>
+Here's a small demo of how the survey works: 
+<br>
+ 
+        <img src="/media/1new1.gif" alt="Mountains" style="width:50%">
+<br>
+    Please use a pc to complete the survey. </p>
+  <br>
+
+<!--    <div class="row">
   <div class="column">
     <img src="/media/2.gif" alt="Snow" style="width:100%">
     <p> Change the brightness of ambient light</p>
@@ -42,10 +38,10 @@
     <p> Change the color of flash light</p>
   </div>
 </div>
- 	 -->
- 	<br>
- 	<br>
-  <p style="font-size: larger"> Please enter your age, gender and proficiency in image editing, then click the "Start" button to begin the survey. </p>
+   -->
+  <br>
+  <br>
+  <p style="font-size: larger"> Please fill out the following form by entering your age, gender and proficiency in image editing, then click the "Start" button to begin the survey. Your demographic information will be used only for academic research purposes. </p>
 <br>
 <div class="container" style="text-align: left;">
 
@@ -57,7 +53,20 @@
         <label for="fname"><strong>Age </strong></label>
       </div>
       <div class="col-75">
-        <input type="number" id="age" name="age" min="1" max="100" placeholder="Your age..">
+          <select id="age" name="age">
+           <option value=""  disabled selected>Please select your age</option>
+          <option value="rather not say">Rather not say</option>
+          <option value="under12">Under 12 years old</option>
+          <option value="12-17">12-17 years old</option>
+          <option value="18-24">18-24 years old</option>
+          <option value="25-34">25-34 years old</option>
+          <option value="35-44">35-44 years old</option>
+          <option value="45-54">45-54 years old</option>
+          <option value="55-64">55-64 years old</option>
+          <option value="65-74">65-74 years old</option>
+          <option value="above 75">75 years or older</option>
+
+        </select>
       </div>
     </div>
 
@@ -67,6 +76,8 @@
       </div>
       <div class="col-75">
         <select id="gender" name="gender">
+           <option value=""  disabled selected>Please select your age</option>
+          <option value="Rather not say">Rather not say</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
@@ -79,6 +90,8 @@
       </div>
       <div class="col-75">
         <select id="experience" name="experience">
+           <option value=""  disabled selected>Please select your proficiency</option>
+          <option value="Rather not say">Rather not say</option>
           <option value="Novice">Novice: I sometimes use applications to make images look better.</option>
           <option value="Intermediate">Intermediate: I know how to work with photographs using tools like Lightroom or Photoshop.</option>
           <option value="Expert">Expert: I can proficiently use advanced photography editing software.</option>

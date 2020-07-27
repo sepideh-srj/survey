@@ -3,7 +3,7 @@
 {% block content%}
 
 <div style="text-align: center">
-<h1>image number {{ pointer | add:1}} from {{numberOfPics}} images</h1>
+<h1>image number {{ pointer | add:1}}</h1>
 <hr>
 <p id="des" style="display: none;"> {{des}} </p>
 <p id="matrix" style="display: none;"> {{matrix}} </p>
@@ -11,6 +11,8 @@
 <p id="picID" style="display: none;"> {{question_id}} </p>
 <p id="choiceSet" style="display: none"> {{choiceSet}}</p>
 <p id="setNum" style="display: none"> {{setNum}}</p>
+<p id="oldFlash" style="display: none"> {{oldFlash}}</p>
+<p id="oldTemp" style="display: none"> {{oldTemp}}</p>
 <img src="{{question.ambientPic.url}}" style="display: none;" id="ambient">
 <img src="{{question.flashPic.url}}" style="display: none;" id="flash" >
 

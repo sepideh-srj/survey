@@ -10,7 +10,10 @@ class Question(models.Model):
     # matrix = models.IntegerField(blank=True)
     flashPic = models.ImageField(upload_to='images/')
     ambientPic = models.ImageField(upload_to='images/')
+    # dropOut = models.BooleanField(default=False, blank= True)
     # blendedPic = models.ImageField(upload_to='images/') 
+    flash = models.IntegerField(default=0)
+    temp = models.IntegerField(default=0)
     def __str__(self):
         return str(self.question_id)
 
@@ -24,6 +27,7 @@ class User(models.Model):
     experience = models.CharField(max_length=100, default='')
     code = models.IntegerField(default=0)
     setNum = models.IntegerField(default=1)
+    numberOfPics = models.IntegerField(default=1)
     def __str__(self):
         return str(self.userID)
 

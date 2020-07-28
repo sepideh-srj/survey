@@ -21,13 +21,21 @@
 <canvas id="output" width="500" height="500"style="display: none"></canvas>
 
 <div class="slidecontainer" style="text-align: center">
-  
+   {% for message in messages %}
 
+                    <div class="alert alert-success">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+
+                        {{ message }}
+
+                    </div>
+            {% endfor %}
 	<br>
 	<!-- <p> ambient lighting adjustment </p> -->
 
 	<h3> choose the image that has the best illumination by clicking on it or click on "no preference" if you can not decide. Then click next.</h3>
 	<p> When you click on your choice for the image it will be shown by a yellow bar on the top of the image. When you click on 'no preference' button it will be shown by changing the background color to yellow. After clicking next you will see the next question and you cannot go back! </p>
+	<p style="color: pink"> You have to select one of the options to go to the next question. </p>
 	<div class="row" >
 		{% if setNum < 3 and setNum > -3 %}
 
@@ -65,9 +73,9 @@
 	<input name="changedColorFlash" id="changedColorFlash" value ="0" style="display: none"> </input>
 	<!-- <p> temperture of flash light adjustment </p> -->
 	<input name="choice" id="choice" value ="0" style="display: none"> </input>
-	<input name="flashBrightness" id="flashBrightness" style="display:none"value ="0" > </input>
+	<input name="flashBrightness" id="flashBrightness" value ="0" style="display: none"> </input>
 	<input name="flashTemp" id="flashTemp" value ="0" style="display: none"> </input>
-
+	<input name="goNext" id="goNext" value="0" style="display: none"> </input>
   <p style="display: none;">Value: <span id="demo"></span></p>
 	<!-- <img src="/{{ MEDIA_URL }}media/slide.jpg" / width="100%" height="30px"> -->
 	<!-- <button type="submit" name="FlashSubmit" class="btn btn-success">Submit</button> -->

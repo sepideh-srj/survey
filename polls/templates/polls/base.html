@@ -370,16 +370,18 @@ input[type=submit]:hover {
        //  }
     	// output1.innerHTML = slider.value;
       function choose1(){
+        document.getElementById("goNext").value =1;
         document.getElementById("choice").value = 1;
-        console.log("here")
         if (setNum == 1) {
           document.getElementById("flashBrightness").value = 50
            document.getElementById("flashTemp").value = 0
         }
 
         if (setNum == 2) {
+
           document.getElementById("flashBrightness").value = 170
            document.getElementById("flashTemp").value = 0
+           document.getElementById("goNext").value =1;
         }
         if (setNum == 3 && choiceSet == 1) {
           //more flash
@@ -422,6 +424,7 @@ input[type=submit]:hover {
         }
       }
       function choose2() {
+        document.getElementById("goNext").value =1;
         document.getElementById("choice").value = 2;
         if (setNum == 1) {
           document.getElementById("flashBrightness").value = 170
@@ -470,6 +473,7 @@ input[type=submit]:hover {
 
       }
       function choose3() {
+        document.getElementById("goNext").value =1;
         document.getElementById("choice").value = 3;
         document.getElementById("flashBrightness").value = oldFlash
         document.getElementById("flashTemp").value = 0
@@ -477,6 +481,7 @@ input[type=submit]:hover {
  
       }
       function choose4() {
+        document.getElementById("goNext").value =1;
         document.getElementById("choice").value = 4;
         if (setNum == 3 && choiceSet == 1) {
           //more flash

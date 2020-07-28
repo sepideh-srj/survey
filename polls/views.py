@@ -12,6 +12,8 @@ from django.core.files.images import ImageFile
 from .resources import QuestionResource
 import random
 from datetime import datetime
+from django.contrib import messages 
+
 notInNext = True
 oldtime = 0
 
@@ -168,12 +170,17 @@ def vote(request, question_id, userID):
     pointer = user.pointer
     setNum = quest.setNum
     print("setNum:{}".format(setNum))
+    print("goNext:{}".format(request.POST.get('goNext')))
     if request.method == 'POST':
         # if 'back' in request.POST:
         #     question_list = Question.objects.all()
         #     context = {'question_list': question_list, 'userID': userID}
-        #     return render(request, 'polls/index.html', context)
-        if 'next' in request.POST:
+        #     return render(request, 'polls/index.html', context)\
+        if (request.POST['goNext'] == "0"):
+            print("goNext")
+            messages.error(request, "Please choose one of the options")
+            return redirect("/polls/vote/"+str(userID)+"/"+str(question_id)) 
+        elif 'next' in request.POST:
             oldFlash = int(request.POST['flashBrightness'])
             vote_form = voteForm()
             # quest.choice_set.create(questionID = question_id, flash=request.POST['mixRange'], ambient=220 - int(request.POST['mixRange']),

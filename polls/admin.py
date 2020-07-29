@@ -16,3 +16,4 @@ class ChoiceAdmin(ImportExportModelAdmin):
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
 	pass	
+admin.site.register(Questuser)	

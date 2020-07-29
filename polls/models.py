@@ -14,11 +14,14 @@ class Question(models.Model):
     # blendedPic = models.ImageField(upload_to='images/') 
     flash = models.IntegerField(default=0)
     temp = models.IntegerField(default=0)
+
     def __str__(self):
         return str(self.question_id)
 
 
+
 class User(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
     userID = models.IntegerField(default=0)
     pointer = models.IntegerField(default=0, blank=True)
     order = models.CharField(max_length=200, blank=True)
@@ -31,8 +34,18 @@ class User(models.Model):
     def __str__(self):
         return str(self.userID)
 
+class Questuser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    question_id = models.IntegerField(default=0)
+    choiceSet = models.IntegerField(default=0)
+    setNum = models.IntegerField(default=0)
+    flash = models.IntegerField(default=0)
+    temp = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.question_id)
+
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
+    question = models.ForeignKey(Questuser, on_delete=models.CASCADE, blank=True, null=True)
     questionID = models.IntegerField(default=0)
     setNum = models.IntegerField(default=1)
     choice = models.IntegerField(default=0)
@@ -42,3 +55,4 @@ class Choice(models.Model):
     time = models.IntegerField(default=0)
     tempNum = models.IntegerField(default=0)
     code = models.IntegerField(default=0)
+

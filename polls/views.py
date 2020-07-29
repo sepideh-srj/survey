@@ -37,7 +37,6 @@ def home(request):
                 question.setNum = 1
                 question.flash = 0
                 question.temp = 0
-                question.dropOut = False
                 question.save()
                 ids.append(question.question_id)
                 # ids.append(question.question_id)
@@ -91,6 +90,9 @@ def home(request):
             numberOfPics = Question.objects.count()*6;
             newUser = User(userID = userID,code=code, numberOfPics = numberOfPics, order= listToStr, setNum = 1, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
             newUser.save()
+            for question in questions:
+                newUser.questuser_set.create(question_id = question.question_id, choiceSet = 0, setNum = 1, flash = 0, temp= 0)
+                newUser.save()
             print(listToStr)
             questions = Question.objects.all()
             question_id = ids[0]
@@ -140,13 +142,16 @@ def process(request):
     return render(request, 'polls/process.html', {'question': quest,'set': setNum,'des': des, 'matrix': matrix, 'flash': flash, 'colorAm': colorAm, 'ambient': ambient, 'flashTemp': flashTemp, 'ambientTemp':ambientTemp, 'ambientBrightness': ambientBrightness, 'color':color})
 
 def vote(request, question_id, userID):
-    quest = Question.objects.get(question_id=question_id)
-    
+    user = User.objects.get(userID=userID)
+    questions = user.questuser_set.all()
+
+    quest = questions.get(question_id=question_id)
+    mainQuest = Question.objects.get(question_id=question_id)
     # shuffle = list(range(1,5))
     print("vote: request: ={}".format(request))
     print("choiceset: {}".format(quest.choiceSet))
     # pointer = pointer +1
-    image = quest.flashPic
+    image = mainQuest.flashPic
     image = Image.open(image)
     choiceSet = quest.choiceSet
     setNum = quest.setNum
@@ -334,5 +339,5 @@ def vote(request, question_id, userID):
     vote_form = voteForm()
     print(request)
 
-    return render(request, 'polls/vote.html', {'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'choiceSet': choiceSet, 'setNum': setNum, 'oldFlash':quest.flash, 'oldTemp':quest.temp})
+    return render(request, 'polls/vote.html', {'mainQuest': mainQuest,'question': quest, 'question_id': question_id,'vote_form':vote_form, 'des': des, 'matrix': matrix, 'userID': userID, 'pointer':pointer, 'choiceSet': choiceSet, 'setNum': setNum, 'oldFlash':quest.flash, 'oldTemp':quest.temp})
 

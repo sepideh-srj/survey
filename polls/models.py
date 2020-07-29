@@ -41,3 +41,4 @@ class Choice(models.Model):
     temp = models.IntegerField(default=0)  
     time = models.IntegerField(default=0)
     tempNum = models.IntegerField(default=0)
+    code = models.IntegerField(default=0)

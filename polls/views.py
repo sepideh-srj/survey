@@ -226,7 +226,7 @@ def vote(request, question_id, userID):
                     # none
                     print("here4")
                     quest.choiceSet = 3
-
+                    
                 else:
                     quest.choiceSet = 4
                     print("why am i here")
@@ -312,7 +312,7 @@ def vote(request, question_id, userID):
             thisTime = (finishTime - oldtime).total_seconds()
             notInNext = True
             print("flashBrightness:{}".format(request.POST['flashBrightness']))
-            quest.choice_set.create(time= thisTime, questionID = question_id, choice = request.POST['choice'], setNum = setNum, flash=int(request.POST['flashBrightness']), tempNum=request.POST['flashTemp'], temp = request.POST['changedColorFlash'])
+            quest.choice_set.create(user = userID, code = user.code, time= thisTime, questionID = question_id, choice = request.POST['choice'], setNum = setNum, flash=int(request.POST['flashBrightness']), tempNum=request.POST['flashTemp'], temp = request.POST['changedColorFlash'])
             question_list = Question.objects.all()
             quest.flash = oldFlash
             quest.temp = int(request.POST['flashTemp'])

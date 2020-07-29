@@ -353,6 +353,8 @@ input[type=submit]:hover {
         var defaultBrightness;
         var oldFlash = document.getElementById("oldFlash").innerHTML;
         oldFlash = parseInt(oldFlash);
+        if (oldFlash == 0)
+          oldFlash = 110
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
         else if (des == 21) {neutral = 42;}

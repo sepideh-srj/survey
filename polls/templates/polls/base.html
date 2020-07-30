@@ -353,6 +353,8 @@ input[type=submit]:hover {
         var defaultBrightness;
         var oldFlash = document.getElementById("oldFlash").innerHTML;
         oldFlash = parseInt(oldFlash);
+        var oldTemp = document.getElementById("oldTemp").innerHTML;
+        oldTemp = parseInt(oldTemp);
         if (oldFlash == 0)
           oldFlash = 110
         des = parseInt(des);
@@ -478,7 +480,7 @@ input[type=submit]:hover {
         document.getElementById("goNext").value =1;
         document.getElementById("choice").value = 3;
         document.getElementById("flashBrightness").value = oldFlash
-        document.getElementById("flashTemp").value = 0
+        document.getElementById("flashTemp").value = oldTemp
 
  
       }

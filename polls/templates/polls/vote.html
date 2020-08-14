@@ -11,8 +11,8 @@
 <p id="picID" style="display: none;"> {{question_id}} </p>
 <p id="choiceSet" style="display: none"> {{choiceSet}}</p>
 <p id="setNum" style="display: none"> {{setNum}}</p>
-<p id="oldFlash" > {{oldFlash}}</p>
-<p id="oldTemp"> {{oldTemp}}</p>
+<p id="oldFlash" style="display: none" > {{oldFlash}}</p>
+<p id="oldTemp" style="display: none"> {{oldTemp}}</p>
 <img src="{{mainQuest.ambientPic.url}}" style="display: none;" id="ambient">
 <img src="{{mainQuest.flashPic.url}}" style="display: none;" id="flash" >
 
@@ -48,13 +48,13 @@
 
 		{% else %}
 		<div class="col-md-4">
-			<button class="canvasBtn" id="canvasBtn" onclick="choose1()" style="margin:0; padding:0; padding-top: 5%; "> <canvas class="first" id="first" width="430" height="434"></canvas></button>
+			<button class="canvasBtn" id="canvasBtn" onclick="choose1()" style="margin:0; padding:0; padding-top: 5%; margin-left: -20%;"> <canvas class="first" id="first" width="430" height="434"></canvas></button>
 		</div>
 		<div class="col-md-4">
-    		<button class="canvasBtn" id="canvasBtn2" onclick="choose2()" style=" margin: 0; padding: 0; padding-top: 5%;  "><canvas id="output2" width="430" height="434"></canvas></button>
+    		<button class="canvasBtn" id="canvasBtn2" onclick="choose2()" style=" margin: 0; padding: 0; padding-top: 5%;"><canvas id="output2" width="430" height="434"></canvas></button>
 		</div>
 				<div class="col-md-4">
-    		<button class="canvasBtn" id="canvasBtn3" onclick="choose4()" style=" margin: 0; padding: 0; padding-top: 5%;  "><canvas id="output3" width="430" height="434"></canvas></button>
+    		<button class="canvasBtn" id="canvasBtn3" onclick="choose4()" style=" margin: 0; padding: 0; padding-top: 5%;  margin-left: 20%;"><canvas id="output3" width="430" height="434"></canvas></button>
 		</div>
 		{% endif %}
 	</div>

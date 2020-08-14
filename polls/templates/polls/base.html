@@ -360,9 +360,8 @@ input[type=submit]:hover {
         des = parseInt(des);
         if (des ==17) {neutral = 48;}
         else if (des == 21) {neutral = 42;}
-        des = 17;
-        console.log("image temperature")
-        console.log(neutral)
+       
+ 
        //  document.getElementById("flashTempRange").value = neutral;
 
        //  function myFunction() {
@@ -533,7 +532,7 @@ input[type=submit]:hover {
         flashContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
         firstContext.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
         output2Context.drawImage(flashimg, 0,0,flashimg.width, flashimg.height);
-
+        	
 
         flashData = flashContext.getImageData(0, 0, flashimg.width, flashimg.height);
         ambientData = ambientContext.getImageData(0, 0, ambientimg.width, ambientimg.height);
@@ -577,6 +576,20 @@ input[type=submit]:hover {
         	fixedFlash = fixColorMap(flashData.data);
 
 
+          if (des == 21)
+          {
+            fixedFlash2 = fixTempd65(fixedFlash);
+          	fixedAmbient = fixTempd65(fixedAmbient);
+
+          // change the ambient brightness randomly
+          //fixedAmbient_orig=fixedAmbient;
+          if (picID == 30 || picID==20 || picID==49 || picID==14 || picID==45){
+
+            fixedFlash2 = fixBrightnessFlash(fixedFlash2);
+            fixedFlash = fixBrightnessFlash(fixedFlash);
+          }
+          fixedAmbient = fixBrightnessAmbient(fixedAmbient);
+        }
           // console.log("first flash")
           // console.log(fixedFlash)
         	// console.log(fixedAmbient)
@@ -611,22 +624,39 @@ input[type=submit]:hover {
 
           }
           if (setNum == 1){
-            
-            fixedFlash=fixTemp2(fixedFlash,randomTemp)  
+            if (des == 21){
+          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+            }
+            else
+            {
+            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            }
             blend2(fixedAmbient,fixedFlash,50,170,firstData.data,zarib);
           	blend2(fixedAmbient,fixedFlash,170,50,output2Data.data,zarib);
 
           }
           if (setNum == 2){
 
-            fixedFlash=fixTemp2(fixedFlash,randomTemp)  
+   			if (des == 21){
+          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+            }
+            else
+            {
+            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            }            
             blend2(fixedAmbient,fixedFlash,170,50,firstData.data,zarib);
             blend2(fixedAmbient,fixedFlash,50,170,output2Data.data,zarib);
 
           }
           if (setNum == 3 && choiceSet == 2){
             // more ambient 
-              fixedFlash=fixTemp2(fixedFlash,randomTemp)  
+                  if (des == 21){
+          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+            }
+            else
+            {
+            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            }
               blend2(fixedAmbient,fixedFlash,20,200,firstData.data,zarib);
               blend2(fixedAmbient,fixedFlash,50,170,output2Data.data,zarib);
               blend2(fixedAmbient,fixedFlash,80,140,output3Data.data,zarib);
@@ -634,14 +664,26 @@ input[type=submit]:hover {
             }
           if (setNum == 3 && choiceSet == 1) {
             //more flash was selected
-              randomTemp = Math.floor(Math.random() * (56 - 40)) + 40;
+              if (des == 21){
+          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+	            }
+	            else
+	            {
+	            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+	            }
               blend2(fixedAmbient,fixedFlash,200,20,firstData.data,zarib);
               blend2(fixedAmbient,fixedFlash,170,50,output2Data.data,zarib);
               blend2(fixedAmbient,fixedFlash,140,80,output3Data.data,zarib);
               output3Context.putImageData(output3Data, 0, 0);
           }
           if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
-              randomTemp = Math.floor(Math.random() * (56 - 40)) + 40;
+          	        if (des == 21){
+          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+	            }
+	            else
+	            {
+	            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+	            }
               blend2(fixedAmbient,fixedFlash,200,20,firstData.data,zarib);
               blend2(fixedAmbient,fixedFlash,110,110,output2Data.data,zarib);
               blend2(fixedAmbient,fixedFlash,20,200,output3Data.data,zarib);
@@ -1258,6 +1300,8 @@ input[type=submit]:hover {
         console.log(changeNorm);
         var t = (math.round(t2+changeNorm*5856));
 
+
+		t = t + 500;
         console.log("new temperature")
         console.log(t);
         var xD, yD=0;
@@ -1889,6 +1933,113 @@ input[type=submit]:hover {
 
     }
 
+
+      function fixTempd65(image){
+      output_new = new Float32Array(output.length);
+
+      t2 = 4500;
+
+      t = 5000;
+   
+        var xD, yD=0;
+
+        if (t >=4500 && t <= 7500){
+        r=getRatio(t,4500,7500)
+        // rgb = [254, 250, 219];
+        // xyz = xyz2rgb(rgb);
+        xD = 0.17;
+        yD = 0.17;
+        xS = 0.4231;
+        yS = 0.3304;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+      }
+
+        else if (t < 4500 && t >= 4000){
+
+        r=getRatio(t,4500,4000)
+        xD = 0.4949;
+        yD = 0.3564;
+        xS = 0.4231;
+        yS = 0.3304;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+      }
+        else if (t >=3500 && t < 4000){
+
+        r=getRatio(t,4000,3500);
+        xD =  0.5141;
+        yD =  0.3434;
+        xS = 0.4949;
+        yS = 0.3564;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+        }
+
+        else if (t >0 && t < 3500){
+        r=getRatio(t,3500,0);
+        xD = 0.5189;
+        yD = 0.3063;
+        xS =  0.5141;
+        yS =  0.3434;
+        r_x=(xD-xS)/100;
+        xD=xS+r*r_x;
+        r_y=(yD-yS)/100;
+        yD=yS+r*r_y;
+        }
+        var chromaticity_x= 0.4231;
+        var chromaticity_y=0.3304;
+
+      
+    
+        //get offest / ratio between average and destination chromaticity
+        var offset_x = xD/chromaticity_x
+        var offset_y = yD/chromaticity_y
+
+        console.log("destination")
+        console.log(xD)
+        console.log(yD)
+        // adjust XYZ values according to ratio
+        for (var i = 0; i < image.length; i+=4) {
+
+          if((image[i]+image[i+1]+image[i+2])==0){
+              var x_pix=0;
+              var y_pix=0;
+          }else{
+              var x_pix = image[i]/(image[i]+image[i+1]+image[i+2]);
+              var y_pix = image[i+1]/(image[i]+image[i+1]+image[i+2]);
+          }
+
+          x_pix=x_pix*offset_x;
+          y_pix=y_pix*offset_y;
+
+
+
+          if(y_pix==0){
+              output_new[i] = 0
+              output_new[i+2] = 0
+          }else{
+              output_new[i] = (x_pix*image[i+1]/y_pix);
+              output_new[i+2] = ((1-x_pix-y_pix)*image[i+1]/y_pix);
+          }
+
+          output_new[i+1] = image[i+1];
+          output_new[i+3] = 255;
+
+        }
+
+        //return XYZ values
+        changedTemp = t - t2
+        return output_new;
+
+
+  }
 
 
 

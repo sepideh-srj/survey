@@ -693,31 +693,31 @@ input[type=submit]:hover {
             // temp 54
 
               currentFlash=fixTemp2(fixedFlash,52) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,firstData.data,zarib);
               currentFlash=fixTemp2(fixedFlash,56) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output2Data.data,zarib);
               currentFlash=fixTemp2(fixedFlash,60) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output3Data.data,zarib);
               output3Context.putImageData(output3Data, 0, 0);
             }
           if (setNum == -3 && choiceSet == -2){
             // temp 40
               currentFlash=fixTemp2(fixedFlash,38) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,firstData.data,zarib);
               currentFlash=fixTemp2(fixedFlash,40) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output2Data.data,zarib);
               currentFlash=fixTemp2(fixedFlash,44) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output3Data.data,zarib);
               output3Context.putImageData(output3Data, 0, 0);
             } 
            if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)){
             // temp 40
               currentFlash=fixTemp2(fixedFlash,36) 
-              blend2(fixedAmbient,currentFlash,110,110,firstData.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,firstData.data,zarib);
               currentFlash=fixTemp2(fixedFlash,48) 
-              blend2(fixedAmbient,currentFlash,110,110,output2Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output2Data.data,zarib);
               currentFlash=fixTemp2(fixedFlash,60) 
-              blend2(fixedAmbient,currentFlash,110,110,output3Data.data,zarib);
+              blend2(fixedAmbient,currentFlash,oldFlash,220 - oldFlash,output3Data.data,zarib);
               output3Context.putImageData(output3Data, 0, 0);
             }  
           defaultBrightness = getBrightness(firstData.data)

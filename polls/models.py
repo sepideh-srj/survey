@@ -6,15 +6,11 @@ class Question(models.Model):
     question_id = models.IntegerField(default=0)
     choiceSet = models.IntegerField(default=0)
     setNum = models.IntegerField(default=0)
-    # matrix = models.CharField(max_length=200, blank=True)
-    # matrix = models.IntegerField(blank=True)
     flashPic = models.ImageField(upload_to='images/')
     ambientPic = models.ImageField(upload_to='images/')
-    # dropOut = models.BooleanField(default=False, blank= True)
-    # blendedPic = models.ImageField(upload_to='images/') 
     flash = models.IntegerField(default=0)
     temp = models.IntegerField(default=0)
-
+    firstSet = models.BooleanField(default=False)
     def __str__(self):
         return str(self.question_id)
 
@@ -41,6 +37,8 @@ class Questuser(models.Model):
     setNum = models.IntegerField(default=0)
     flash = models.IntegerField(default=0)
     temp = models.IntegerField(default=0)
+    firstSet = models.BooleanField(default=False)
+    secondSet = models.BooleanField(default=False)
     def __str__(self):
         return str(self.question_id)
 

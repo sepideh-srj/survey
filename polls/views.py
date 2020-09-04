@@ -24,7 +24,15 @@ def home(request):
 		if 'start' in request.POST:
 			lastUser = User.objects.all().last()
 			questions = Question.objects.all()
-
+			allIDs = [[116,103], [118,101], [56,51], [3,114], [4,20], [132,59], [60,135],[134,136],[121,131],[122,141]]
+			allIDs =  [[116,103]]
+			rows = len(allIDs)
+			index = [0,1]
+			thisIDs = []
+			for i in range(rows):
+				rand = random.choice(index)
+				thisIDs.append(allIDs[i][rand]) 
+			print(thisIDs)	
 			ids = []
 			ids2 = []
 			ids3 = []
@@ -33,30 +41,31 @@ def home(request):
 			ids6 = []
 			x = [1,2]
 			for question in questions:
-				# if question.question_id == 61:
-				question.choiceSet = 0
+				if question.question_id in thisIDs:
+					question.choiceSet = 0
 
-				question.flash = 0
-				question.temp = 0
-				question.firstSet = False
-				question.save()
-				ids.append(question.question_id)
-					# ids.append(question.question_id)
-					# ids.append(question.question_id)
-					# ids.append(question.question_id)
-					# ids.append(question.question_id)
-					# ids.append(question.question_id)
+					question.flash = 0
+					question.temp = 0
+					question.firstSet = False
+					question.save()
+					ids.append(question.question_id)
+		
 
 			for question in questions:
-			    ids2.append(question.question_id) 
+				if question.question_id in thisIDs:
+					ids2.append(question.question_id) 
 			for question in questions:
-			    ids3.append(question.question_id) 
+				if question.question_id in thisIDs:
+					ids3.append(question.question_id) 
 			for question in questions:
-			    ids4.append(question.question_id) 
+				if question.question_id in thisIDs:
+					ids4.append(question.question_id) 
 			for question in questions:
-			    ids5.append(question.question_id)           
+				if question.question_id in thisIDs:
+					ids5.append(question.question_id)           
 			for question in questions:
-			    ids6.append(question.question_id) 
+				if question.question_id in thisIDs:
+					ids6.append(question.question_id) 
 
 			random.shuffle(ids)
 			random.shuffle(ids2)
@@ -66,15 +75,15 @@ def home(request):
 			random.shuffle(ids6)
 
 			for i in range(len(ids2)):
-			    ids.append(ids2[i])
+				ids.append(ids2[i])
 			for i in range(len(ids2)):
-			    ids.append(ids3[i])
+				ids.append(ids3[i])
 			for i in range(len(ids2)):
-			    ids.append(ids4[i])
+				ids.append(ids4[i])
 			for i in range(len(ids2)):
-			    ids.append(ids5[i]) 
+				ids.append(ids5[i]) 
 			for i in range(len(ids2)):
-			    ids.append(ids6[i])   
+				ids.append(ids6[i])   
 	   
 			print("here")
 			print(ids)
@@ -89,7 +98,7 @@ def home(request):
 			print(gender)
 			code = random.randint(1000,10000)  
 			print(code)  
-			numberOfPics = Question.objects.count()*6;
+			numberOfPics = rows*6;
 			newUser = User(userID = userID,code=code, numberOfPics = numberOfPics, order= listToStr, setNum = 1, pointer=0, gender= gender, age = request.POST['age'], experience = request.POST['experience'])
 			newUser.save()
 			for question in questions:
@@ -245,8 +254,10 @@ def vote(request, question_id, userID):
 						newOrder = ','.join([str(elem) for elem in intOrder])
 						print(newOrder)
 						user.order = newOrder
-						user.numberOfPics = user.numberOfPics - 1
+						numberOfPics = user.numberOfPics
+						user.numberOfPics = numberOfPics -1
 						user.save()
+						print("numberOfPics {}".format(user.numberOfPics))
 						quest.setNum = -1
 						oldFlash = 110        
 			elif quest.setNum == -1:
@@ -290,8 +301,10 @@ def vote(request, question_id, userID):
 						newOrder = ','.join([str(elem) for elem in intOrder])
 						print(newOrder)
 						user.order = newOrder
-						user.numberOfPics = user.numberOfPics - 1
+						numberOfPics = user.numberOfPics
+						user.numberOfPics = numberOfPics -1
 						user.save()
+						print("numberOfPics {}".format(user.numberOfPics))
 					quest.setNum = -3
 
 
@@ -328,6 +341,7 @@ def vote(request, question_id, userID):
 							intOrder.append(int(num))
 						print(quest.question_id)    
 						indices = [i for i, x in enumerate(intOrder) if x == quest.question_id]
+						print(quest.question_id)  
 						for index in indices:
 							if index > pointer:
 								del intOrder[index]
@@ -337,8 +351,10 @@ def vote(request, question_id, userID):
 						newOrder = ','.join([str(elem) for elem in intOrder])
 						print(newOrder)
 						user.order = newOrder
-						user.numberOfPics = user.numberOfPics - 1
+						numberOfPics = user.numberOfPics
+						user.numberOfPics = numberOfPics -1
 						user.save()
+						print("numberOfPics {}".format(user.numberOfPics))
 						quest.setNum = -1
 						oldFlash = 110
 
@@ -388,7 +404,9 @@ def vote(request, question_id, userID):
 						newOrder = ','.join([str(elem) for elem in intOrder])
 						print(newOrder)
 						user.order = newOrder
-						user.numberOfPics = user.numberOfPics - 1
+						numberOfPics = user.numberOfPics
+						user.numberOfPics = numberOfPics -1
+						print("numberOfPics {}".format(user.numberOfPics))
 						user.save()
 					quest.setNum = -3
 
@@ -424,7 +442,7 @@ def vote(request, question_id, userID):
 			quest.save()
 			user = User.objects.get(userID=userID)
 			pointer = user.pointer
-			print("question_id:{}".format(question_id))
+			['141', '20', '56', '3', '135', '103', '136', '118', '121', '103', '141', '118', '56', '3', '20', '135', '121', '136', '103', '56', '3', '20', '136', '20', '141', '103', '136', '56', '135', '121', '118', '3', '118', '20', '56', '3', '121', '141', '103', '135', '136', '135', '136', '20', '121', '118']
 			pointer = pointer + 1
 			user.pointer = pointer
 			user.save()
@@ -432,7 +450,8 @@ def vote(request, question_id, userID):
 			print("userID:{}".format(userID))
 			if (user.numberOfPics == pointer):
 				return redirect("/polls/end/"+str(userID))
-			# print("number:{}".format(numberOfPics))    
+			# print("number:{}".format(numberOfPics))  
+			print("order:{}".format(order))  
 			question_id = int(order[pointer])
 			print("question_id:{}".format(question_id))
 			return redirect("/polls/vote/"+str(userID)+"/"+str(question_id)) 

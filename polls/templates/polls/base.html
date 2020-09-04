@@ -423,7 +423,7 @@ input[type=submit]:hover {
         if (setNum == -3 && (choiceSet == -3 || choiceSet == -4)) {
           //more ambient
           document.getElementById("flashBrightness").value = oldFlash
-           document.getElementById("flashTemp").value = 38
+           document.getElementById("flashTemp").value = 36
         }
       }
       function choose2() {
@@ -625,25 +625,40 @@ input[type=submit]:hover {
           }
           if (setNum == 1){
             if (des == 21){
-          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+          	  	fixedFlash = fixedFlash2 
             }
             else
             {
             	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
             }
+
+            // fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            // fixedFlash=fixTemp2(fixedFlash,40.8)
+            // blend2(fixedAmbient,fixedFlash,155,220-155,firstData.data,zarib);
+            // fixedFlash=fixTemp2(fixedFlash,44)
             blend2(fixedAmbient,fixedFlash,50,170,firstData.data,zarib);
           	blend2(fixedAmbient,fixedFlash,170,50,output2Data.data,zarib);
 
           }
           if (setNum == 2){
 
-   			if (des == 21){
-          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+   			// if (des == 21){
+      //     	  	fixedFlash=fixedFlash2; 
+      //       }
+      //       else
+      //       {
+      //       	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+      //       }
+      // fixedFlash=fixTemp2(fixedFlash,38)
+            // fixedFlash=fixTemp2(fixedFlash,60)
+            // fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            if (des == 21){
+                fixedFlash = fixedFlash2 
             }
             else
             {
-            	fixedFlash=fixTemp2(fixedFlash,randomTemp) 
-            }            
+              fixedFlash=fixTemp2(fixedFlash,randomTemp) 
+            }
             blend2(fixedAmbient,fixedFlash,170,50,firstData.data,zarib);
             blend2(fixedAmbient,fixedFlash,50,170,output2Data.data,zarib);
 
@@ -651,7 +666,7 @@ input[type=submit]:hover {
           if (setNum == 3 && choiceSet == 2){
             // more ambient 
                   if (des == 21){
-          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+          	  	fixedFlash=fixedFlash2
             }
             else
             {
@@ -665,7 +680,7 @@ input[type=submit]:hover {
           if (setNum == 3 && choiceSet == 1) {
             //more flash was selected
               if (des == 21){
-          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+          	  	fixedFlash=fixedFlash2
 	            }
 	            else
 	            {
@@ -678,7 +693,7 @@ input[type=submit]:hover {
           }
           if (setNum == 3 && (choiceSet == 3 || choiceSet == 4)) {
           	        if (des == 21){
-          	  	fixedFlash=fixTemp2(fixedFlash2,randomTemp)  
+          	  	fixedFlash= fixedFlash2
 	            }
 	            else
 	            {
@@ -1283,8 +1298,13 @@ input[type=submit]:hover {
       }
       else if (des == 21){
          t2 = 4500;
+         // real t = 5200 48
       console.log(tempChange)
       console.log("image temperature")
+//   des 17
+//     48 ---> t = 5500          40 --> t = 5032     56---> t = 5968   54 --> t = 5851   52 ---> t = 5700
+//   des 21 
+//     48 ---> t = 5000        40 --> t = 4500      56----> t = 5500   54--> t = 5700    52 ---> t--> 5400 44---> t = 4750
       // console.log(t);
       // var ratio = (t2 - 3000)/5856;
       // var ratio2 = (10000- t2)/5856;
@@ -1294,14 +1314,46 @@ input[type=submit]:hover {
       if (tempChange == neutral)
         return image;
       else{
+        if (tempChange == 36){
+          t = 4400;
+        }
+        if (tempChange == 38){
+          t = 4600;
+        }
+        if (tempChange == 40){
+          t = 4750
+        }
+        else if (tempChange == 60)
+        {
+          t = 6100;
+        }
+        else if (tempChange == 56)
+        {
+          t = 5800;
+        }
+        else if (tempChange == 54)
+        {
+          t = 5500;
+        }
+        else if (tempChange == 52)
+        {
+          t = 5300;
+        }
+        else if( tempChange == 44)
+        {
+          t = 4900;
+        }
+        else if (tempChange == 48)
+        {
+          return fixTempd65(image)
+        }
+  //       var changeNorm=(tempChange-neutral)/100;
+  //       console.log("changeNorm")
+  //       console.log(changeNorm);
+  //       var t = (math.round(t2+changeNorm*5856));
 
-        var changeNorm=(tempChange-neutral)/100;
-        console.log("changeNorm")
-        console.log(changeNorm);
-        var t = (math.round(t2+changeNorm*5856));
 
-
-		t = t + 500;
+		// t = t + 300;
         console.log("new temperature")
         console.log(t);
         var xD, yD=0;
@@ -1939,7 +1991,7 @@ input[type=submit]:hover {
 
       t2 = 4500;
 
-      t = 5000;
+      t = 5200;
    
         var xD, yD=0;
 
